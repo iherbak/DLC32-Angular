@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ZComponent } from './z.component';
+import { FileItemComponent } from './file-item.component';
 
-describe('ZComponent', () => {
-  let component: ZComponent;
-  let fixture: ComponentFixture<ZComponent>;
+describe('FileItemComponent', () => {
+  let component: FileItemComponent;
+  let fixture: ComponentFixture<FileItemComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ZComponent ]
+      declarations: [ FileItemComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ZComponent);
+    fixture = TestBed.createComponent(FileItemComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

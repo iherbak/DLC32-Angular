@@ -1,0 +1,11 @@
+<div class="filesgrid">
+    <mat-selection-list multiple="false">
+        <mat-list-option *ngFor="let file of pageFiles" #files>
+            <app-file-item [fileName]="file"></app-file-item>          
+        </mat-list-option>
+      </mat-selection-list>
+    <mat-paginator pageSize="10" [pageIndex]="pageIndex" [length]="files.length" (page)="paginate($event)"></mat-paginator>
+</div>
+<button mat-raised-button [disabled]="fileSelected()">Start</button>
+<button mat-raised-button [disabled]="fileSelected()">Show boundary</button>
+

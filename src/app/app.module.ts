@@ -10,18 +10,26 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ControlsComponent } from './tabs/controls/controls.component';
 import { MatGridListModule } from '@angular/material/grid-list';
-import { XyComponent } from './tabs/controls/xy/xy.component';
-import { ZComponent } from './tabs/controls/z/z.component';
+import { XyzComponent } from './tabs/controls/xy/xyz.component';
 import { GeneralComponent } from './tabs/controls/general/general.component';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { LaserComponent } from './tabs/controls/laser/laser.component';
+import { FilesComponent } from './tabs/files/files.component';
+import { FileItemComponent } from './tabs/files/file-item/file-item.component';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatCardModule } from '@angular/material/card';
+import {MatListModule} from '@angular/material/list';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
     ControlsComponent,
-    XyComponent,
-    ZComponent,
-    GeneralComponent
+    XyzComponent,
+    GeneralComponent,
+    LaserComponent,
+    FilesComponent,
+    FileItemComponent
   ],
   imports: [
     BrowserModule,
@@ -30,7 +38,11 @@ import { GeneralComponent } from './tabs/controls/general/general.component';
     MatButtonModule,
     MatMenuModule,
     MatTabsModule,
-    MatGridListModule
+    MatGridListModule,
+    MatButtonToggleModule,
+    MatPaginatorModule,
+    MatCardModule,
+    MatListModule
   ],
   providers: [],
   bootstrap: [AppComponent]

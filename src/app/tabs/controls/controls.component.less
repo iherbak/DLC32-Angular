@@ -1,3 +1,19 @@
-.controls{
-    display:flex;
+.controls-grid{
+    display: grid;
+    grid-template-columns: 3;
+    grid-template-rows: 2;
+    justify-content: flex-start;
+}
+app-xy{
+    grid-column: 1;
+}
+app-general{
+    grid-column: 2;
+}
+app-laser{
+    grid-column: 3;
+}
+app-files{
+    grid-row: 2;
+    grid-column: span 3;
 }

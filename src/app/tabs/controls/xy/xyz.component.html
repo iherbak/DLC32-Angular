@@ -1,0 +1,19 @@
+<div class="controlgrid">
+    <div class="panel-title xy">X/Z</div>
+    <button mat-raised-button class="up xy">UP</button>
+    <button mat-raised-button class="left-xy">LEFT</button>
+    <button mat-raised-button class="mat-accent home-xy">HOME</button>
+    <button mat-raised-button class="right-xy">RIGHT</button>
+    <button mat-raised-button class="down-xy">DOWN</button>
+
+    <div class="panel-title z">Z</div>
+    <button mat-raised-button class="up z">UP</button>
+    <button mat-raised-button class="mat-accent home-z">HOME</button>
+    <button mat-raised-button class="down-z">DOWN</button>
+    <mat-button-toggle-group class="distance" name="distance" aria-label="distance" value="0.1">
+        <mat-button-toggle class="tenth-step" value="0.1">0.1</mat-button-toggle>
+        <mat-button-toggle class="one-step" value="1">1</mat-button-toggle>
+        <mat-button-toggle class="ten-step" value="10">10</mat-button-toggle>
+        <mat-button-toggle class="hundred-step" value="100">100</mat-button-toggle>
+    </mat-button-toggle-group>
+</div>

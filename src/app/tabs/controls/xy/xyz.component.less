@@ -1,0 +1,69 @@
+button {
+    width: 100px;
+}
+
+.controlgrid {
+    display: grid;
+    grid-template-columns: 4;
+    grid-template-rows: 5;
+    place-items: center;
+    column-gap: 5px;
+    row-gap: 5px;
+    justify-content: center;
+    margin: 5px;
+}
+
+.z {
+    grid-column: 4;
+}
+
+.xy {
+    grid-column: span 3;
+}
+
+.up {
+    grid-row: 2;
+}
+
+.left-xy {
+    grid-column: 1;
+    grid-row: 3;
+}
+
+.home-xy {
+    grid-column: 2;
+    grid-row: 3;
+}
+
+.right-xy {
+    grid-column: 3;
+    grid-row: 3;
+}
+
+.down-xy {
+    grid-column-start: span 3;
+    grid-row: 4;
+}
+
+.home-z{
+    grid-row: 3;
+    grid-column: 4;
+}
+.down-z{
+    grid-row: 4;
+    grid-column: 4;
+}
+
+.distance{
+    grid-row: 5;
+    grid-column: span 4;
+}
+
+.tenth-step,.one-step,.ten-step,.hundred-step{
+    width:70px;
+}
+
+mat-button-toggle{
+    border-top:1px solid gray;
+    border-bottom:1px solid gray;
+}
