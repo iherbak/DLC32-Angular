@@ -1,0 +1,59 @@
+button {
+    width: 100px;
+}
+
+.panelgrid {
+    grid-template-areas: 
+    'title title title title-z'
+    'up up up up-z'
+    'left home right home-z'
+    'down down down down-z';
+    place-items: center;
+}
+
+.z{
+    grid-area: title-z;
+}
+.up-xy {
+    grid-area: up;
+}
+
+.left-xy {
+    grid-area: left;
+}
+
+.home-xy {
+    grid-area: home;
+}
+
+.right-xy {
+    grid-area: right;
+}
+
+.down-xy {
+    grid-area: down;
+}
+
+.up-z{
+    grid-area: up-z;
+}
+.home-z{
+    grid-area: home-z;
+}
+.down-z{
+   grid-area: down-z;
+}
+
+.distance{
+    grid-row: 5;
+    grid-column: span 4;
+}
+
+.tenth-step,.one-step,.ten-step,.hundred-step{
+    width:70px;
+}
+
+mat-button-toggle{
+    border-top:1px solid gray;
+    border-bottom:1px solid gray;
+}

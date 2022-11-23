@@ -1,5 +1,5 @@
 import { Component, ComponentRef, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { MatListOption, MatSelectionListChange } from '@angular/material/list';
+import { MatListOption, MatSelectionList, MatSelectionListChange } from '@angular/material/list';
 import { PageEvent } from '@angular/material/paginator';
 
 @Component({
@@ -9,13 +9,14 @@ import { PageEvent } from '@angular/material/paginator';
 })
 export class FilesComponent implements OnInit {
 
+  @ViewChild('filelist') filelist : MatSelectionList | undefined;
   public files: string[]
   public pageIndex = 0;
   public pageFiles: string[] = [];
-  public selectedFile : string;
+
+  
   constructor() {
     this.files = ['a.txt', 'b.txt', 'c.txt', 'd.txt', 'e.txt', 'f.txt', 'g.txt', 'h.txt', 'i.txt', 'j.txt', 'k.txt', 'l.txt', 'm.txt', 'n.txt', 'o.txt'];
-    this.selectedFile = "";
   }
 
   ngOnInit(): void {
@@ -33,6 +34,6 @@ export class FilesComponent implements OnInit {
 
   public fileSelected()
   {
-    return this.selectedFile;
+    return !this.filelist?.selectedOptions.hasValue();
   }
 }

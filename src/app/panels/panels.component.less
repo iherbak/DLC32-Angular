@@ -1,0 +1,29 @@
+.panelsgrid {
+    display: grid;
+    grid-template-areas: 
+    'progress progress xyz'
+    'files files xyz'
+    'files files general'
+    'files files laser'
+    ;
+}
+
+app-progress {
+    grid-area: progress;
+}
+
+app-xyz {
+    grid-area: xyz;
+}
+
+app-general {
+    grid-area: general;
+}
+
+app-laser {
+    grid-area: laser;
+}
+
+app-files {
+    grid-area:files;
+}

@@ -1,0 +1,36 @@
+button {
+    width: 140px;
+}
+
+.panelgrid {
+    grid-template-areas:
+        'title title title'
+        'files files files'
+        'paginator paginator paginator'
+        'start boundary upload';
+    justify-content: space-between;
+}
+
+.files {
+    grid-area: files;
+    height: 480px;
+}
+
+.paginator {
+    grid-area: paginator;
+}
+
+.start {
+    grid-area: start;
+    margin: 5px;
+}
+
+.upload {
+    grid-area: upload;
+    margin: 5px;
+}
+
+.boundary {
+    grid-area: boundary;
+    margin: 5px;
+}

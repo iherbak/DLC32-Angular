@@ -8,28 +8,32 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTabsModule } from '@angular/material/tabs';
-import { ControlsComponent } from './tabs/controls/controls.component';
+import { PanelsComponent } from './panels/panels.component';
 import { MatGridListModule } from '@angular/material/grid-list';
-import { XyzComponent } from './tabs/controls/xy/xyz.component';
-import { GeneralComponent } from './tabs/controls/general/general.component';
+import { XyzComponent } from './panels/controls/xy/xyz.component';
+import { GeneralComponent } from './panels/controls/general/general.component';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { LaserComponent } from './tabs/controls/laser/laser.component';
-import { FilesComponent } from './tabs/files/files.component';
-import { FileItemComponent } from './tabs/files/file-item/file-item.component';
+import { LaserComponent } from './panels/controls/laser/laser.component';
+import { FilesComponent } from './panels/files/files.component';
+import { FileItemComponent } from './panels/files/file-item/file-item.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatCardModule } from '@angular/material/card';
-import {MatListModule} from '@angular/material/list';
+import { MatListModule } from '@angular/material/list';
+import { ProgressComponent } from './panels/progress/progress.component';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
-    ControlsComponent,
+    PanelsComponent,
     XyzComponent,
     GeneralComponent,
     LaserComponent,
     FilesComponent,
-    FileItemComponent
+    FileItemComponent,
+    ProgressComponent
   ],
   imports: [
     BrowserModule,
@@ -42,7 +46,8 @@ import {MatListModule} from '@angular/material/list';
     MatButtonToggleModule,
     MatPaginatorModule,
     MatCardModule,
-    MatListModule
+    MatListModule,
+    MatProgressBarModule
   ],
   providers: [],
   bootstrap: [AppComponent]

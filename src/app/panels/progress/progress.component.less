@@ -1,0 +1,22 @@
+.panelgrid {
+    grid-template-areas:
+    'title title'
+    'progress-bar progress-bar'
+    'on off';
+    justify-content: space-between;
+}
+
+.progressbar {
+    grid-area: progress-bar;
+    padding:5px;
+}
+
+.warn {
+    grid-area: on;
+    margin: 5px;
+}
+
+.accent {
+    grid-area: off;
+    margin:5px;
+}
