@@ -1,6 +1,6 @@
 <div class="panelgrid">
     <div class="panel-title">Progress</div>
     <div class="progressbar"><mat-progress-bar mode="determinate" value="40"></mat-progress-bar></div>
-    <button mat-raised-button class="mat-warn warn">On</button>
-    <button mat-raised-button class="mat-accent accent">Off</button>
+    <button mat-raised-button class="mat-warn warn" [disabled]="!isEngraving">Cancel</button>
+    <button mat-raised-button class="mat-accent accent" [disabled]="!isEngraving">Pause</button>
 </div>

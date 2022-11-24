@@ -21,7 +21,11 @@ import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
 import { ProgressComponent } from './panels/progress/progress.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-
+import { TerminalComponent } from './panels/terminal/terminal.component';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
   declarations: [
@@ -33,7 +37,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     LaserComponent,
     FilesComponent,
     FileItemComponent,
-    ProgressComponent
+    ProgressComponent,
+    TerminalComponent
   ],
   imports: [
     BrowserModule,
@@ -47,7 +52,12 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     MatPaginatorModule,
     MatCardModule,
     MatListModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatAutocompleteModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule
   ],
   providers: [],
   bootstrap: [AppComponent]

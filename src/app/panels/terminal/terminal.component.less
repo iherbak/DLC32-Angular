@@ -1,0 +1,25 @@
+.panelgrid {
+    grid-template-areas:
+    'title'
+    'window'
+    'input'
+    'send';
+    //justify-content: space-between;
+}
+
+
+.window{
+    grid-area: window;
+    height: 100px;
+    overflow-y: auto;
+}
+.auto{
+    grid-area: input;
+}
+.send {
+    grid-area: send;
+    margin: 5px;
+}
+.max{
+    width: 100%;
+}
