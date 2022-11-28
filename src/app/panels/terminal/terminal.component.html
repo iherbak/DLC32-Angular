@@ -1,6 +1,6 @@
-<form [formGroup]="commandForm">
-    <div class="panelgrid">
-        <div class="panel-title">Terminal</div>
+<form [formGroup]="commandForm" >
+    <div class="panel-title">Terminal</div>
+    <div class="panelgrid" appBusyIndicator>
         <mat-form-field class="window max" appearance="fill">
             <textarea matInput disabled="true"></textarea>
         </mat-form-field>

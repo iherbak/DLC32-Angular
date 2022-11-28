@@ -1,19 +1,25 @@
-<div class="panelgrid">
-    <div class="panel-title">X/Z</div>
-    <button mat-raised-button class="up-xy">UP</button>
-    <button mat-raised-button class="left-xy">LEFT</button>
-    <button mat-raised-button class="mat-accent home-xy">HOME</button>
-    <button mat-raised-button class="right-xy">RIGHT</button>
-    <button mat-raised-button class="down-xy">DOWN</button>
+<form [formGroup]="distanceForm" >
+    <div class="panel-title">Motion</div>
+    <div class="panelgrid" appBusyIndicator>
+        <button mat-raised-button class="up" (click)="move(Axes.Y)">UP</button>
+        <button mat-raised-button class="left" (click)="move(Axes.X,Directions.MINUS)">LEFT</button>
+        <button mat-raised-button class="mat-accent home" (click)="home()">HOME</button>
+        <button mat-raised-button class="right" (click)="move(Axes.X)">RIGHT</button>
+        <button mat-raised-button class="down" (click)="move(Axes.Y,Directions.MINUS)">DOWN</button>
 
-    <div class="panel-title z">Z</div>
-    <button mat-raised-button class="up-z">UP</button>
-    <button mat-raised-button class="mat-accent home-z">HOME</button>
-    <button mat-raised-button class="down-z">DOWN</button>
-    <mat-button-toggle-group class="distance" name="distance" aria-label="distance" value="0.1">
-        <mat-button-toggle class="tenth-step" value="0.1">0.1</mat-button-toggle>
-        <mat-button-toggle class="one-step" value="1">1</mat-button-toggle>
-        <mat-button-toggle class="ten-step" value="10">10</mat-button-toggle>
-        <mat-button-toggle class="hundred-step" value="100">100</mat-button-toggle>
-    </mat-button-toggle-group>
-</div>
+        <mat-form-field appearance="fill" class="axisselect" [formControl]="axisFc">
+            <mat-label>Select</mat-label>
+            <mat-select>
+              <mat-option value="XY">X/Y</mat-option>
+              <mat-option value="Z">Z</mat-option>
+            </mat-select>
+          </mat-form-field>
+          
+        <mat-button-toggle-group [formControl]="distanceFc" class="distance" name="distance" aria-label="distance">
+            <mat-button-toggle class="tenth-step" value="0.1">0.1</mat-button-toggle>
+            <mat-button-toggle class="one-step" value="1">1</mat-button-toggle>
+            <mat-button-toggle class="ten-step" value="10">10</mat-button-toggle>
+            <mat-button-toggle class="hundred-step" value="100">100</mat-button-toggle>
+        </mat-button-toggle-group>
+    </div>
+</form>

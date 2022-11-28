@@ -4,9 +4,8 @@ button {
 
 .panelgrid {
     grid-template-areas: 
-    'title title title title-z'
-    'up up up up-z'
-    'left home right home-z'
+    'up up up empty'
+    'left home right axisselect'
     'down down down down-z'
     'distance distance distance distance';
     place-items: center;
@@ -15,40 +14,34 @@ button {
 .z{
     grid-area: title-z;
 }
-.up-xy {
+.up {
     grid-area: up;
 }
 
-.left-xy {
+.left {
     grid-area: left;
 }
 
-.home-xy {
+.home {
     grid-area: home;
 }
 
-.right-xy {
+.right {
     grid-area: right;
 }
 
-.down-xy {
+.down {
     grid-area: down;
 }
 
-.up-z{
-    grid-area: up-z;
+.axisselect{
+    grid-area: axisselect;
 }
-.home-z{
-    grid-area: home-z;
-}
-.down-z{
-   grid-area: down-z;
-}
-
 .distance{
     grid-area: distance;
 }
 
+.minus-tenth-step,.minus-one-step,.minus-ten-step,.minus-hundred-step,
 .tenth-step,.one-step,.ten-step,.hundred-step{
     width:70px;
 }

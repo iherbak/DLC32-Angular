@@ -4,10 +4,11 @@ button {
 
 .panelgrid {
     grid-template-areas:
-        'title title title'
+        'start empty boundary'
         'files files files'
         'paginator paginator paginator'
-        'start boundary upload';
+        "upload create delete"
+        ;
     justify-content: space-between;
 }
 
@@ -29,6 +30,17 @@ button {
     grid-area: upload;
     margin: 5px;
 }
+
+.create {
+    grid-area: create;
+    margin: 5px;
+}
+
+.delete {
+    grid-area: delete;
+    margin: 5px;
+}
+
 
 .boundary {
     grid-area: boundary;

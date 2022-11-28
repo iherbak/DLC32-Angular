@@ -26,6 +26,8 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { HttpClientModule } from '@angular/common/http';
+import { BusyIndicatorDirective } from './directives/busy-indicator.directive';
 
 @NgModule({
   declarations: [
@@ -38,7 +40,8 @@ import { MatInputModule } from '@angular/material/input';
     FilesComponent,
     FileItemComponent,
     ProgressComponent,
-    TerminalComponent
+    TerminalComponent,
+    BusyIndicatorDirective
   ],
   imports: [
     BrowserModule,
@@ -57,7 +60,8 @@ import { MatInputModule } from '@angular/material/input';
     FormsModule,
     ReactiveFormsModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

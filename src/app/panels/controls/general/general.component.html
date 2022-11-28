@@ -1,8 +1,8 @@
-<div class="panelgrid">
-    <div class="panel-title">Set origin</div>
-    <button mat-raised-button class="x">X</button>
-    <button mat-raised-button class="y">Y</button>
-    <button mat-raised-button class="z">Z</button>
-    <button mat-raised-button class="xy">X/Y</button>
-    <button mat-raised-button class="xyz">X/Y/Z</button>
+<div class="panel-title">Set origin</div>
+<div class="panelgrid" appBusyIndicator>
+    <button mat-raised-button class="x" (click)="setOrigin([Axes.X])">X</button>
+    <button mat-raised-button class="y" (click)="setOrigin([Axes.Y])">Y</button>
+    <button mat-raised-button class="z" (click)="setOrigin([Axes.Z])">Z</button>
+    <button mat-raised-button class="xy" (click)="setOrigin([Axes.X,Axes.Y])">X/Y</button>
+    <button mat-raised-button class="xyz" (click)="setOrigin([Axes.X,Axes.Y,Axes.Z])">X/Y/Z</button>
 </div>

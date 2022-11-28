@@ -1,5 +1,5 @@
-<div class="panelgrid">
-    <div class="panel-title">Files</div>
+<div class="panel-title">Files</div>
+<div class="panelgrid" appBusyIndicator>
     <mat-selection-list class="files" multiple="false" #filelist>
         <mat-list-option *ngFor="let file of pageFiles">
             <app-file-item [fileName]="file"></app-file-item>          
@@ -9,6 +9,8 @@
     <button class="start mat-warn" mat-raised-button [disabled]="fileSelected()">Start</button>
     <button class="boundary" mat-raised-button [disabled]="fileSelected()">Show boundary</button>
     <button class="upload" mat-raised-button >Upload</button>
+    <button class="create" mat-raised-button >Create</button>
+    <button class="delete mat-warn" mat-raised-button [disabled]="fileSelected()" >Delete</button>
 </div>
 
 
