@@ -1,3 +1,11 @@
+<div class="loader" *ngIf="clientService.WaitingForClient | async">
+    <div class="lds-bars">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+    <div>Busy...</div>
+</div>
 <app-header></app-header>
 <mat-divider></mat-divider>
 <app-panels></app-panels>

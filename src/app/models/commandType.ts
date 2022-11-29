@@ -8,5 +8,6 @@ export enum CommandType {
     Move,
     Home,
     Jog,
-    SetOrigin
+    SetOrigin,
+    FwInfo
 }

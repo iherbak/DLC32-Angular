@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, UntypedFormBuilder } from '@angular/forms';
 import { Axis } from 'src/app/models/axis';
+import { CommandType } from 'src/app/models/commandType';
 import { Direction } from 'src/app/models/direction';
 import { ClientService } from 'src/app/services/client.service';
 import { CommandService } from 'src/app/services/command.service';
@@ -45,11 +46,12 @@ export class XyzComponent {
       axis = Axis.Z;
     }
     let distance = this.distanceFc.value;
-    this.commandService.getJogCommand(axis, direction === Direction.MINUS ? -distance : distance);
+    let command = this.commandService.getJogCommand(axis, direction === Direction.MINUS ? -distance : distance);
+    this.clientService.sendCommand(command);
   }
 
   public home() {
-    let command = this.commandService.getHomeCommand();
+    let command = this.commandService.getCommandUrlByType(CommandType.Home);
     if (command !== undefined) {
       this.clientService.sendCommand(command);
     }

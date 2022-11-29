@@ -1,6 +1,6 @@
 <form [formGroup]="commandForm" >
     <div class="panel-title">Terminal</div>
-    <div class="panelgrid" appBusyIndicator>
+    <div class="panelgrid">
         <mat-form-field class="window max" appearance="fill">
             <textarea matInput class="window" #window [formControl]="commandWindowFc"></textarea>
         </mat-form-field>
@@ -16,6 +16,6 @@
                 </mat-autocomplete>
             </mat-form-field>
         </div>
-        <button mat-raised-button class="send" (click)="sendCommand()">Send</button>
+        <button mat-raised-button class="send" [disabled]="hasCommand()" (click)="sendCommand()">Send</button>
     </div>
 </form>

@@ -2,6 +2,7 @@ import { Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/cor
 import { FormControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { Command } from 'src/app/models/command';
+import { ClientService } from 'src/app/services/client.service';
 import { CommandService } from 'src/app/services/command.service';
 
 @Component({
@@ -30,7 +31,7 @@ export class TerminalComponent implements OnDestroy {
 
   private unsub: Subject<void> = new Subject();
 
-  constructor(formBuilder: UntypedFormBuilder, private commandService: CommandService) {
+  constructor(formBuilder: UntypedFormBuilder, private commandService: CommandService, private clientService: ClientService) {
     this.commandForm = formBuilder.group({
       commandInput: [""],
       commandWindow: [{ value: "Terminal is ready", disabled: true }]
@@ -49,6 +50,19 @@ export class TerminalComponent implements OnDestroy {
         this.commandWindowElement.nativeElement.scrollTop = this.commandWindowElement.nativeElement.scrollHeight;
       }
     });
+
+    this.commandService.InvalidCommand.pipe(takeUntil(this.unsub)).subscribe(invalidCommandtext => {
+      this.logCommand(invalidCommandtext);
+    });
+
+    this.clientService.CommandSuccess.pipe(takeUntil(this.unsub)).subscribe(commandResult => {
+      this.logCommand(commandResult);
+    });
+
+    this.clientService.CommandError.pipe(takeUntil(this.unsub)).subscribe(commandResult => {
+      this.logCommand(commandResult);
+    });
+
   }
 
   ngOnDestroy(): void {
@@ -57,6 +71,14 @@ export class TerminalComponent implements OnDestroy {
   }
 
   public sendCommand() {
-    this.commandWindowFc.setValue(this.commandWindowFc.value + "\n" + this.commandInputFc.value);
+    this.clientService.sendCommand(this.commandInputFc.value);
+  }
+
+  public hasCommand() {
+    return this.commandInputFc.value === '' || this.commandInputFc.value === null;
+  }
+
+  private logCommand(command: string) {
+    this.commandWindowFc.setValue(this.commandWindowFc.value + "\n" + command);
   }
 }

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Axis } from 'src/app/models/axis';
+import { ClientService } from 'src/app/services/client.service';
 import { CommandService } from 'src/app/services/command.service';
 
 @Component({
@@ -14,12 +15,13 @@ export class GeneralComponent {
     return Axis;
   }
 
-  constructor(private commandService: CommandService){
+  constructor(private commandService: CommandService, private clientServce: ClientService){
 
   }
 
   public setOrigin(axes: Axis[]) {
-    this.commandService.getSetOriginCommand(axes);
+    let command = this.commandService.getSetOriginCommand(axes);
+    this.clientServce.sendCommand(command);
   }
 
 }

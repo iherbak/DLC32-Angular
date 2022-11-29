@@ -26,8 +26,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { HttpClientModule } from '@angular/common/http';
-import { BusyIndicatorDirective } from './directives/busy-indicator.directive';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -39,8 +39,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     FilesComponent,
     FileItemComponent,
     ProgressComponent,
-    TerminalComponent,
-    BusyIndicatorDirective
+    TerminalComponent
   ],
   imports: [
     BrowserModule,
@@ -61,7 +60,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     MatFormFieldModule,
     MatInputModule,
     HttpClientModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatSnackBarModule
   ],
   providers: [],
   bootstrap: [AppComponent]

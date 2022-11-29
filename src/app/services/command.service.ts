@@ -1,5 +1,5 @@
-import { Direction } from '@angular/cdk/bidi';
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 import { Axis } from '../models/axis';
 import { Command } from '../models/command';
 import { CommandType } from '../models/commandType';
@@ -8,6 +8,8 @@ import { CommandType } from '../models/commandType';
   providedIn: 'root'
 })
 export class CommandService {
+
+  public InvalidCommand: Subject<string> = new Subject();
 
   private commands: Command[] = [new Command("$$", "Display Grbl Settings."),
   new Command("$x", "Change Grbl Setting x to val."),
@@ -28,6 +30,7 @@ export class CommandService {
   new Command("?", "Status report query."),
   new Command("~", "Cycle Start/Resume from Feed Hold, Door or Program pause."),
   new Command("!", "Feed Hold - Stop all motion."),
+  new Command("[ESP800]", "GetFirmware information", CommandType.FwInfo),
   new Command("G28.1", "Set origin to current toolhead position", CommandType.SetOrigin),
   new Command("getFiles", "Getting Files from server", CommandType.FilesGet),
   new Command("manipulateFiles", "Manipulate files on server", CommandType.FilesAction),
@@ -44,12 +47,16 @@ export class CommandService {
   public getJogCommand(axis: Axis, distance: number) {
     let basecommand = this.commands.find(c => c.commandType === CommandType.Jog);
     let axisparam = this.assembleMoveParams(axis, distance);
-    return basecommand?.getCommandUrl(axisparam)
+    return this.getCommandUrl(basecommand, axisparam);
   }
 
-  public getHomeCommand() {
-    let basecommand = this.commands.find(c => c.commandType === CommandType.Home);
-    return basecommand?.getCommandUrl([]);
+  public getCommandUrlByType(commandType: CommandType, args: string[] = []) {
+    let basecommand = this.commands.find(c => c.commandType === commandType);
+    if (basecommand !== undefined) {
+      return this.getCommandUrl(basecommand, args);
+    }
+    this.InvalidCommand.next(`Invalid command type: ${commandType}`);
+    return "";
   }
 
   public getSetOriginCommand(axes: Axis[]) {
@@ -71,7 +78,7 @@ export class CommandService {
         }
       }
     });
-    return basecommand?.getCommandUrl([args.join(" ")]);
+    return this.getCommandUrl(basecommand, [args.join(" ")]);
   }
 
   private assembleMoveParams(axis: Axis, distance: number): string[] {
@@ -91,4 +98,47 @@ export class CommandService {
         }
     }
   }
+
+  private getCommandUrl(command: Command | undefined, args: string[]): string {
+    let issuedCommand = '';
+    if (command !== undefined) {
+      switch (command.commandType) {
+
+        case CommandType.Jog: {
+          issuedCommand = `/command?commandText=${command.command}${args.join('&')}`;
+          break;
+        }
+        case CommandType.FilesGet: {
+          issuedCommand = "/files";
+          break;
+        }
+        case CommandType.FilesAction: {
+          //delete, deletedir, createdir and filename as additional required parameter 
+          issuedCommand = `/files?${args.join('&')}`;
+          break;
+        }
+        case CommandType.Login:
+          {
+            issuedCommand = "/login";
+            break;
+          }
+        case CommandType.UpdateFw: {
+          issuedCommand = "/updatefw";
+          break;
+        }
+        default:
+          {
+            let commandprefix = command.commandType === CommandType.CommandSilent ? "command_silent" : "command";
+            issuedCommand = `/${commandprefix}?commandText=${command.command} ${args.join('&')}`;
+            break;
+          }
+      }
+      return issuedCommand;
+    }
+    else {
+      this.InvalidCommand.next(issuedCommand);
+      return "";
+    }
+  }
+
 }

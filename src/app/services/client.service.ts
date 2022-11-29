@@ -1,21 +1,35 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
-import { CommandType } from '../models/commandType';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { SnackBarService } from './snack-bar.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ClientService {
 
-  public WaitingForClient: Subject<boolean> = new Subject();
+  public WaitingForClient: BehaviorSubject<boolean> = new BehaviorSubject(true);
+  public CommandSuccess : Subject<string> = new Subject();
+  public CommandError : Subject<string> = new Subject();
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient, private snackBar: SnackBarService) { 
+  }
 
-  public sendCommand(command: string) {
+  public sendCommand(commandUrl: string) {
     this.WaitingForClient.next(true);
-    let result = this.httpClient.get(command);
-    //this.WaitingForClient.next(false);
+    let obs =  this.httpClient.get(encodeURI(commandUrl));
+    obs.subscribe({
+      next: (success : any) => {
+        this.CommandSuccess.next(`${commandUrl} -> ${success.status}`);
+        this.WaitingForClient.next(false);
+      },
+      error: (error : any) => {
+        this.CommandError.next(`${commandUrl} -> ${error.status}`);
+        this.snackBar.showSnackBar(`${commandUrl} failed`);
+        this.WaitingForClient.next(false);
+      }
+    });
+    return obs;
   }
 
 }
