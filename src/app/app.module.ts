@@ -13,7 +13,6 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { XyzComponent } from './panels/controls/xy/xyz.component';
 import { GeneralComponent } from './panels/controls/general/general.component';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { LaserComponent } from './panels/controls/laser/laser.component';
 import { FilesComponent } from './panels/files/files.component';
 import { FileItemComponent } from './panels/files/file-item/file-item.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -28,7 +27,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { HttpClientModule } from '@angular/common/http';
 import { BusyIndicatorDirective } from './directives/busy-indicator.directive';
-import { MatSelectModule } from '@angular/material/select';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [
@@ -37,7 +36,6 @@ import { MatSelectModule } from '@angular/material/select';
     PanelsComponent,
     XyzComponent,
     GeneralComponent,
-    LaserComponent,
     FilesComponent,
     FileItemComponent,
     ProgressComponent,
@@ -63,7 +61,7 @@ import { MatSelectModule } from '@angular/material/select';
     MatFormFieldModule,
     MatInputModule,
     HttpClientModule,
-    MatSelectModule
+    MatCheckboxModule
   ],
   providers: [],
   bootstrap: [AppComponent]

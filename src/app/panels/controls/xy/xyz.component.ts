@@ -18,15 +18,15 @@ export class XyzComponent {
     return this.distanceForm.get('distanceInput') as FormControl;
   }
 
-  public get axisFc() {
-    return this.distanceForm.get('axisInput') as FormControl;
+  public get moveZFc() {
+    return this.distanceForm.get('moveZInput') as FormControl;
   }
 
   constructor(private commandService: CommandService, formBuilder: UntypedFormBuilder, private clientService: ClientService) {
 
     this.distanceForm = formBuilder.group({
       distanceInput: ["0.1"],
-      axisInput: ['XY']
+      moveZInput: [false]
     });
 
   }
@@ -40,6 +40,10 @@ export class XyzComponent {
   };
 
   public move(axis: Axis, direction: Direction = Direction.PLUS) {
+    //if Z is target override axis
+    if(this.moveZFc.value){
+      axis = Axis.Z;
+    }
     let distance = this.distanceFc.value;
     this.commandService.getJogCommand(axis, direction === Direction.MINUS ? -distance : distance);
   }
@@ -49,6 +53,10 @@ export class XyzComponent {
     if (command !== undefined) {
       this.clientService.sendCommand(command);
     }
+  }
+
+  public validMovementForZ(){
+    return this.moveZFc.value;
   }
 
 }

@@ -4,9 +4,9 @@ button {
 
 .panelgrid {
     grid-template-areas: 
-    'up up up empty'
-    'left home right axisselect'
-    'down down down down-z'
+    'up up up axisselect'
+    'left home right on'
+    'down down down off'
     'distance distance distance distance';
     place-items: center;
 }
@@ -36,6 +36,12 @@ button {
 
 .axisselect{
     grid-area: axisselect;
+}
+.on{
+    grid-area: on;
+}
+.off{
+    grid-area: off;
 }
 .distance{
     grid-area: distance;

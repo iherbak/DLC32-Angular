@@ -1,10 +1,7 @@
 .panelsgrid {
     display: grid;
     grid-template-areas: 
-    'progress progress xyz'
-    'files files xyz'
-    'files files general'
-    'files files laser'
+    'progress xyz general'
     'files files terminal'
     ;
     gap: 5px;
@@ -20,10 +17,6 @@ app-xyz {
 
 app-general {
     grid-area: general;
-}
-
-app-laser {
-    grid-area: laser;
 }
 
 app-files {
