@@ -29,6 +29,9 @@ import { HttpClientModule } from '@angular/common/http';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSelectModule } from '@angular/material/select';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatExpansionModule } from '@angular/material/expansion';
+
 
 @NgModule({
   declarations: [
@@ -63,7 +66,9 @@ import { MatSelectModule } from '@angular/material/select';
     HttpClientModule,
     MatCheckboxModule,
     MatSnackBarModule,
-    MatSelectModule
+    MatSelectModule,
+    MatProgressSpinnerModule,
+    MatExpansionModule
   ],
   providers: [],
   bootstrap: [AppComponent]

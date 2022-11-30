@@ -1,7 +1,31 @@
-<div class="panelsgrid">
-    <app-progress></app-progress>
-    <app-xyz></app-xyz>
-    <app-general></app-general>
-    <app-files></app-files>
-    <app-terminal></app-terminal>
-</div>
+<mat-accordion>
+    <mat-expansion-panel>
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                Controls
+            </mat-panel-title>
+            <mat-panel-description>
+                Control options for laser like move, set origin etc.
+            </mat-panel-description>
+        </mat-expansion-panel-header>
+        <div class="controls-panel-grid">
+            <app-xyz></app-xyz>
+            <app-general></app-general>
+        </div>
+    </mat-expansion-panel>
+    <mat-expansion-panel expanded="true">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                Files panel
+            </mat-panel-title>
+            <mat-panel-description>
+                Da files
+            </mat-panel-description>
+        </mat-expansion-panel-header>
+        <div class="files-panel-grid">
+            <app-progress></app-progress>
+            <app-files></app-files>
+            <app-terminal></app-terminal>
+        </div>
+    </mat-expansion-panel>
+</mat-accordion>

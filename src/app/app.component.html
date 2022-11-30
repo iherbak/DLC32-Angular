@@ -1,10 +1,5 @@
 <div class="loader" *ngIf="clientService.WaitingForClient | async">
-    <div class="lds-bars">
-        <div></div>
-        <div></div>
-        <div></div>
-    </div>
-    <div>Busy...</div>
+    <mat-progress-spinner color="accent" mode="indeterminate"></mat-progress-spinner>
 </div>
 <app-header></app-header>
 <mat-divider></mat-divider>
