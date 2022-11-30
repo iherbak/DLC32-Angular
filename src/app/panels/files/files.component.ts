@@ -8,6 +8,7 @@ import { ESP32File } from 'src/app/models/esp32file';
 import { ClientService } from 'src/app/services/client.service';
 import { CommandService } from 'src/app/services/command.service';
 import { Drive, FileSource } from 'src/app/models/fileSource';
+import { ThisReceiver } from '@angular/compiler';
 
 @Component({
   selector: 'app-files',
@@ -17,33 +18,41 @@ import { Drive, FileSource } from 'src/app/models/fileSource';
 export class FilesComponent {
 
   @ViewChild('filelist') filelist: MatSelectionList | undefined;
+
+  @ViewChild("fileInput") fileInput: ElementRef | undefined;
+
   public directory: Directory;
   public pageIndex = 0;
   public pageFiles: ESP32File[] = [];
-  public fileSources: FileSource[] = [ new FileSource("Internal flash", Drive.SPIFF), new FileSource("SD card",Drive.SD)];
+  public fileSources: FileSource[] = [new FileSource("Internal flash", Drive.SPIFF), new FileSource("SD card", Drive.SD)];
   public fileForm: FormGroup;
   private currentPath = "/";
-  
-  public get fileSourceFc(){
+
+  public get Path() {
+    return this.currentPath;
+  }
+
+  public get fileSourceFc() {
     return this.fileForm.get("fileSource") as FormControl;
   }
 
   constructor(private formBuilder: FormBuilder, private commandService: CommandService, private clientService: ClientService) {
-    
+
     this.fileForm = this.formBuilder.group({
       fileSource: [this.fileSources[0]]
     });
 
     this.directory = new Directory();
-    let basecommand = this.commandService.getCommandUrlByType(CommandType.FilesGet, ["action=list", "filename=all", `path=${this.currentPath}`]);
-    this.clientService.sendCommand(basecommand).subscribe({
-      next: (n: Directory) => {
-        this.directory = n;
-        this.showFilesOnPage(0, 10);
+    let basecommand = this.commandService.getCommandUrlByType(CommandType.FilesAction, ["action=list", "filename=all", `path=${this.currentPath}`]);
+    if (basecommand != null) {
+      this.clientService.sendGetCommand(basecommand).subscribe({
+        next: (n: Directory) => {
+          this.directory = n;
+          this.showFilesOnPage(0, 10);
+        }
       }
+      );
     }
-
-    )
   }
 
   public paginate(event: PageEvent) {
@@ -57,5 +66,29 @@ export class FilesComponent {
 
   public fileSelected() {
     return !this.filelist?.selectedOptions.hasValue();
+  }
+
+  public upload(){
+    this.fileInput?.nativeElement.click();
+  }
+
+  public uploadFile(event: Event) {
+    let basecommand = this.commandService.getCommandUrlByType(CommandType.Upload);
+    let files = (event.target as HTMLInputElement).files;
+    if (files != null && basecommand != null) {
+      let formData = new FormData();
+      formData.append('path', this.Path);
+      formData.append(`${this.Path}${files[0].name}S`, `${files[0].size}`);
+      formData.append("myfile[]", files[0]);
+      this.clientService.sendPostCommand(basecommand,formData).subscribe({
+        next: (ret: Directory) => {
+          this.directory = ret;
+          this.showFilesOnPage(0, 10);
+        },
+        error: error => {
+          console.log("upload failed");
+        }
+      });
+    }
   }
 }

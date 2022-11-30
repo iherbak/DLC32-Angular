@@ -3,6 +3,7 @@ import { Subscription } from 'rxjs';
 import { CommandType } from './models/commandType';
 import { ClientService } from './services/client.service';
 import { CommandService } from './services/command.service';
+import { FirmwareService } from './services/firmware.service';
 import { SnackBarService } from './services/snack-bar.service';
 import { SocketService } from './services/socket.service';
 
@@ -13,12 +14,12 @@ import { SocketService } from './services/socket.service';
 })
 
 export class AppComponent implements AfterViewInit, OnDestroy {
-  
-  title = 'DLC32UI';
-  
-  private websocketSubscription!: Subscription; 
 
-  constructor(private commandService: CommandService, public clientService: ClientService, private snackBar: SnackBarService, private socketService: SocketService) {
+  title = 'DLC32UI';
+
+  private websocketSubscription!: Subscription;
+
+  constructor(private commandService: CommandService, public clientService: ClientService, private snackBar: SnackBarService, private socketService: SocketService, private firmware: FirmwareService) {
 
   }
 
@@ -28,15 +29,19 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     let command = this.commandService.getCommandUrlByType(CommandType.FwInfo);
-    this.clientService.sendCommand(command).subscribe({
-      next: ret => {
-        this.snackBar.showSnackBar("Firmware info fetched, starting websocket connection...");
-        this.StartWebSocketConnection();
-      },
-      error: error => {
-        this.snackBar.showSnackBar("Firmware info fetch failure!");
-      }
-    });
+    if (command != null) {
+      this.clientService.sendGetCommand(command).subscribe({
+        next: ret => {
+          this.firmware.FirmwareInfo.parseInfo(ret);
+          this.snackBar.showSnackBar("Firmware info fetched, starting websocket connection...");
+          this.StartWebSocketConnection();
+        },
+        error: error => {
+          this.firmware.FirmwareInfo.parseInfo('FW version:1.1 (2022010501) # FW target:grbl-embedded  # FW HW:Direct SD  # primary sd:/sd # secondary sd:none # authentication:no # webcommunication: Sync: 81:10.0.4.125 # hostname:grblesp # axis:3\r\n');
+          this.snackBar.showSnackBar("Firmware info fetch failure!");
+        }
+      });
+    }
   }
 
   private StartWebSocketConnection() {
@@ -45,7 +50,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       next: n => {
         console.log("Juhuu");
       },
-      error: e => { 
+      error: e => {
         console.log("Awwwww");
         this.websocketSubscription.unsubscribe();
       }

@@ -31,9 +31,10 @@ export class CommandService {
   new Command("?", "Status report query."),
   new Command("~", "Cycle Start/Resume from Feed Hold, Door or Program pause."),
   new Command("!", "Feed Hold - Stop all motion."),
-  new Command("[ESP800]", "GetFirmware information", CommandType.FwInfo,"text"),
+  new Command("[ESP800]", "GetFirmware information", CommandType.FwInfo, "GET", "text"),
   new Command("G28.1", "Set origin to current toolhead position", CommandType.SetOrigin),
-  new Command("getFiles", "Getting Files from server", CommandType.FilesGet),
+  new Command("getFiles", "Getting Files from server", CommandType.FilesAction),
+  new Command("upload", "Getting Files from server", CommandType.Upload, "POST"),
   new Command("manipulateFiles", "Manipulate files on server", CommandType.FilesAction),
   new Command("login", "Login to files", CommandType.Login),
   new Command("updateFw", "Update Frimware command", CommandType.UpdateFw),
@@ -110,7 +111,7 @@ export class CommandService {
   }
 
   private getCommandUrl(command: Command | undefined, args: string[]): ExecutableCommand {
-    let issuedCommand = new ExecutableCommand("",'json');
+    let issuedCommand = new ExecutableCommand("");
     if (command !== undefined) {
       switch (command.commandType) {
 
@@ -119,14 +120,15 @@ export class CommandService {
           issuedCommand.responseType = command.responseType;
           break;
         }
-        case CommandType.FilesGet: {
-          issuedCommand.commandUrl = "/files";
+        case CommandType.Upload: {
+          issuedCommand.commandUrl = `/files`;
           issuedCommand.responseType = command.responseType;
+          issuedCommand.httpAction = command.httpAction;
           break;
         }
         case CommandType.FilesAction: {
           //delete, deletedir, createdir and filename as additional required parameter 
-          issuedCommand.commandUrl = `/files?${args.join('&')}`;
+          issuedCommand.commandUrl = `/files${args.length > 0 ? "?" + args.join('&') : ""}`;
           issuedCommand.responseType = command.responseType;
           break;
         }

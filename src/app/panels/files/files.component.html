@@ -13,15 +13,16 @@
     <div class="panelgrid">
         <mat-selection-list class="files" multiple="false" #filelist>
             <mat-list-option *ngFor="let file of pageFiles">
-                <app-file-item [fileName]="file"></app-file-item>
+                <app-file-item [file]="file"></app-file-item>
             </mat-list-option>
         </mat-selection-list>
-        <mat-paginator class="paginator" pageSize="10" [pageIndex]="pageIndex" [length]="files.length"
+        <mat-paginator class="paginator" pageSize="10" [pageIndex]="pageIndex" [length]="directory.files.length"
             (page)="paginate($event)"></mat-paginator>
-        <button class="start mat-warn" mat-raised-button [disabled]="fileSelected()">Start</button>
-        <button class="boundary" mat-raised-button [disabled]="fileSelected()">Show boundary</button>
-        <button class="upload" mat-raised-button>Upload</button>
-        <button class="create" mat-raised-button>Create directory</button>
-        <button class="delete mat-warn" mat-raised-button [disabled]="fileSelected()">Delete</button>
+        <button type="button" class="start mat-warn" mat-raised-button [disabled]="fileSelected()">Start</button>
+        <button type="button" class="boundary" mat-raised-button [disabled]="fileSelected()">Show boundary</button>
+        <input #fileInput hidden type="file" (change)="uploadFile($event)">
+        <button type="button" class="upload" mat-raised-button (click)="upload()">Upload</button>
+        <button type="button" class="create" mat-raised-button>Create directory</button>
+        <button type="button" class="delete mat-warn" mat-raised-button [disabled]="fileSelected()">Delete</button>
     </div>
 </form>

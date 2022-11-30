@@ -2,7 +2,7 @@ export enum CommandType {
     Login,
     Command,
     CommandSilent,
-    FilesGet,
+    Upload,
     FilesAction,
     UpdateFw,
     Move,

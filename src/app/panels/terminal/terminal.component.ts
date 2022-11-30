@@ -75,7 +75,7 @@ export class TerminalComponent implements OnDestroy {
   public sendCommand() {
     let baseCommand = this.commandService.getCommandUrlByCommand(this.commandInputFc.value);
     if (baseCommand !== null) {
-      this.clientService.sendCommand(baseCommand);
+      this.clientService.sendGetCommand(baseCommand);
     }
   }
 

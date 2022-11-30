@@ -31,6 +31,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { InfosheetComponent } from './main/infosheet/infosheet.component';
+import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 
 
 @NgModule({
@@ -43,7 +45,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
     FilesComponent,
     FileItemComponent,
     ProgressComponent,
-    TerminalComponent
+    TerminalComponent,
+    InfosheetComponent
   ],
   imports: [
     BrowserModule,
@@ -68,7 +71,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatSnackBarModule,
     MatSelectModule,
     MatProgressSpinnerModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatBottomSheetModule
   ],
   providers: [],
   bootstrap: [AppComponent]

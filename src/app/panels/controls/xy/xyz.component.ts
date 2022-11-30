@@ -47,13 +47,13 @@ export class XyzComponent {
     }
     let distance = this.distanceFc.value;
     let command = this.commandService.getJogCommand(axis, direction === Direction.MINUS ? -distance : distance);
-    this.clientService.sendCommand(command);
+    this.clientService.sendGetCommand(command);
   }
 
   public home() {
     let command = this.commandService.getCommandUrlByType(CommandType.Home);
-    if (command !== undefined) {
-      this.clientService.sendCommand(command);
+    if (command !== null) {
+      this.clientService.sendGetCommand(command);
     }
   }
 
