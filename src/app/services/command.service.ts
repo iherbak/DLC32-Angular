@@ -3,6 +3,7 @@ import { Subject } from 'rxjs';
 import { Axis } from '../models/axis';
 import { Command } from '../models/command';
 import { CommandType } from '../models/commandType';
+import { ExecutableCommand } from '../models/executableCommand';
 
 @Injectable({
   providedIn: 'root'
@@ -30,12 +31,12 @@ export class CommandService {
   new Command("?", "Status report query."),
   new Command("~", "Cycle Start/Resume from Feed Hold, Door or Program pause."),
   new Command("!", "Feed Hold - Stop all motion."),
-  new Command("[ESP800]", "GetFirmware information", CommandType.FwInfo),
+  new Command("[ESP800]", "GetFirmware information", CommandType.FwInfo,"text"),
   new Command("G28.1", "Set origin to current toolhead position", CommandType.SetOrigin),
   new Command("getFiles", "Getting Files from server", CommandType.FilesGet),
   new Command("manipulateFiles", "Manipulate files on server", CommandType.FilesAction),
   new Command("login", "Login to files", CommandType.Login),
-  new Command("updateFw", "Update Frimware command", CommandType.UpdateFw)
+  new Command("updateFw", "Update Frimware command", CommandType.UpdateFw),
   ];
 
   constructor() { }
@@ -50,13 +51,22 @@ export class CommandService {
     return this.getCommandUrl(basecommand, axisparam);
   }
 
+  public getCommandUrlByCommand(command: string, args: string[] = []) {
+    let basecommand = this.commands.find(c => c.command === command);
+    if (basecommand) {
+      return this.getCommandUrl(basecommand, args);
+    }
+    this.InvalidCommand.next(`Invalid command : ${command}`);
+    return null;
+  }
+
   public getCommandUrlByType(commandType: CommandType, args: string[] = []) {
     let basecommand = this.commands.find(c => c.commandType === commandType);
     if (basecommand !== undefined) {
       return this.getCommandUrl(basecommand, args);
     }
     this.InvalidCommand.next(`Invalid command type: ${commandType}`);
-    return "";
+    return null;
   }
 
   public getSetOriginCommand(axes: Axis[]) {
@@ -99,45 +109,51 @@ export class CommandService {
     }
   }
 
-  private getCommandUrl(command: Command | undefined, args: string[]): string {
-    let issuedCommand = '';
+  private getCommandUrl(command: Command | undefined, args: string[]): ExecutableCommand {
+    let issuedCommand = new ExecutableCommand("",'json');
     if (command !== undefined) {
       switch (command.commandType) {
 
         case CommandType.Jog: {
-          issuedCommand = `/command?commandText=${command.command}${args.join('&')}`;
+          issuedCommand.commandUrl = `/command?commandText=${command.command}${args.join('&')}`;
+          issuedCommand.responseType = command.responseType;
           break;
         }
         case CommandType.FilesGet: {
-          issuedCommand = "/files";
+          issuedCommand.commandUrl = "/files";
+          issuedCommand.responseType = command.responseType;
           break;
         }
         case CommandType.FilesAction: {
           //delete, deletedir, createdir and filename as additional required parameter 
-          issuedCommand = `/files?${args.join('&')}`;
+          issuedCommand.commandUrl = `/files?${args.join('&')}`;
+          issuedCommand.responseType = command.responseType;
           break;
         }
         case CommandType.Login:
           {
-            issuedCommand = "/login";
+            issuedCommand.commandUrl = "/login";
+            issuedCommand.responseType = command.responseType;
             break;
           }
         case CommandType.UpdateFw: {
-          issuedCommand = "/updatefw";
+          issuedCommand.commandUrl = "/updatefw";
+          issuedCommand.responseType = command.responseType;
           break;
         }
         default:
           {
             let commandprefix = command.commandType === CommandType.CommandSilent ? "command_silent" : "command";
-            issuedCommand = `/${commandprefix}?commandText=${command.command} ${args.join('&')}`;
+            issuedCommand.commandUrl = `/${commandprefix}?commandText=${command.command} ${args.join('&')}`;
+            issuedCommand.responseType = command.responseType;
             break;
           }
       }
       return issuedCommand;
     }
     else {
-      this.InvalidCommand.next(issuedCommand);
-      return "";
+      this.InvalidCommand.next(issuedCommand.commandUrl);
+      return issuedCommand;
     }
   }
 

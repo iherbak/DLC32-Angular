@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { ESP32File } from 'src/app/models/esp32file';
 
 @Component({
   selector: 'app-file-item',
@@ -7,8 +8,9 @@ import { Component, Input } from '@angular/core';
 })
 export class FileItemComponent {
 
-  @Input() fileName: string;
+  @Input() file!: ESP32File;
+  
   constructor(){
-    this.fileName = "";
+    
   }
 }
