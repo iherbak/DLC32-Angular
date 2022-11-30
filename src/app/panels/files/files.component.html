@@ -1,16 +1,27 @@
-<div class="panel-title">Files</div>
-<div class="panelgrid">
-    <mat-selection-list class="files" multiple="false" #filelist>
-        <mat-list-option *ngFor="let file of pageFiles">
-            <app-file-item [fileName]="file"></app-file-item>          
-        </mat-list-option>
-      </mat-selection-list>
-    <mat-paginator class="paginator" pageSize="10" [pageIndex]="pageIndex" [length]="files.length" (page)="paginate($event)"></mat-paginator>
-    <button class="start mat-warn" mat-raised-button [disabled]="fileSelected()">Start</button>
-    <button class="boundary" mat-raised-button [disabled]="fileSelected()">Show boundary</button>
-    <button class="upload" mat-raised-button >Upload</button>
-    <button class="create" mat-raised-button >Create directory</button>
-    <button class="delete mat-warn" mat-raised-button [disabled]="fileSelected()" >Delete</button>
-</div>
-
-
+<form [formGroup]="fileForm">
+    <div class="panel-title">
+        <div>Files</div>
+        <mat-form-field appearance="fill">
+            <mat-label>Source</mat-label>
+            <mat-select [formControl]="fileSourceFc">
+                <mat-option *ngFor="let source of fileSources" [value]="source">
+                    {{source.Name}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div class="panelgrid">
+        <mat-selection-list class="files" multiple="false" #filelist>
+            <mat-list-option *ngFor="let file of pageFiles">
+                <app-file-item [fileName]="file"></app-file-item>
+            </mat-list-option>
+        </mat-selection-list>
+        <mat-paginator class="paginator" pageSize="10" [pageIndex]="pageIndex" [length]="files.length"
+            (page)="paginate($event)"></mat-paginator>
+        <button class="start mat-warn" mat-raised-button [disabled]="fileSelected()">Start</button>
+        <button class="boundary" mat-raised-button [disabled]="fileSelected()">Show boundary</button>
+        <button class="upload" mat-raised-button>Upload</button>
+        <button class="create" mat-raised-button>Create directory</button>
+        <button class="delete mat-warn" mat-raised-button [disabled]="fileSelected()">Delete</button>
+    </div>
+</form>
