@@ -10,6 +10,7 @@ import { ExecutableCommand } from '../models/executableCommand';
 })
 export class CommandService {
 
+  //GRbl commands response comes back through websocket connection
   public InvalidCommand: Subject<string> = new Subject();
 
   private commands: Command[] = [new Command("$$", "Display Grbl Settings."),
@@ -19,7 +20,7 @@ export class CommandService {
   new Command("$C", "Toggle Check Gcode Mode"),
   new Command("$H", "Run Homing Cycle", CommandType.Home),
   new Command("$J", "Run Jogging Motion.", CommandType.Jog),
-  new Command("$X", "Kill Alarm Lock state."),
+  new Command("$X", "Kill Alarm Lock state.", CommandType.Unlock),
   new Command("$I", "View Build Info"),
   new Command("$N", "View saved start up code"),
   new Command("$Nx", "Save Start-up GCode line (x=0 or 1) There are executed on a reset."),
@@ -32,7 +33,9 @@ export class CommandService {
   new Command("~", "Cycle Start/Resume from Feed Hold, Door or Program pause."),
   new Command("!", "Feed Hold - Stop all motion."),
   new Command("[ESP800]", "GetFirmware information", CommandType.FwInfo, "GET", "text"),
-  new Command("G28.1", "Set origin to current toolhead position", CommandType.SetOrigin),
+  new Command("G92", "Set origin to current position", CommandType.SetOrigin),
+  new Command("M3", "Turn on laser/spindle", CommandType.LaserOn),
+  new Command("M5", "Turn off laser/spindle", CommandType.LaserOff),
   new Command("getFiles", "Getting Files from server", CommandType.FilesAction),
   new Command("upload", "Getting Files from server", CommandType.Upload, "POST"),
   new Command("manipulateFiles", "Manipulate files on server", CommandType.FilesAction),
@@ -46,14 +49,14 @@ export class CommandService {
     return this.commands;
   }
 
-  public getJogCommand(axis: Axis, distance: number) {
+  public getJogCommand(axis: Axis, distance: number, feedrate: number) {
     let basecommand = this.commands.find(c => c.commandType === CommandType.Jog);
-    let axisparam = this.assembleMoveParams(axis, distance);
+    let axisparam = this.assembleMoveParams(axis, distance, feedrate);
     return this.getCommandUrl(basecommand, axisparam);
   }
 
   public getCommandUrlByCommand(command: string, args: string[] = []) {
-    let basecommand = this.commands.find(c => c.command === command);
+    let basecommand = new Command(command, '');
     if (basecommand) {
       return this.getCommandUrl(basecommand, args);
     }
@@ -92,16 +95,16 @@ export class CommandService {
     return this.getCommandUrl(basecommand, [args.join(" ")]);
   }
 
-  private assembleMoveParams(axis: Axis, distance: number): string[] {
+  private assembleMoveParams(axis: Axis, distance: number, feedrate: number): string[] {
     switch (axis) {
       case Axis.X: {
-        return [`=X${distance}`];
+        return [`=G91 G21 X${distance} F${feedrate}`];
       }
       case Axis.Y: {
-        return [`=Y${distance}`];
+        return [`=G91 G21 Y${distance} F${feedrate}`];
       }
       case Axis.Z: {
-        return [`=Z${distance}`];
+        return [`=G91 G21 Z${distance} F${feedrate}`];
       }
       default:
         {

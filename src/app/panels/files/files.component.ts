@@ -45,11 +45,14 @@ export class FilesComponent {
     this.directory = new Directory();
     let basecommand = this.commandService.getCommandUrlByType(CommandType.FilesAction, ["action=list", "filename=all", `path=${this.currentPath}`]);
     if (basecommand != null) {
-      this.clientService.sendGetCommand(basecommand).subscribe({
-        next: (n: Directory) => {
+      this.clientService.sendGetCommand<Directory>(basecommand).subscribe({
+        next: n => {
+          console.log(n);
+          console.log(typeof(n));
           this.directory = n;
           this.showFilesOnPage(0, 10);
         }
+       
       }
       );
     }
@@ -80,7 +83,7 @@ export class FilesComponent {
       formData.append('path', this.Path);
       formData.append(`${this.Path}${files[0].name}S`, `${files[0].size}`);
       formData.append("myfile[]", files[0]);
-      this.clientService.sendPostCommand(basecommand,formData).subscribe({
+      this.clientService.sendPostCommand<Directory>(basecommand,formData).subscribe({
         next: (ret: Directory) => {
           this.directory = ret;
           this.showFilesOnPage(0, 10);

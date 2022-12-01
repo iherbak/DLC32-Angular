@@ -30,7 +30,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     let command = this.commandService.getCommandUrlByType(CommandType.FwInfo);
     if (command != null) {
-      this.clientService.sendGetCommand(command).subscribe({
+      this.clientService.sendGetCommand<string>(command).subscribe({
         next: ret => {
           this.firmware.FirmwareInfo.parseInfo(ret);
           this.snackBar.showSnackBar("Firmware info fetched, starting websocket connection...");
@@ -44,16 +44,16 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  private StartWebSocketConnection() {
-    this.socketService.createConnection("wss://localhost", 4201);
-    this.websocketSubscription = this.socketService.socketObservable.subscribe({
-      next: n => {
-        console.log("Juhuu");
-      },
-      error: e => {
-        console.log("Awwwww");
-        this.websocketSubscription.unsubscribe();
-      }
-    });
+  public StartWebSocketConnection() {
+    this.socketService.createConnection(this.firmware.WebSocket);
+     this.websocketSubscription = this.socketService.socketObservable.subscribe({
+       next: n => {
+         console.log("Juhuu");
+       },
+       error: e => {
+         console.log("Awwwww");
+         this.websocketSubscription.unsubscribe();
+       }
+     });
   }
 }

@@ -1,3 +1,5 @@
+import { __values } from "tslib";
+
 export class FirmwareInfo {
 
     public infoKeyValues!: KeyValue[];
@@ -5,6 +7,16 @@ export class FirmwareInfo {
     public get SDPath(): KeyValue | undefined {
         return this.infoKeyValues.find(kv => kv.key === "primary sd");
     }
+
+    public get WebSocket(): string {
+        let webcomm = this.infoKeyValues.find(kv => kv.key === "webcommunication")?.value;
+        let parts = webcomm?.split(":");
+        if (parts && parts?.length > 1) {
+            return `ws://${parts[2].trim()}:${parts[1].trim()}`;
+        }
+        return "";
+    }
+
     //FW version:1.1 (2022010501) # FW target:grbl-embedded  # FW HW:Direct SD  # primary sd:/sd # secondary sd:none # authentication:no # webcommunication: Sync: 81:10.0.4.125 # hostname:grblesp # axis:3\r\n
 
     public parseInfo(info: string) {

@@ -2,8 +2,6 @@ import { Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/cor
 import { FormControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { Command } from 'src/app/models/command';
-import { CommandType } from 'src/app/models/commandType';
-import { ExecutableCommand } from 'src/app/models/executableCommand';
 import { ClientService } from 'src/app/services/client.service';
 import { CommandService } from 'src/app/services/command.service';
 
@@ -75,7 +73,9 @@ export class TerminalComponent implements OnDestroy {
   public sendCommand() {
     let baseCommand = this.commandService.getCommandUrlByCommand(this.commandInputFc.value);
     if (baseCommand !== null) {
-      this.clientService.sendGetCommand(baseCommand);
+      this.clientService.sendGetCommand(baseCommand).subscribe(n => {
+
+      });
     }
   }
 

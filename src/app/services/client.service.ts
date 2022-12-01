@@ -1,7 +1,6 @@
-import { HttpClient, HttpRequest } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subject, tap } from 'rxjs';
-import { SnackBarService } from './snack-bar.service';
+import { BehaviorSubject, map, Observable, Subject, switchMap, tap } from 'rxjs';
 import { ExecutableCommand } from '../models/executableCommand';
 
 @Injectable({
@@ -13,29 +12,30 @@ export class ClientService {
   public CommandSuccess: Subject<string> = new Subject();
   public CommandError: Subject<string> = new Subject();
 
-  constructor(private httpClient: HttpClient, private snackBar: SnackBarService) {
+  constructor(private httpClient: HttpClient) {
   }
 
-  public sendPostCommand(command: ExecutableCommand, payload: any) {
+  public sendPostCommand<R>(command: ExecutableCommand, payload: any) : Observable<R> {
     let config: any = {
       body: payload,
-      responseType: 'POST'
+      responseType: command.responseType
     };
-    return this.sendCommand(command, config);
+    return this.sendCommand<R>(command, config);
   }
 
-  public sendGetCommand(command: ExecutableCommand) {
+  public sendGetCommand<R>(command: ExecutableCommand) : Observable<R> {
     let config: any = {
-      responseType: 'GET'
+      responseType: command.responseType,
+      observe: 'body'
     };
-    return this.sendCommand(command, config);
+    return this.sendCommand<R>(command, config);
   }
 
-  private sendCommand(command: ExecutableCommand, config: any) {
+  private sendCommand<R>(command: ExecutableCommand, config: any) : Observable<R>{
     this.WaitingForClient.next(true);
-    let obs: Observable<any>;
+    let obs: Observable<R>;
 
-    obs = this.httpClient.request(command.httpAction, command.commandUrl, config);
+    obs = this.httpClient.request<R>(command.httpAction, command.commandUrl, config as object);
 
     return obs.pipe(
       tap({
@@ -44,8 +44,7 @@ export class ClientService {
           this.WaitingForClient.next(false);
         },
         error: e => {
-          this.CommandError.next(`${command.commandUrl} ->`);
-          this.snackBar.showSnackBar(`${command.commandUrl} failed`);
+          this.CommandError.next(`${command.commandUrl} -> failed`);
           this.WaitingForClient.next(false);
         }
       })

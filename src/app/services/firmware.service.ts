@@ -16,6 +16,10 @@ export class FirmwareService {
     this.info = info;
   }
 
+  public get WebSocket(){
+    return this.info.WebSocket;
+  }
+
   constructor() { 
 
   }

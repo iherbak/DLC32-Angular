@@ -9,5 +9,8 @@ export enum CommandType {
     Home,
     Jog,
     SetOrigin,
-    FwInfo
+    FwInfo,
+    LaserOff,
+    LaserOn,
+    Unlock
 }

@@ -21,7 +21,7 @@ export class GeneralComponent {
 
   public setOrigin(axes: Axis[]) {
     let command = this.commandService.getSetOriginCommand(axes);
-    this.clientServce.sendGetCommand(command);
+    this.clientServce.sendGetCommand(command).subscribe();
   }
 
 }

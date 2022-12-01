@@ -13,14 +13,17 @@
     'files'
     ;
     gap: 5px;
+    align-items: center;
 }
 
 .controls-panel-grid {
     display: grid;
     grid-template-areas: 
     'xyz general'
+    'xyz laser'
     ;
     gap: 5px;
+    align-items: center;
 }
 
 .accordion{
@@ -38,6 +41,9 @@ app-general {
     grid-area: general;
 }
 
+app-laser{
+    grid-area: laser;
+}
 app-files {
     grid-area:files;
 }

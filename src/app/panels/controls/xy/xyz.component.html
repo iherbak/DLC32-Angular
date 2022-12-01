@@ -16,8 +16,10 @@
       <mat-button-toggle class="hundred-step" value="100">100</mat-button-toggle>
     </mat-button-toggle-group>
 
-    <button type="button" mat-raised-button class="mat-warn on">On</button>
-    <button type="button" mat-raised-button class="mat-accent off">Off</button>
+    <mat-form-field appearance="fill" class="feedrate">
+      <mat-label>Feedrate</mat-label>
+      <input matInput type="text" placeholder="Feedrate" aria-label="Number" matInput [formControl]="feedRateFc">
+  </mat-form-field>
 
   </div>
 </form>

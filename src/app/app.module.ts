@@ -33,6 +33,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { InfosheetComponent } from './main/infosheet/infosheet.component';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
+import { LaserComponent } from './panels/controls/laser/laser.component';
 
 
 @NgModule({
@@ -46,7 +47,8 @@ import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
     FileItemComponent,
     ProgressComponent,
     TerminalComponent,
-    InfosheetComponent
+    InfosheetComponent,
+    LaserComponent
   ],
   imports: [
     BrowserModule,
