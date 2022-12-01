@@ -52,13 +52,13 @@ export class FilesComponent implements OnInit, OnDestroy {
     });
 
     this.directory = new Directory();
-    // this.directory.path = "/";
-
-    //  this.directory.files.push(new ESP32File("adssadsa.txt","32 kb"));
-    //  this.directory.files.push(new ESP32File("folder","-1"));
-    //  this.directory.files.push(new ESP32File("alder","-1"));
-    //  this.UpdateFileList(this.directory);
-    //  this.showFilesOnPage(0,10);
+     
+      this.directory.path = "/";
+      this.directory.files.push(new ESP32File("adssadsa.txt","322.77 KB"));
+      this.directory.files.push(new ESP32File("folder","-1"));
+      this.directory.files.push(new ESP32File("alder","-1"));
+      this.UpdateFileList(this.directory);
+      this.showFilesOnPage(0,10);
 
     this.clientService.Connected.pipe(takeUntil(this.unsub)).subscribe(() => {
       let sdPaths = this.firmwareService.FirmwareInfo.SDPaths;

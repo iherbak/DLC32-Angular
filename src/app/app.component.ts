@@ -46,15 +46,26 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
   public StartWebSocketConnection() {
     this.socketService.createConnection(this.firmwareService.WebSocketInfo);
-     this.websocketSubscription = this.socketService.socketObservable.subscribe({
+     let openerSubscription = this.socketService.socketObservable.subscribe({
        next: n => {
          this.snackBar.showSnackBar("websocket connected...");
-         this.websocketSubscription.unsubscribe();
+         this.openMainSubscription();
+         openerSubscription.unsubscribe();
        },
        error: e => {
         this.snackBar.showSnackBar("websocket connection failed!");
          this.websocketSubscription.unsubscribe();
        }
      });
+  }
+  private openMainSubscription() {
+    this.websocketSubscription = this.socketService.socketObservable.subscribe({
+      next: n => {
+      },
+      error: e => {
+       this.snackBar.showSnackBar("websocket connection failed!");
+        this.websocketSubscription.unsubscribe();
+      }
+    });
   }
 }
