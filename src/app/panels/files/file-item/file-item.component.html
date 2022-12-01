@@ -1,4 +1,7 @@
 <div class="fileInfo">
+    <div *ngIf="file.size == '-1'" class="directory icon"></div>
+    <div *ngIf="file.size != '-1'" class="file icon"></div>
     <div class="filename">{{file.name}}</div>
-    <div class="filesize">{{file.size}}</div>
+    <div *ngIf="file.size == '-1'" class="filesize"></div>
+    <div *ngIf="file.size != '-1'" class="filesize">{{file.size}}</div>
 </div>

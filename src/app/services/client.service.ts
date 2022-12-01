@@ -11,6 +11,7 @@ export class ClientService {
   public WaitingForClient: BehaviorSubject<boolean> = new BehaviorSubject(true);
   public CommandSuccess: Subject<string> = new Subject();
   public CommandError: Subject<string> = new Subject();
+  public Connected: Subject<void> = new Subject();
 
   constructor(private httpClient: HttpClient) {
   }

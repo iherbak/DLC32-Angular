@@ -3,10 +3,11 @@ button {
 }
 
 .panelgrid {
+    grid-template-columns: repeat(3,110px) auto;
     grid-template-areas: 
-    'up up up axisselect'
+    '. up . axisselect'
     'left home right on'
-    'down down down off'
+    '. down . .'
     'distance distance distance feedrate';
     place-items: center;
 }
@@ -37,11 +38,12 @@ button {
 .axisselect{
     grid-area: axisselect;
 }
-.distance{
-    grid-area: distance;
-}
 .feedrate{
     grid-area: feedrate;
+}
+
+.distance{
+    grid-area: distance;
 }
 
 .minus-tenth-step,.minus-one-step,.minus-ten-step,.minus-hundred-step,

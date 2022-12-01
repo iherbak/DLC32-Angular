@@ -36,8 +36,10 @@ export class CommandService {
   new Command("G92", "Set origin to current position", CommandType.SetOrigin),
   new Command("M3", "Turn on laser/spindle", CommandType.LaserOn),
   new Command("M5", "Turn off laser/spindle", CommandType.LaserOff),
-  new Command("getFiles", "Getting Files from server", CommandType.FilesAction),
-  new Command("upload", "Getting Files from server", CommandType.Upload, "POST"),
+  new Command("getFiles from internal flash", "Getting Files from server", CommandType.FilesAction),
+  new Command("getFiles from sd card", "Getting Files from server", CommandType.FilesSdAction),
+  new Command("upload to internal flash", "Getting Files from server", CommandType.Upload, "POST"),
+  new Command("upload to sd card", "Getting Files from server", CommandType.UploadSd, "POST"),
   new Command("manipulateFiles", "Manipulate files on server", CommandType.FilesAction),
   new Command("login", "Login to files", CommandType.Login),
   new Command("updateFw", "Update Frimware command", CommandType.UpdateFw),
@@ -127,6 +129,18 @@ export class CommandService {
           issuedCommand.commandUrl = `/files`;
           issuedCommand.responseType = command.responseType;
           issuedCommand.httpAction = command.httpAction;
+          break;
+        }
+        case CommandType.UploadSd: {
+          issuedCommand.commandUrl = `/upload`;
+          issuedCommand.responseType = command.responseType;
+          issuedCommand.httpAction = command.httpAction;
+          break;
+        }
+        case CommandType.FilesSdAction: {
+          //delete, deletedir, createdir and filename as additional required parameter 
+          issuedCommand.commandUrl = `/upload${args.length > 0 ? "?" + args.join('&') : ""}`;
+          issuedCommand.responseType = command.responseType;
           break;
         }
         case CommandType.FilesAction: {

@@ -1,8 +1,10 @@
 .panelgrid {
+    grid-template-columns: repeat(3,110px);
     grid-template-areas:
-        'x x y y z z'
-        'xy xy xy xyz xyz xyz';
+        'x y z '
+        'xy . xyz';
     place-items: center;
+    justify-content: center;
 }
 
 .x {

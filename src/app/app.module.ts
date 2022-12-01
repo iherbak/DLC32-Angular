@@ -34,6 +34,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { InfosheetComponent } from './main/infosheet/infosheet.component';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { LaserComponent } from './panels/controls/laser/laser.component';
+import { CreateDirectoryComponent } from './panels/files/create-directory/create-directory.component';
 
 
 @NgModule({
@@ -48,7 +49,8 @@ import { LaserComponent } from './panels/controls/laser/laser.component';
     ProgressComponent,
     TerminalComponent,
     InfosheetComponent,
-    LaserComponent
+    LaserComponent,
+    CreateDirectoryComponent
   ],
   imports: [
     BrowserModule,

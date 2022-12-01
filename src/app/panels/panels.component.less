@@ -1,53 +1,14 @@
 .panel-grid {
     display: grid;
-    grid-template-areas: 
-    'accordion progress'
-    'accordion terminal'
-    ;
+    grid-template-columns: minmax(500px,auto) minmax(400px,auto);
     gap: 5px;
 }
 
-.files-panel-grid {
-    display: grid;
-    grid-template-areas: 
-    'files'
-    ;
-    gap: 5px;
-    align-items: center;
-}
+@media screen and (max-width:950px) {
 
-.controls-panel-grid {
-    display: grid;
-    grid-template-areas: 
-    'xyz general'
-    'xyz laser'
-    ;
-    gap: 5px;
-    align-items: center;
-}
-
-.accordion{
-    grid-area: accordion;
-}
-app-progress {
-    grid-area: progress;
-}
-
-app-xyz {
-    grid-area: xyz;
-}
-
-app-general {
-    grid-area: general;
-}
-
-app-laser{
-    grid-area: laser;
-}
-app-files {
-    grid-area:files;
-}
-
-app-terminal{
-    grid-area: terminal;
+    .panel-grid {
+        display: grid;
+        grid-template-columns: auto;
+    }
+    
 }

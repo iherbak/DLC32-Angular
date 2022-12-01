@@ -11,8 +11,8 @@
         </mat-form-field>
     </div>
     <div class="panelgrid">
-        <mat-selection-list class="files" multiple="false" #filelist>
-            <mat-list-option *ngFor="let file of pageFiles">
+        <mat-selection-list class="files" multiple="false" formControlName="selectedFile">
+            <mat-list-option *ngFor="let file of pageFiles" [value]="file">
                 <app-file-item [file]="file"></app-file-item>
             </mat-list-option>
         </mat-selection-list>
@@ -22,7 +22,7 @@
         <button type="button" class="boundary" mat-raised-button [disabled]="fileSelected()">Show boundary</button>
         <input #fileInput hidden type="file" (change)="uploadFile($event)">
         <button type="button" class="upload" mat-raised-button (click)="upload()">Upload</button>
-        <button type="button" class="create" mat-raised-button>Create directory</button>
+        <button type="button" class="create" mat-raised-button (click)="showCreateDirectory()">Create directory</button>
         <button type="button" class="delete mat-warn" mat-raised-button [disabled]="fileSelected()">Delete</button>
     </div>
 </form>

@@ -4,7 +4,7 @@ export class FileSource {
 
     constructor(name: string, drive: Drive) {
         this.Name = name;
-        this.Drive = drive
+        this.Drive = drive;
     }
 }
 

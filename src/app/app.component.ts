@@ -19,7 +19,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
   private websocketSubscription!: Subscription;
 
-  constructor(private commandService: CommandService, public clientService: ClientService, private snackBar: SnackBarService, private socketService: SocketService, private firmware: FirmwareService) {
+  constructor(private commandService: CommandService, public clientService: ClientService, private snackBar: SnackBarService, private socketService: SocketService, private firmwareService: FirmwareService) {
 
   }
 
@@ -32,12 +32,12 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     if (command != null) {
       this.clientService.sendGetCommand<string>(command).subscribe({
         next: ret => {
-          this.firmware.FirmwareInfo.parseInfo(ret);
+          this.firmwareService.FirmwareInfo.parseInfo(ret);
           this.snackBar.showSnackBar("Firmware info fetched, starting websocket connection...");
           this.StartWebSocketConnection();
+          this.clientService.Connected.next();
         },
         error: error => {
-          this.firmware.FirmwareInfo.parseInfo('FW version:1.1 (2022010501) # FW target:grbl-embedded  # FW HW:Direct SD  # primary sd:/sd # secondary sd:none # authentication:no # webcommunication: Sync: 81:10.0.4.125 # hostname:grblesp # axis:3\r\n');
           this.snackBar.showSnackBar("Firmware info fetch failure!");
         }
       });
@@ -45,13 +45,14 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   }
 
   public StartWebSocketConnection() {
-    this.socketService.createConnection(this.firmware.WebSocket);
+    this.socketService.createConnection(this.firmwareService.WebSocketInfo);
      this.websocketSubscription = this.socketService.socketObservable.subscribe({
        next: n => {
-         console.log("Juhuu");
+         this.snackBar.showSnackBar("websocket connected...");
+         this.websocketSubscription.unsubscribe();
        },
        error: e => {
-         console.log("Awwwww");
+        this.snackBar.showSnackBar("websocket connection failed!");
          this.websocketSubscription.unsubscribe();
        }
      });

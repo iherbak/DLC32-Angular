@@ -4,8 +4,8 @@ export class FirmwareInfo {
 
     public infoKeyValues!: KeyValue[];
 
-    public get SDPath(): KeyValue | undefined {
-        return this.infoKeyValues.find(kv => kv.key === "primary sd");
+    public get SDPaths(): KeyValue[] {
+        return this.infoKeyValues.filter(kv => (kv.key === "primary sd") || (kv.key === "secondary sd"));
     }
 
     public get WebSocket(): string {

@@ -16,8 +16,12 @@ export class FirmwareService {
     this.info = info;
   }
 
-  public get WebSocket(){
+  public get WebSocketInfo(){
     return this.info.WebSocket;
+  }
+
+  public get SdPath(){
+    return this.info.SDPaths;
   }
 
   constructor() { 
