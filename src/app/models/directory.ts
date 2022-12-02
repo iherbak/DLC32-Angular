@@ -5,6 +5,7 @@ export class Directory {
     public path!: string;
     public status!: string;
     public total!: string;
+    public used!: string;
 
     constructor()
     {

@@ -13,6 +13,7 @@ import { FirmwareService } from 'src/app/services/firmware.service';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { CreateDirectoryComponent } from './create-directory/create-directory.component';
 import { SnackBarService } from 'src/app/services/snack-bar.service';
+import { DeleteComponent } from './delete/delete.component';
 
 @Component({
   selector: 'app-files',
@@ -30,10 +31,9 @@ export class FilesComponent implements OnInit, OnDestroy {
   public pageFiles: ESP32File[] = [];
   public fileSources: FileSource[] = [new FileSource("Internal flash", Drive.SPIFF)];
   public fileForm: FormGroup;
-  private currentPath = "/";
 
-  public get Path() {
-    return this.currentPath;
+  public get slashCorrectPath() {
+    return `${this.directory.path}${this.directory.path === "/" ? "" : "/"}`;
   }
 
   public get fileSourceFc() {
@@ -52,18 +52,18 @@ export class FilesComponent implements OnInit, OnDestroy {
     });
 
     this.directory = new Directory();
-     
-      this.directory.path = "/";
-      this.directory.files.push(new ESP32File("adssadsa.txt","322.77 KB"));
-      this.directory.files.push(new ESP32File("folder","-1"));
-      this.directory.files.push(new ESP32File("alder","-1"));
-      this.UpdateFileList(this.directory);
-      this.showFilesOnPage(0,10);
+
+    this.directory.path = "/";
+    this.directory.total= "1/100 TB";
+    this.directory.files.push(new ESP32File("adssadsa.txt", "322.77 KB"));
+    this.directory.files.push(new ESP32File("folder", "-1"));
+    this.directory.files.push(new ESP32File("alder", "-1"));
+    this.UpdateFileList(this.directory);
 
     this.clientService.Connected.pipe(takeUntil(this.unsub)).subscribe(() => {
       let sdPaths = this.firmwareService.FirmwareInfo.SDPaths;
-      sdPaths.forEach(sdp => {
-        this.fileSources.push(new FileSource(sdp.key, Drive.SD))
+      sdPaths.forEach((value: string, key: string) => {
+        this.fileSources.push(new FileSource(key, Drive.SD))
       });
 
       if (this.fileSources.length > 1) {
@@ -76,31 +76,17 @@ export class FilesComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
 
     this.fileSourceFc.valueChanges.pipe(takeUntil(this.unsub)).subscribe((source: FileSource) => {
-      this.currentPath = "/"
+      this.directory.path = "/"
       this.refreshFiles();
     });
 
-    this.selectedFileFc.valueChanges.pipe(takeUntil(this.unsub)).subscribe((file: ESP32File[]) => {
-      if (file[0].size == "-1") {
-        //reverse to parent
-        if (file[0].name == '..') {
-          var lastpath = this.currentPath.lastIndexOf("/");
-          this.currentPath = this.currentPath.substring(0, lastpath);
-          this.currentPath = this.currentPath == '' ? '/' : this.currentPath;
-        }
-        else {
-          this.currentPath += file[0].name;
-        }
-        this.refreshFiles();
-      }
-    });
   }
 
   private refreshFiles() {
     //reset file selection
     this.selectedFileFc.setValue(null, { emitEvent: false });
 
-    let basecommand = this.commandService.getCommandUrlByType(this.getFileActionCommandType(), ["action=list", "filename=all", `path=${this.currentPath}`]);
+    let basecommand = this.commandService.getCommandUrlByType(this.getFileActionCommandType(), ["action=list", "filename=all", `path=${this.directory.path}`]);
     if (basecommand != null) {
       this.clientService.sendGetCommand<Directory>(basecommand).subscribe({
         next: n => {
@@ -159,7 +145,16 @@ export class FilesComponent implements OnInit, OnDestroy {
   }
 
   public fileSelected() {
-    return !this.selectedFileFc.value;
+    if ((this.fileSourceFc.value as FileSource).Drive === Drive.SPIFF) {
+      return false;
+    }
+    if (this.selectedFileFc.value == null) {
+      return false;
+    }
+    if (this.selectedFileFc.value[0].name !== '..') {
+      return true;
+    }
+    return true;
   }
 
   public upload() {
@@ -171,13 +166,15 @@ export class FilesComponent implements OnInit, OnDestroy {
     let files = (event.target as HTMLInputElement).files;
     if (files != null && basecommand != null) {
       let formData = new FormData();
-      formData.append('path', this.Path);
-      formData.append(`${this.Path}${files[0].name}S`, `${files[0].size}`);
-      formData.append("myfile[]", files[0]);
+      //to get updated list of this path
+      formData.append('path', this.slashCorrectPath);
+      //for size check on server
+      formData.append(`${this.slashCorrectPath}${files[0].name}S`, `${files[0].size}`);
+      //to create file under dir
+      formData.append("myfile[]", files[0], `${this.slashCorrectPath}${files[0].name}`);
       this.clientService.sendPostCommand<Directory>(basecommand, formData).subscribe({
         next: (ret: Directory) => {
-          this.directory = ret;
-          this.showFilesOnPage(0, 10);
+          this.UpdateFileList(ret);
         },
         error: error => {
           console.log("upload failed");
@@ -187,7 +184,7 @@ export class FilesComponent implements OnInit, OnDestroy {
   }
 
   public showCreateDirectory() {
-    let sheetRef = this.bottomSheet.open(CreateDirectoryComponent, { data: { currentPath: this.currentPath, commandType: this.getFileActionCommandType() } });
+    let sheetRef = this.bottomSheet.open(CreateDirectoryComponent, { data: { currentPath: this.directory.path, commandType: this.getFileActionCommandType() } });
     sheetRef.afterDismissed().subscribe((n: { success: boolean, directory: Directory }) => {
       if (n.success) {
         this.UpdateFileList(n.directory);
@@ -196,7 +193,40 @@ export class FilesComponent implements OnInit, OnDestroy {
         this.snackBar.showSnackBar("Create Directory failed");
       }
     });
-
-
   }
+
+  public showDelete() {
+    let sheetRef = this.bottomSheet.open(DeleteComponent, { data: { currentPath: this.directory.path, file: this.selectedFileFc.value[0], commandType: this.getFileActionCommandType() } });
+    sheetRef.afterDismissed().subscribe((n: { success: boolean, directory: Directory }) => {
+      if (n.success) {
+        this.UpdateFileList(n.directory);
+      }
+      else {
+        this.snackBar.showSnackBar("Delete failed");
+      }
+    });
+  }
+
+  public enterDir(file: ESP32File) {
+    if (file.size == "-1") {
+      //reverse to parent
+      if (file.name == '..') {
+        var lastpath = this.directory.path.lastIndexOf("/");
+        this.directory.path = this.directory.path.substring(0, lastpath);
+        this.directory.path = this.directory.path == '' ? '/' : this.directory.path;
+      }
+      else {
+        this.directory.path += "/" + file.name;
+      }
+      this.refreshFiles();
+    }
+  }
+  public StartFile() {
+
+    let basecommand = this.commandService.getCommandUrlByType(CommandType.PrintSdFile, [`${this.slashCorrectPath}${this.selectedFileFc.value[0].name}`]);
+    if (basecommand != null) {
+      this.clientService.sendGetCommand<void>(basecommand).subscribe();
+    }
+  }
+
 }

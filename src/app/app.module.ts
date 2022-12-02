@@ -35,6 +35,8 @@ import { InfosheetComponent } from './main/infosheet/infosheet.component';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { LaserComponent } from './panels/controls/laser/laser.component';
 import { CreateDirectoryComponent } from './panels/files/create-directory/create-directory.component';
+import { DeleteComponent } from './panels/files/delete/delete.component';
+import { DoubleClickDirective } from './panels/files/double-click.directive';
 
 
 @NgModule({
@@ -50,7 +52,9 @@ import { CreateDirectoryComponent } from './panels/files/create-directory/create
     TerminalComponent,
     InfosheetComponent,
     LaserComponent,
-    CreateDirectoryComponent
+    CreateDirectoryComponent,
+    DeleteComponent,
+    DoubleClickDirective
   ],
   imports: [
     BrowserModule,

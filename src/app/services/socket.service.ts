@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, retry, share, switchMap, tap } from 'rxjs';
 import makeWebSocketObservable, { GetWebSocketResponses, WebSocketOptions } from 'rxjs-websockets';
 import { ClientService } from './client.service';
+import { WsStatusMessage } from '../models/wsStatusMessage';
 
 @Injectable({
   providedIn: 'root'
@@ -27,12 +28,8 @@ export class SocketService {
     var config: WebSocketOptions = {
       protocols: ['arduino'],
       makeWebSocket: (url) => {
-        console.log('making socket');
         let socket = new WebSocket(url, ['arduino']);
-        console.log(socket.protocol);
-        console.log(socket.binaryType);
         socket.binaryType = 'arraybuffer';
-        console.log(socket.binaryType);
         return socket;
       }
     }
@@ -45,10 +42,17 @@ export class SocketService {
       tap({
         next: (message: any) => {
           if (message instanceof ArrayBuffer) {
-            this.clientService.CommandSuccess.next(`WS: ${this.textDecoder.decode(message)}`);
+            let strMessage = this.textDecoder.decode(message);
+            //it is a status message
+            if (strMessage.startsWith('<')) {
+              let wsMessage = new WsStatusMessage(strMessage);
+              this.clientService.WsStatusMessage.next(wsMessage);
+            }
+            this.clientService.CommandSuccess.next(strMessage);
           }
-          if(typeof(message) == 'string'){
-            this.clientService.CommandSuccess.next(`WS: ${message}`);
+          if (typeof (message) == 'string') {
+
+            this.clientService.CommandError.next(message);
           }
         },
         error: (error) => {

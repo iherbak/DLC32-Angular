@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Observable, Subject, Subscription, take, takeUntil, timer } from 'rxjs';
 import { CommandType } from './models/commandType';
 import { ClientService } from './services/client.service';
 import { CommandService } from './services/command.service';
@@ -17,14 +17,16 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
   title = 'DLC32UI';
 
-  private websocketSubscription!: Subscription;
+  private unsub: Subject<void> = new Subject();
+  private watchDog!: Observable<number>;
 
   constructor(private commandService: CommandService, public clientService: ClientService, private snackBar: SnackBarService, private socketService: SocketService, private firmwareService: FirmwareService) {
 
   }
 
   ngOnDestroy(): void {
-    this.websocketSubscription.unsubscribe();
+    this.unsub.next();
+    this.unsub.complete();
   }
 
   ngAfterViewInit(): void {
@@ -38,6 +40,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
           this.clientService.Connected.next();
         },
         error: error => {
+          let ret = "FW version:1.1 (2022010501) # FW target:grbl-embedded  # FW HW:Direct SD  # primary sd:/sd # secondary sd:none # authentication:no # webcommunication: Sync: 81:10.0.4.112 # hostname:grblesp # axis:3";
+          this.firmwareService.FirmwareInfo.parseInfo(ret);
           this.snackBar.showSnackBar("Firmware info fetch failure!");
         }
       });
@@ -46,25 +50,31 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
   public StartWebSocketConnection() {
     this.socketService.createConnection(this.firmwareService.WebSocketInfo);
-     let openerSubscription = this.socketService.socketObservable.subscribe({
-       next: n => {
-         this.snackBar.showSnackBar("websocket connected...");
-         this.openMainSubscription();
-         openerSubscription.unsubscribe();
-       },
-       error: e => {
+    this.socketService.socketObservable.pipe(take(1)).subscribe({
+      next: n => {
+        this.snackBar.showSnackBar("websocket connected...");
+        this.openMainSubscriptions();
+      },
+      error: e => {
         this.snackBar.showSnackBar("websocket connection failed!");
-         this.websocketSubscription.unsubscribe();
-       }
-     });
+      }
+    });
   }
-  private openMainSubscription() {
-    this.websocketSubscription = this.socketService.socketObservable.subscribe({
+
+  private openMainSubscriptions() {
+    let baseCommand = this.commandService.getCommandUrlByCommand("?");
+    this.watchDog = timer(0, 3000);
+    this.watchDog.pipe(takeUntil(this.unsub)).subscribe(() => {
+      if (baseCommand != null) {
+        this.clientService.sendGetCommand(baseCommand,true).subscribe();
+      }
+    });
+
+    this.socketService.socketObservable.pipe(takeUntil(this.unsub)).subscribe({
       next: n => {
       },
       error: e => {
-       this.snackBar.showSnackBar("websocket connection failed!");
-        this.websocketSubscription.unsubscribe();
+        this.snackBar.showSnackBar("websocket connection failed!");
       }
     });
   }

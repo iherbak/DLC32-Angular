@@ -14,5 +14,6 @@ export enum CommandType {
     FwInfo,
     LaserOff,
     LaserOn,
-    Unlock
+    Unlock,
+    PrintSdFile
 }

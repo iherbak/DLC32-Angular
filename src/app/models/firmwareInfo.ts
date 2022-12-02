@@ -1,15 +1,23 @@
-import { __values } from "tslib";
+import { KeyValue } from "@angular/common";
+import { WsStringMessage } from "./wsStringMessage";
 
-export class FirmwareInfo {
+export class FirmwareInfo extends WsStringMessage {
 
-    public infoKeyValues!: KeyValue[];
+    public infoKeyValues!: Map<string, string>;
 
-    public get SDPaths(): KeyValue[] {
-        return this.infoKeyValues.filter(kv => (kv.key === "primary sd") || (kv.key === "secondary sd"));
+    public get SDPaths(): Map<string, string> {
+        let result = new Map<string, string>();
+        if (this.infoKeyValues.get("primary sd") !== undefined) {
+            let value = this.infoKeyValues.get("primary sd");
+            if (value !== undefined && value !== "none") {
+                result.set("primary sd", value);
+            }
+        };
+        return result;
     }
 
     public get WebSocket(): string {
-        let webcomm = this.infoKeyValues.find(kv => kv.key === "webcommunication")?.value;
+        let webcomm = this.infoKeyValues.get("webcommunication");
         let parts = webcomm?.split(":");
         if (parts && parts?.length > 1) {
             return `ws://${parts[2].trim()}:${parts[1].trim()}`;
@@ -23,32 +31,5 @@ export class FirmwareInfo {
         this.infoKeyValues = this.getallKeyvalues(info.split("#"));
     }
 
-    private getallKeyvalues(sections: string[]): KeyValue[] {
-        let keyvalues: KeyValue[] = [];
-        if (sections.length > 0) {
-            sections.forEach(section => {
-                let strippedSection = section.trim();
-                let keyValue = strippedSection.split(":");
-                if (keyValue.length > 2) {
-                    keyvalues.push(new KeyValue(keyValue[0], strippedSection.replace(keyValue[0] + ':', '')));
-                    let subKEys = this.getallKeyvalues(keyValue[1].split(":"));
-                    keyvalues = keyvalues.concat(subKEys)
-                }
-                if (keyValue.length == 2) {
-                    keyvalues.push(new KeyValue(keyValue[0], keyValue[1]));
-                }
-            });
-        }
-        return keyvalues;
-    }
 
-}
-
-export class KeyValue {
-    public key: string;
-    public value: string;
-    constructor(key: string, value: string) {
-        this.key = key;
-        this.value = value;
-    }
 }

@@ -1,6 +1,6 @@
 <div class="bottomsheet-title">Firmware info</div>
 <div class="info-grid">
-    <div class="grid-row" *ngFor="let info of firmwareInfo">
+    <div class="grid-row" *ngFor="let info of firmwareInfo | keyvalue">
         <span>{{info.key}}</span><span>{{info.value}}</span>
     </div>
 </div>
