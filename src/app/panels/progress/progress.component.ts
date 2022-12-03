@@ -1,8 +1,10 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
+import { ProcessingDetails } from 'src/app/models/processingDetails';
 import { WsState } from 'src/app/models/wsStatusMessage';
 import { ClientService } from 'src/app/services/client.service';
 import { CommandService } from 'src/app/services/command.service';
+import { SocketService } from 'src/app/services/socket.service';
 
 @Component({
   selector: 'app-progress',
@@ -12,51 +14,42 @@ import { CommandService } from 'src/app/services/command.service';
 export class ProgressComponent implements OnDestroy {
 
   private unsub: Subject<void> = new Subject();
+  private processingDetails: ProcessingDetails = new ProcessingDetails("", 0);
 
-  public processingFileName: string = '';
-  public progress: number = 0;
-
-  public isRunning: boolean = false;
-  public isPaused: boolean = false;
-  public get pauseResumeText() {
-    return this.isPaused ? "Resume" : "Pause";
+  public get ProcessingDetails(): ProcessingDetails {
+    return this.processingDetails;
   }
 
-  constructor(private clientService: ClientService, private commandService: CommandService) {
+  public get isRunning() {
+    return this.socketService.isRunning;
+  }
+  public get pauseResumeText() {
+    return this.socketService.MachineState === WsState.Hold ? "Resume" : "Pause";
+  }
+
+  constructor(private clientService: ClientService, private commandService: CommandService, private socketService: SocketService) {
     this.clientService.WsStatusMessage.pipe(takeUntil(this.unsub)).subscribe(commandResult => {
       if (commandResult.state == WsState.Run) {
-        this.isRunning = true;
-        let progress = commandResult.infoKeyValues.get("SD");
-        if (progress != undefined) {
-          let sdMessageParts = progress.split(",");
-          this.processingFileName = sdMessageParts[1];
-          this.progress = parseFloat(sdMessageParts[0]);
-        }
+        this.processingDetails = commandResult.getProcessingDetails();
       }
       if (commandResult.state == WsState.Idle) {
-        this.isRunning = this.isPaused = false;
-        this.progress = 0;
-        this.processingFileName = "";
+        this.processingDetails = new ProcessingDetails("", 0);
       }
     });
   }
 
   public pause() {
-    let command = this.isPaused?"~":"!";
+    let command = this.socketService.MachineState === WsState.Hold ? "~" : "!";
     let baseCommand = this.commandService.getCommandUrlByCommand(command);
     if (baseCommand != null) {
-      this.clientService.sendGetCommand(baseCommand).subscribe(() => {
-        this.isPaused = !this.isPaused;
-      });
+      this.clientService.sendGetCommand(baseCommand).subscribe();
     }
   }
 
   public cancel() {
     let baseCommand = this.commandService.getCommandUrlByCommand("\u0018");
     if (baseCommand != null) {
-      this.clientService.sendGetCommand(baseCommand).subscribe(() => {
-        this.isRunning = this.isPaused = false;
-      });
+      this.clientService.sendGetCommand(baseCommand).subscribe();
     }
   }
 

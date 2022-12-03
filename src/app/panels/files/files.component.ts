@@ -14,6 +14,8 @@ import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { CreateDirectoryComponent } from './create-directory/create-directory.component';
 import { SnackBarService } from 'src/app/services/snack-bar.service';
 import { DeleteComponent } from './delete/delete.component';
+import { WsState } from 'src/app/models/wsStatusMessage';
+import { ProcessingDetails } from 'src/app/models/processingDetails';
 
 @Component({
   selector: 'app-files',
@@ -25,7 +27,8 @@ export class FilesComponent implements OnInit, OnDestroy {
   @ViewChild("fileInput") fileInput: ElementRef | undefined;
 
   private unsub: Subject<void> = new Subject();
-
+  private postponedUpdate: boolean = true;
+  private processingDetails: ProcessingDetails = new ProcessingDetails("", 0);
   public directory: Directory;
   public pageIndex = 0;
   public pageFiles: ESP32File[] = [];
@@ -54,7 +57,7 @@ export class FilesComponent implements OnInit, OnDestroy {
     this.directory = new Directory();
 
     this.directory.path = "/";
-    this.directory.total= "1/100 TB";
+    this.directory.total = "1/100 TB";
     this.directory.files.push(new ESP32File("adssadsa.txt", "322.77 KB"));
     this.directory.files.push(new ESP32File("folder", "-1"));
     this.directory.files.push(new ESP32File("alder", "-1"));
@@ -80,6 +83,19 @@ export class FilesComponent implements OnInit, OnDestroy {
       this.refreshFiles();
     });
 
+    this.clientService.WsStatusMessage.pipe(takeUntil(this.unsub)).subscribe({
+      next: (commandResult) => {
+        if (commandResult.state === WsState.Idle && this.postponedUpdate) {
+          this.postponedUpdate = false;
+          this.directory.path = this.processingDetails.FilePath.substring(0, this.processingDetails.FilePath.lastIndexOf("/"));
+          this.refreshFiles();
+        }
+        if ((commandResult.state == WsState.Run || commandResult.state === WsState.Hold) && this.postponedUpdate) {
+          this.processingDetails = commandResult.getProcessingDetails();
+        }
+      }
+    });
+
   }
 
   private refreshFiles() {
@@ -90,8 +106,13 @@ export class FilesComponent implements OnInit, OnDestroy {
     if (basecommand != null) {
       this.clientService.sendGetCommand<Directory>(basecommand).subscribe({
         next: n => {
-          this.UpdateFileList(n);
-        }
+          if (n.status.toLowerCase() !== "busy") {
+            this.UpdateFileList(n);
+          }
+          else {
+            this.postponedUpdate = true;
+          }
+        },
       }
       );
     }
@@ -216,7 +237,7 @@ export class FilesComponent implements OnInit, OnDestroy {
         this.directory.path = this.directory.path == '' ? '/' : this.directory.path;
       }
       else {
-        this.directory.path += "/" + file.name;
+        this.directory.path = `${this.slashCorrectPath}${file.name}`;
       }
       this.refreshFiles();
     }

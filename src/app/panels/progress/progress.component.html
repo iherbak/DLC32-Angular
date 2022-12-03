@@ -1,6 +1,7 @@
 <div class="panel-title">Progress</div>
 <div class="panelgrid">
-    <div class="progressbar"><mat-progress-bar mode="determinate" [value]="progress"></mat-progress-bar></div>
+    <div class="filepath">{{ProcessingDetails.FilePath}}</div>
+    <div class="progressbar"><mat-progress-bar mode="determinate" [value]="ProcessingDetails.Percentage"></mat-progress-bar></div>
     <button mat-raised-button class="mat-warn warn" [disabled]="!isRunning" (click)="cancel()">Cancel</button>
     <button mat-raised-button class="mat-accent accent" [disabled]="!isRunning" (click)="pause()">{{pauseResumeText}}</button>
 </div>

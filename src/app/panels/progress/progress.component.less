@@ -1,5 +1,6 @@
 .panelgrid {
     grid-template-areas:
+    'filepath filepath'
     'progress-bar progress-bar'
     'on off';
     justify-content: space-between;
@@ -18,4 +19,10 @@
 .accent {
     grid-area: off;
     margin:5px;
+}
+
+.filepath{
+    grid-area: filepath;
+    justify-self: center;
+    padding-top: 5px;
 }

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, retry, share, switchMap, tap } from 'rxjs';
 import makeWebSocketObservable, { GetWebSocketResponses, WebSocketOptions } from 'rxjs-websockets';
 import { ClientService } from './client.service';
-import { WsStatusMessage } from '../models/wsStatusMessage';
+import { WsState, WsStatusMessage } from '../models/wsStatusMessage';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +17,16 @@ export class SocketService {
   public socketObservable!: Observable<ArrayBuffer>;
   //a subject to send messages through websocket
   public sendMessage: QueueingSubject<ArrayBuffer> = new QueueingSubject();
+
+  private machineState: WsState = WsState.Idle
+
+  public get MachineState(){
+    return this.machineState;
+  }
+
+  public get isRunning(){
+    return (this.machineState === WsState.Run || this.machineState === WsState.Hold);
+  }
 
   constructor(private clientService: ClientService) {
 
@@ -46,6 +56,12 @@ export class SocketService {
             //it is a status message
             if (strMessage.startsWith('<')) {
               let wsMessage = new WsStatusMessage(strMessage);
+              //set state change
+              if(this.machineState !== wsMessage.state)
+              { 
+                this.machineState = wsMessage.state;
+              }
+
               this.clientService.WsStatusMessage.next(wsMessage);
             }
             this.clientService.CommandSuccess.next(strMessage);

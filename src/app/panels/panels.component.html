@@ -1,7 +1,7 @@
 <div class="panel-grid">
     <mat-accordion class="accordion">
-        <mat-expansion-panel>
-            <mat-expansion-panel-header>
+        <mat-expansion-panel [disabled]="isRunning" [expanded]="isExpanded">
+            <mat-expansion-panel-header >
                 <mat-panel-title>
                     Controls
                 </mat-panel-title>
@@ -15,7 +15,7 @@
                 <app-general></app-general>
             </div>
         </mat-expansion-panel>
-        <mat-expansion-panel expanded="true">
+        <mat-expansion-panel [expanded]="isExpanded" [disabled]="isRunning">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     Files panel
