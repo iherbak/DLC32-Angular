@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, UntypedFormBuilder } from '@angular/forms';
+import { FormControl, FormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Axis } from 'src/app/models/axis';
 import { CommandType } from 'src/app/models/commandType';
 import { Direction } from 'src/app/models/direction';
@@ -33,7 +33,7 @@ export class XyzComponent {
     this.distanceForm = formBuilder.group({
       distanceInput: ["0.1"],
       moveZInput: [false],
-      feedRate: [500]
+      feedRate: [500,[Validators.required, Validators.min(1), Validators.max(3000)]]
     });
 
   }

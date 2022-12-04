@@ -3,11 +3,8 @@
 html,
 body {
   height: 100%;
-}
-
-body {
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font: 400 14px/20px Roboto, sans-serif;
 }
 
 .panel-title {
@@ -33,12 +30,13 @@ button {
   padding-bottom: 5px;
 }
 
-//remove material formfield reserved hint line
-.mat-mdc-form-field-subscript-wrapper {
-  display: none;
+.bottomsheet-title {
+  margin: 10px;
+  border-bottom: 1px solid magenta;
 }
 
-.bottomsheet-title{
-  margin:10px;
-  border-bottom: 1px solid magenta;
+//remove material formfield reserved hint line
+.mat-mdc-form-field-hint-wrapper,
+.mat-mdc-form-field-error-wrapper {
+  padding: 0px;
 }

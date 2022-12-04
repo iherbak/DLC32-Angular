@@ -166,15 +166,12 @@ export class FilesComponent implements OnInit, OnDestroy {
   }
 
   public fileSelected() {
-    if ((this.fileSourceFc.value as FileSource).Drive === Drive.SPIFF) {
-      return false;
-    }
     if (this.selectedFileFc.value == null) {
       return false;
     }
-    if (this.selectedFileFc.value[0].name !== '..') {
-      return true;
-    }
+    if (this.fileSourceFc.value[0].Drive === Drive.SPIFF || this.selectedFileFc.value[0].name !== '..' || this.selectedFileFc.value[0].size !== '-1') {
+      return false;
+    }    
     return true;
   }
 

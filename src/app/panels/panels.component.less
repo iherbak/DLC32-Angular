@@ -1,14 +1,13 @@
 .panel-grid {
     display: grid;
-    grid-template-columns: minmax(500px,auto) minmax(400px,auto);
     gap: 5px;
+    grid-auto-flow: column;
 }
 
 @media screen and (max-width:950px) {
 
     .panel-grid {
-        display: grid;
-        grid-template-columns: auto;
+        grid-auto-flow: row;
     }
     
 }

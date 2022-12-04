@@ -3,6 +3,9 @@
     <mat-form-field appearance="fill" class="name">
         <mat-label>Directory name</mat-label>
         <input matInput type="text" placeholder="new" aria-label="text" matInput [formControl]="nameFc">
+        <mat-error *ngIf="nameFc.hasError('required')">
+            <strong>Required</strong>
+          </mat-error>
     </mat-form-field>
-    <button type="button" mat-raised-button class="create" [disabled]="!nameFc.value" (click)="createDirectory()">Create</button>
+    <button type="button" mat-raised-button class="create" [disabled]="!directoryForm.valid" (click)="createDirectory()">Create</button>
 </form>

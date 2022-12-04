@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { FormBuilder, FormControl, UntypedFormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
 import { Observable, Subject } from 'rxjs';
 import { CommandType } from 'src/app/models/commandType';
@@ -22,7 +22,7 @@ export class CreateDirectoryComponent {
 
   constructor(@Inject(MAT_BOTTOM_SHEET_DATA) public data: { currentPath: string, commandType: CommandType }, private _bottomSheetRef: MatBottomSheetRef<CreateDirectoryComponent>, private formBuilder: FormBuilder, private commandService: CommandService, private clientService: ClientService) {
     this.directoryForm = this.formBuilder.group({
-      name: ['']
+      name: ['',[Validators.required]]
     });
   }
 

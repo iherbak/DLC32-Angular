@@ -1,11 +1,11 @@
 <form [formGroup]="distanceForm">
   <div class="panel-title">Motion</div>
   <div class="panelgrid">
-    <button type="button" mat-raised-button class="up" (click)="move(Axes.Y)">UP</button>
-    <button type="button" mat-raised-button class="left" (click)="move(Axes.X,Directions.MINUS)" [disabled]="validMovementForZ()">LEFT</button>
-    <button type="button" mat-raised-button class="mat-accent home" (click)="home()">HOME</button>
-    <button type="button" mat-raised-button class="right" (click)="move(Axes.X)" [disabled]="validMovementForZ()">RIGHT</button>
-    <button type="button" mat-raised-button class="down" (click)="move(Axes.Y,Directions.MINUS)">DOWN</button>
+    <button type="button" mat-raised-button class="up" (click)="move(Axes.Y)" [disabled]="!distanceForm.valid">UP</button>
+    <button type="button" mat-raised-button class="left" (click)="move(Axes.X,Directions.MINUS)" [disabled]="validMovementForZ() || !distanceForm.valid">LEFT</button>
+    <button type="button" mat-raised-button class="mat-accent home" (click)="home()" [disabled]="!distanceForm.valid">HOME</button>
+    <button type="button" mat-raised-button class="right" (click)="move(Axes.X)" [disabled]="validMovementForZ() || !distanceForm.valid">RIGHT</button>
+    <button type="button" mat-raised-button class="down" (click)="move(Axes.Y,Directions.MINUS)" [disabled]="!distanceForm.valid">DOWN</button>
 
     <mat-checkbox class="axisselect" [formControl]="moveZFc">Move Z</mat-checkbox>
 
@@ -18,7 +18,17 @@
 
     <mat-form-field appearance="fill" class="feedrate">
       <mat-label>Feedrate</mat-label>
-      <input matInput type="text" placeholder="Feedrate" aria-label="Number" matInput [formControl]="feedRateFc">
+      <input matInput class="" type="number" placeholder="Feedrate" aria-label="Number" matInput [formControl]="feedRateFc">
+      <mat-error *ngIf="feedRateFc.hasError('min') && !feedRateFc.hasError('required')">
+        Min: 1
+      </mat-error>
+      <mat-error *ngIf="feedRateFc.hasError('max') && !feedRateFc.hasError('required')">
+        Max: 3000
+      </mat-error>
+      <mat-error *ngIf="feedRateFc.hasError('required')">
+        <strong>Required</strong>
+      </mat-error>
+  
   </mat-form-field>
 
   </div>

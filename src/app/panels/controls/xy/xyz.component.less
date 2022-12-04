@@ -6,9 +6,9 @@ button {
     grid-template-columns: repeat(3,110px) auto;
     grid-template-areas: 
     '. up . axisselect'
-    'left home right on'
+    'left home right feedrate'
     '. down . .'
-    'distance distance distance feedrate';
+    'distance distance distance .';
     place-items: center;
 }
 
@@ -40,6 +40,7 @@ button {
 }
 .feedrate{
     grid-area: feedrate;
+    width:100px;
 }
 
 .distance{

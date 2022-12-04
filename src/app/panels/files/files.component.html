@@ -1,7 +1,7 @@
 <form [formGroup]="fileForm">
     <div class="panel-title">
         <div>Files</div>
-        <div>{{directory.used}} / {{directory.total}}</div>
+        <div class="total">{{directory.used}} / {{directory.total}}</div>
         <mat-form-field appearance="fill">
             <mat-label>Source</mat-label>
             <mat-select [formControl]="fileSourceFc">
