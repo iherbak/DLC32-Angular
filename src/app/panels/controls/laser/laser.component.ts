@@ -16,7 +16,7 @@ export class LaserComponent {
   }
 
   public unlock() {
-    let command = this.commandService.getCommandUrlByType(CommandType.Unlock);
+    let command = this.commandService.getCommandUrlByCommand("$X");
     if (command != null) {
       this.clientService.sendGetCommand(command).subscribe();
     }
@@ -25,10 +25,10 @@ export class LaserComponent {
   public switchLaser(on: boolean) {
     let command: ExecutableCommand | null;
     if (on) {
-      command = this.commandService.getCommandUrlByType(CommandType.LaserOn, ['S25']);
+      command = this.commandService.getCommandUrlByCommand("M3", ['S25']);
     }
     else {
-      command = this.commandService.getCommandUrlByType(CommandType.LaserOff);
+      command = this.commandService.getCommandUrlByCommand("M%");
     }
     if (command != null) {
       this.clientService.sendGetCommand(command).subscribe();

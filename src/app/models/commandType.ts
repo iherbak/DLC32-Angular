@@ -7,13 +7,4 @@ export enum CommandType {
     FilesAction,
     FilesSdAction,
     UpdateFw,
-    Move,
-    Home,
-    Jog,
-    SetOrigin,
-    FwInfo,
-    LaserOff,
-    LaserOn,
-    Unlock,
-    PrintSdFile
 }

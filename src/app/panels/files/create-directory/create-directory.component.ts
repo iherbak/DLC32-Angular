@@ -27,7 +27,7 @@ export class CreateDirectoryComponent {
   }
 
   public createDirectory() {
-    let command = this.commandService.getCommandUrlByType(this.data.commandType, ["action=createdir", `filename=${this.nameFc.value}`, `path=${this.data.currentPath}`]);
+    let command = this.commandService.getEspApiCommand(this.data.commandType, ["action=createdir", `filename=${this.nameFc.value}`, `path=${this.data.currentPath}`]);
     if (command != null) {
       this.clientService.sendGetCommand<Directory>(command).subscribe({
         next: d => {

@@ -18,7 +18,7 @@ export class DeleteComponent {
   }
 
   public delete() {
-    let command = this.commandService.getCommandUrlByType(this.data.commandType, [`action=${this.data.file.size === "-1" ? "deletedir" : "delete"}`, `filename=${this.data.file.name}`, `path=${this.data.currentPath}`]);
+    let command = this.commandService.getEspApiCommand(this.data.commandType, [`action=${this.data.file.size === "-1" ? "deletedir" : "delete"}`, `filename=${this.data.file.name}`, `path=${this.data.currentPath}`]);
     if (command != null) {
       this.clientService.sendGetCommand<Directory>(command).subscribe({
         next: d => {

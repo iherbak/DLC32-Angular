@@ -102,7 +102,7 @@ export class FilesComponent implements OnInit, OnDestroy {
     //reset file selection
     this.selectedFileFc.setValue(null, { emitEvent: false });
 
-    let basecommand = this.commandService.getCommandUrlByType(this.getFileActionCommandType(), ["action=list", "filename=all", `path=${this.directory.path}`]);
+    let basecommand = this.commandService.getEspApiCommand(this.getFileActionCommandType(), ["action=list", "filename=all", `path=${this.directory.path}`]);
     if (basecommand != null) {
       this.clientService.sendGetCommand<Directory>(basecommand).subscribe({
         next: n => {
@@ -180,7 +180,7 @@ export class FilesComponent implements OnInit, OnDestroy {
   }
 
   public uploadFile(event: Event) {
-    let basecommand = this.commandService.getCommandUrlByType(this.getUploadTargetCommandType());
+    let basecommand = this.commandService.getEspApiCommand(this.getUploadTargetCommandType());
     let files = (event.target as HTMLInputElement).files;
     if (files != null && basecommand != null) {
       let formData = new FormData();
@@ -241,7 +241,7 @@ export class FilesComponent implements OnInit, OnDestroy {
   }
   public StartFile() {
 
-    let basecommand = this.commandService.getCommandUrlByType(CommandType.PrintSdFile, [`${this.slashCorrectPath}${this.selectedFileFc.value[0].name}`]);
+    let basecommand = this.commandService.getCommandUrlByCommand("[ESP220]", [`${this.slashCorrectPath}${this.selectedFileFc.value[0].name}`]);
     if (basecommand != null) {
       this.clientService.sendGetCommand<void>(basecommand).subscribe();
     }

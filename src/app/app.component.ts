@@ -30,7 +30,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    let command = this.commandService.getCommandUrlByType(CommandType.FwInfo);
+    let command = this.commandService.getCommandUrlByCommand("[ESP800]");
     if (command != null) {
       this.clientService.sendGetCommand<string>(command).subscribe({
         next: ret => {

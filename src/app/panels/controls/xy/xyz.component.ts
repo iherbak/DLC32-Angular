@@ -57,7 +57,7 @@ export class XyzComponent {
   }
 
   public home() {
-    let command = this.commandService.getCommandUrlByType(CommandType.Home);
+    let command = this.commandService.getCommandUrlByCommand("$H");
     if (command !== null) {
       this.clientService.sendGetCommand(command).subscribe();
     }

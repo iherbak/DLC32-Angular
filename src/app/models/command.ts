@@ -15,7 +15,7 @@ export class Command {
 
     }
 
-    constructor(command: string, desc: string, commandType: CommandType = CommandType.Command, action : 'GET' | 'POST' | 'UPDATE' | 'DELETE' = 'GET', responseType: string = 'json') {
+    constructor(command: string, desc: string, action : 'GET' | 'POST' | 'UPDATE' | 'DELETE' = 'GET', responseType: 'text' | 'json' = 'json', commandType: CommandType = CommandType.Command) {
         this.commandType = commandType;
         this.command = this.isRawCommand ? command : "";
         this.description = desc;
