@@ -4,11 +4,24 @@ import { Observable, retry, share, switchMap, tap } from 'rxjs';
 import makeWebSocketObservable, { GetWebSocketResponses, WebSocketOptions } from 'rxjs-websockets';
 import { ClientService } from './client.service';
 import { WsState, WsStatusMessage } from '../models/wsStatusMessage';
+import { AlarmCode } from '../models/alarmCode';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SocketService {
+
+  private alarmCodes: AlarmCode[] = [
+    new AlarmCode("1", "Hard limit has been triggered. Machine position is likely lost due to sudden halt. Re-homing is highly recommended."),
+    new AlarmCode("2", "Soft limit alarm. G-code motion target exceeds machine travel. Machine position retained. Alarm may be safely unlocked."),
+    new AlarmCode("3", "Reset while in motion. Machine position is likely lost due to sudden halt. Re-homing is highly recommended."),
+    new AlarmCode("4", "Probe fail. Probe is not in the expected initial state before starting probe cycle when G38.2 and G38.3 is not triggered and G38.4 and G38.5 is triggered."),
+    new AlarmCode("5", "Probe fail. Probe did not contact the workpiece within the programmed travel for G38.2 and G38.4."),
+    new AlarmCode("6", "Homing fail. The active homing cycle was reset."),
+    new AlarmCode("7", "Homing fail. Safety door was opened during homing cycle."),
+    new AlarmCode("8", "Homing fail. Pull off travel failed to clear limit switch. Try increasing pull-off setting or check wiring."),
+    new AlarmCode("9", "Homing fail. Could not find limit switch within search distances. Try increasing max travel, decreasing pull-off distance, or check wiring.")
+  ];
 
   private textDecoder: TextDecoder = new TextDecoder("utf8");
   //observable for connection
@@ -20,11 +33,11 @@ export class SocketService {
 
   private machineState: WsState = WsState.Idle
 
-  public get MachineState(){
+  public get MachineState() {
     return this.machineState;
   }
 
-  public get isRunning(){
+  public get isRunning() {
     return (this.machineState === WsState.Run || this.machineState === WsState.Hold);
   }
 
@@ -57,11 +70,19 @@ export class SocketService {
             if (strMessage.startsWith('<')) {
               let wsMessage = new WsStatusMessage(strMessage);
               //set state change
-              if(this.machineState !== wsMessage.state)
-              { 
+              if (this.machineState !== wsMessage.state) {
                 this.machineState = wsMessage.state;
               }
 
+              if (wsMessage.state == WsState.Alarm) {
+                let alarmdesc = this.alarmCodes.find(ac => ac.code == wsMessage.infoKeyValues.get("ALARM"));
+                if (alarmdesc != null) {
+                  wsMessage.infoKeyValues.set("alarm", alarmdesc?.description);
+                }
+                else{
+                  wsMessage.infoKeyValues.set("alarm", "unknown");
+                }
+              }
               this.clientService.WsStatusMessage.next(wsMessage);
             }
             this.clientService.CommandSuccess.next(strMessage);
