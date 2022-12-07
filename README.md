@@ -2,26 +2,24 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 14.2.2.
 
-## Development server
+# Purpose
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+To provide an alternative UI for my modded MKS-DLC32 UI https://github.com/iherbak/MKS-DLC32-FIRMWARE
 
-## Code scaffolding
+#Functions
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+For daily use it contains all the controls you would find in the other UI-s
+- Jogging and homing
+- File actions
+- Engraving status
+- a terminal to issue commands towards the firmware
 
-## Build
+#Under construction
+- Better error handling
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+#Compilation
 
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+- npm install
+- Build with ng build
+- use https://github.com/iherbak/DLC32-UIEmbedder to integrate the files into the index.html and generate an uploadable index.html.gz
+- Upload the index.html.gz to the device'S internal flash/SPIFF
