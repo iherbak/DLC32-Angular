@@ -13,7 +13,7 @@ import { FirmwareService } from 'src/app/services/firmware.service';
 export class InfosheetComponent {
 
   public get firmwareInfo(){
-    return this.firmware.FirmwareInfo.infoKeyValues;
+    return this.firmware.FirmwareInfo;
   }
   
   constructor(private firmware: FirmwareService) {

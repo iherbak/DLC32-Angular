@@ -20,9 +20,6 @@ export class FirmwareService {
     return this.info.WebSocket;
   }
 
-  public get SdPath(){
-    return this.info.SDPaths;
-  }
 
   constructor() { 
 

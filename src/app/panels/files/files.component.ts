@@ -64,11 +64,7 @@ export class FilesComponent implements OnInit, OnDestroy {
     this.UpdateFileList(this.directory);
 
     this.clientService.Connected.pipe(takeUntil(this.unsub)).subscribe(() => {
-      let sdPaths = this.firmwareService.FirmwareInfo.SDPaths;
-      sdPaths.forEach((value: string, key: string) => {
-        this.fileSources.push(new FileSource(key, Drive.SD))
-      });
-
+      this.fileSources.push(new FileSource(this.firmwareService.FirmwareInfo.Primary_Sd, Drive.SD))
       if (this.fileSources.length > 1) {
         this.fileSourceFc.setValue(this.fileSources[1], { emitEvent: false });
       }
@@ -169,9 +165,9 @@ export class FilesComponent implements OnInit, OnDestroy {
     if (this.selectedFileFc.value == null) {
       return false;
     }
-    if (this.fileSourceFc.value[0].Drive === Drive.SPIFF || this.selectedFileFc.value[0].name !== '..' || this.selectedFileFc.value[0].size !== '-1') {
+    if (this.fileSourceFc.value.Drive === Drive.SPIFF || this.selectedFileFc.value[0].name === '..' || this.selectedFileFc.value[0].size === '-1') {
       return false;
-    }    
+    }
     return true;
   }
 

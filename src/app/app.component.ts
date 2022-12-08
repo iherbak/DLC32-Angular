@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, OnDestroy } from '@angular/core';
 import { Observable, Subject, Subscription, take, takeUntil, timer } from 'rxjs';
 import { CommandType } from './models/commandType';
+import { FirmwareInfo } from './models/firmwareInfo';
 import { ClientService } from './services/client.service';
 import { CommandService } from './services/command.service';
 import { FirmwareService } from './services/firmware.service';
@@ -30,18 +31,16 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    let command = this.commandService.getCommandUrlByCommand("[ESP800]");
+    let command = this.commandService.getEspApiCommand(CommandType.FirmwareInfo);
     if (command != null) {
-      this.clientService.sendGetCommand<string>(command).subscribe({
+      this.clientService.sendGetCommand<FirmwareInfo>(command).subscribe({
         next: ret => {
-          this.firmwareService.FirmwareInfo.parseInfo(ret);
+          Object.assign(this.firmwareService.FirmwareInfo,ret);
           this.snackBar.showSnackBar("Firmware info fetched, starting websocket connection...");
           this.StartWebSocketConnection();
           this.clientService.Connected.next();
         },
         error: error => {
-          let ret = "FW version:1.1 (2022010501) # FW target:grbl-embedded  # FW HW:Direct SD  # primary sd:/sd # secondary sd:none # authentication:no # webcommunication: Sync: 81:10.0.4.112 # hostname:grblesp # axis:3";
-          this.firmwareService.FirmwareInfo.parseInfo(ret);
           this.snackBar.showSnackBar("Firmware info fetch failure!");
         }
       });
@@ -49,6 +48,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   }
 
   public StartWebSocketConnection() {
+    this.snackBar.showSnackBar(this.firmwareService.WebSocketInfo);
     this.socketService.createConnection(this.firmwareService.WebSocketInfo);
     this.socketService.socketObservable.pipe(take(1)).subscribe({
       next: n => {

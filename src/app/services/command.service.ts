@@ -96,7 +96,9 @@ export class CommandService {
     new Command("upload to sd card", "Getting Files from server", "POST", "json", CommandType.UploadSd),
     new Command("manipulateFiles", "Manipulate files on server", "GET", "json", CommandType.FilesAction),
     new Command("login", "Login to files", "GET", "json", CommandType.Login),
-    new Command("updateFw", "Update Frimware command", "GET", "json", CommandType.UpdateFw)
+    new Command("updateFw", "Update Frimware command", "GET", "json", CommandType.UpdateFw),
+    new Command("firmwareInfo", "Get firmware info", "GET", "json", CommandType.FirmwareInfo)
+
   ];
 
   private gcodeCommands: Command[] = [
@@ -223,47 +225,46 @@ export class CommandService {
 
         case CommandType.Upload: {
           issuedCommand.commandUrl = `/files`;
-          issuedCommand.responseType = command.responseType;
           issuedCommand.httpAction = command.httpAction;
           break;
         }
         case CommandType.UploadSd: {
           issuedCommand.commandUrl = `/upload`;
-          issuedCommand.responseType = command.responseType;
           issuedCommand.httpAction = command.httpAction;
           break;
         }
         case CommandType.FilesSdAction: {
           //delete, deletedir, createdir and filename as additional required parameter 
           issuedCommand.commandUrl = `/upload${args.length > 0 ? "?" + args.join('&') : ""}`;
-          issuedCommand.responseType = command.responseType;
           break;
         }
         case CommandType.FilesAction: {
           //delete, deletedir, createdir and filename as additional required parameter 
           issuedCommand.commandUrl = `/files${args.length > 0 ? "?" + args.join('&') : ""}`;
-          issuedCommand.responseType = command.responseType;
           break;
         }
         case CommandType.Login:
           {
             issuedCommand.commandUrl = "/login";
-            issuedCommand.responseType = command.responseType;
             break;
           }
         case CommandType.UpdateFw: {
           issuedCommand.commandUrl = "/updatefw";
-          issuedCommand.responseType = command.responseType;
+          break;
+        }
+        case CommandType.FirmwareInfo: {
+          issuedCommand.commandUrl = "/firmware";
           break;
         }
         default:
           {
             let commandprefix = command.commandType === CommandType.CommandSilent ? "command_silent" : "command";
             issuedCommand.commandUrl = `/${commandprefix}?commandText=${command.command} ${args.join('&')}`;
-            issuedCommand.responseType = command.responseType;
             break;
           }
       }
+
+      issuedCommand.responseType = command.responseType;
       return issuedCommand;
     }
     else {

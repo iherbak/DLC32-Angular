@@ -1,6 +1,45 @@
 <div class="bottomsheet-title">Firmware info</div>
 <div class="info-grid">
-    <div class="grid-row" *ngFor="let info of firmwareInfo | keyvalue">
-        <span>{{info.key}}</span><span>{{info.value}}</span>
+    <div class="grid-row">
+        <span>FW Version</span><span>{{firmwareInfo.FW_Version}}</span>
+    </div>
+    <div class="grid-row">
+        <span>FW Build</span><span>{{firmwareInfo.FW_Build}}</span>
+    </div>
+    <div class="grid-row">
+        <span>FW Target</span><span>{{firmwareInfo.FW_Target}}</span>
+    </div>
+    <div class="grid-row">
+        <span>FW HW</span><span>{{firmwareInfo.FW_HW}}</span>
+    </div>
+    <div class="grid-row">
+        <span>Primary SD</span><span>{{firmwareInfo.Primary_Sd}}</span>
+    </div>
+    <div class="grid-row">
+        <span>Secondary SD</span><span>{{firmwareInfo.Secondary_Sd}}</span>
+    </div>
+    <div class="grid-row">
+        <span>Authentication</span><span>{{firmwareInfo.Authentication}}</span>
+    </div>
+    <div class="grid-row">
+        <span>Axis count</span><span>{{firmwareInfo.Axis_Count}}</span>
+    </div>
+    <div class="grid-row">
+        <span>WebCommunication</span>
+    </div>
+    <div class="grid-row">
+        <span>Mode</span><span>{{firmwareInfo.Webcommunication.Mode}}</span>
+    </div>
+    <div class="grid-row">
+        <span>Websocket port</span><span>{{firmwareInfo.Webcommunication.Websocket_Port}}</span>
+    </div>
+    <div class="grid-row">
+        <span>Wifi IP</span><span>{{firmwareInfo.Webcommunication.Wifi_Ip}}</span>
+    </div>
+    <div class="grid-row">
+        <span>Hostname</span><span>{{firmwareInfo.Webcommunication.Hostname}}</span>
+    </div>
+    <div class="grid-row">
+        <span>Wifi mode</span><span>{{firmwareInfo.Webcommunication.Wifi_Mode}}</span>
     </div>
 </div>

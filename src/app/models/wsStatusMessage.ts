@@ -19,21 +19,21 @@ export class WsStatusMessage extends WsStringMessage {
     }
     constructor(info: string) {
         super();
-        var messageType = (info.split("|"))[0].replace('<', '').toLowerCase();
-
         this.infoKeyValues = this.getallKeyvalues(info.replace('<', '').replace('>', '').split("|"));
-
-        if (messageType.includes("run")) {
-            this.state = WsState.Run;
-        }
-        if (messageType.includes('idle')) {
-            this.state = WsState.Idle;
-        }
-        if (messageType.includes('hold')) {
-            this.state = WsState.Hold;
-        }
-        if (messageType.includes('alarm')) {
-            this.state = WsState.Alarm;
+        let messageType = this.infoKeyValues.get("State");
+        if (messageType != null) {
+            if (messageType === "Run") {
+                this.state = WsState.Run;
+            }
+            if (messageType === 'Idle') {
+                this.state = WsState.Idle;
+            }
+            if (messageType === 'Hold') {
+                this.state = WsState.Hold;
+            }
+            if (messageType === 'Alarm') {
+                this.state = WsState.Alarm;
+            }
         }
 
     }
