@@ -163,6 +163,10 @@ export class CommandService {
   public getCommandUrlByCommand(command: string, args: string[] = []) {
     let basecommand = new Command(command, '');
     if (basecommand) {
+      let storedCommand = this.getCommands().find(c=> c.command.startsWith(command));
+      if(storedCommand != null){
+        basecommand.responseType = storedCommand.responseType;
+      }
       return this.getCommandUrl(basecommand, args);
     }
     this.InvalidCommand.next(`Invalid command : ${command}`);
@@ -229,13 +233,13 @@ export class CommandService {
           break;
         }
         case CommandType.UploadSd: {
-          issuedCommand.commandUrl = `/upload`;
+          issuedCommand.commandUrl = `/SD`;
           issuedCommand.httpAction = command.httpAction;
           break;
         }
         case CommandType.FilesSdAction: {
           //delete, deletedir, createdir and filename as additional required parameter 
-          issuedCommand.commandUrl = `/upload${args.length > 0 ? "?" + args.join('&') : ""}`;
+          issuedCommand.commandUrl = `/SD${args.length > 0 ? "?" + args.join('&') : ""}`;
           break;
         }
         case CommandType.FilesAction: {
