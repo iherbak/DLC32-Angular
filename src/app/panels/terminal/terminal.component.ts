@@ -60,7 +60,7 @@ export class TerminalComponent implements OnDestroy {
     });
 
     this.clientService.CommandError.pipe(takeUntil(this.unsub)).subscribe(commandResult => {
-      this.logCommand(commandResult);
+      this.logCommand(commandResult, true);
     });
 
   }
@@ -83,7 +83,7 @@ export class TerminalComponent implements OnDestroy {
     return this.commandInputFc.value === '' || this.commandInputFc.value === null;
   }
 
-  private logCommand(command: string) {
-    this.commandWindowFc.setValue(this.commandWindowFc.value + "\n" + command);
+  private logCommand(command: string, isError: boolean = false) {
+    this.commandWindowFc.setValue(`${isError?"Error":""} ${this.commandWindowFc.value} ${command}`);
   }
 }

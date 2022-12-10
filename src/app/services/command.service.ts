@@ -64,7 +64,7 @@ export class CommandService {
     new Command("[ESP107]<IP>pwd=<admin password>", "Set/Get AP IP"),
     new Command("[ESP108]<channel>pwd=<admin password>", "Set/Get AP channel"),
     new Command("[ESP110]<state>pwd=<admin password>", "Set/Get radio state which can be STA, AP, BT, OFF"),
-    new Command("[ESP111]<header answer>", "Get current IP"),
+    new Command("[ESP111]<header answer>", "Get current IP","GET","text"),
     new Command("[ESP112]<Hostname> pwd=<admin password>", "Get/Set hostname"),
     new Command("[ESP115]<state>pwd=<admin password>", "Get/Set immediate Radio (WiFi/BT) state which can be ON, OFF"),
     new Command("[ESP120]<state>pwd=<admin password>", "Get/Set HTTP state which can be ON, OFF"),

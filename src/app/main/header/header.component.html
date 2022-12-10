@@ -7,9 +7,9 @@
 
 <mat-menu #menu="matMenu">
     <button mat-menu-item (click)="showInfo()">
-      <span>Info</span>
+      <span>Firmware info</span>
     </button>
-    <button mat-menu-item>
-      <span>Smoosher</span>
+    <button mat-menu-item (click)="showGrblSettings()">
+      <span>Grbl settings</span>
     </button>
   </mat-menu>

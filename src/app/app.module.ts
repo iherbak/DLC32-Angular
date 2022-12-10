@@ -37,6 +37,7 @@ import { LaserComponent } from './panels/controls/laser/laser.component';
 import { CreateDirectoryComponent } from './panels/files/create-directory/create-directory.component';
 import { DeleteComponent } from './panels/files/delete/delete.component';
 import { DoubleClickDirective } from './panels/files/double-click.directive';
+import { GrblsheetComponent } from './main/header/grblsheet/grblsheet.component';
 
 
 @NgModule({
@@ -54,7 +55,8 @@ import { DoubleClickDirective } from './panels/files/double-click.directive';
     LaserComponent,
     CreateDirectoryComponent,
     DeleteComponent,
-    DoubleClickDirective
+    DoubleClickDirective,
+    GrblsheetComponent
   ],
   imports: [
     BrowserModule,
