@@ -1,5 +1,8 @@
-<form [formGroup]="commandForm" >
-    <div class="panel-title">Terminal</div>
+<form [formGroup]="commandForm">
+    <div class="panel-title">
+        <div>Terminal</div>
+        <mat-checkbox class="axisselect" [formControl]="autoscrollFc">Autoscroll</mat-checkbox>
+    </div>
     <div class="panelgrid">
         <mat-form-field class="window max" appearance="fill">
             <textarea matInput class="window" #window [formControl]="commandWindowFc"></textarea>
@@ -7,8 +10,8 @@
         <div class="auto">
             <mat-form-field appearance="fill" class="max">
                 <mat-label>Command</mat-label>
-                <input matInput type="text" placeholder="Command" aria-label="Number" matInput [formControl]="commandInputFc"
-                    [matAutocomplete]="auto">
+                <input matInput type="text" placeholder="Command" aria-label="Number" matInput
+                    [formControl]="commandInputFc" [matAutocomplete]="auto">
                 <mat-autocomplete #auto="matAutocomplete">
                     <mat-option *ngFor="let option of filteredOptions" [value]="option.command">
                         {{option.command}} - {{option.description}}

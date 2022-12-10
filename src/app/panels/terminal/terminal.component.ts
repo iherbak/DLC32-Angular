@@ -13,7 +13,7 @@ import { CommandService } from 'src/app/services/command.service';
 export class TerminalComponent implements OnDestroy {
 
   @ViewChild("window") commandWindowElement!: ElementRef;
-  @Input() maxLines: number = 100;
+  @Input() maxLines: number = 200;
 
   private currentLinesCount: number = 1;
   public commandForm: UntypedFormGroup;
@@ -26,6 +26,10 @@ export class TerminalComponent implements OnDestroy {
     return this.commandForm.get('commandWindow') as FormControl;
   }
 
+  public get autoscrollFc(): FormControl {
+    return this.commandForm.get('autoscroll') as FormControl;
+  }
+
 
   public filteredOptions: Command[] = [];
 
@@ -34,12 +38,14 @@ export class TerminalComponent implements OnDestroy {
   constructor(formBuilder: UntypedFormBuilder, private commandService: CommandService, private clientService: ClientService) {
     this.commandForm = formBuilder.group({
       commandInput: [""],
-      commandWindow: [{ value: "Terminal is ready", disabled: true }]
+      commandWindow: [{ value: "Terminal is ready", disabled: true }],
+      autoscroll: [true]
     });
 
-    this.commandInputFc.valueChanges.pipe(takeUntil(this.unsub)).subscribe(commandfilter => {
+    this.commandInputFc.valueChanges.pipe(takeUntil(this.unsub)).subscribe((commandfilter: string) => {
       this.filteredOptions = this.commandService.getCommands().filter(o => o.command.includes(commandfilter));
     });
+
 
     this.commandWindowFc.valueChanges.pipe(takeUntil(this.unsub)).subscribe((added: string) => {
       if (this.currentLinesCount++ > this.maxLines) {
@@ -47,7 +53,9 @@ export class TerminalComponent implements OnDestroy {
         this.commandWindowFc.setValue("Stripped as max lines reached....");
       }
       else {
-        this.commandWindowElement.nativeElement.scrollTop = this.commandWindowElement.nativeElement.scrollHeight;
+        if (this.autoscrollFc.value) {
+          this.commandWindowElement.nativeElement.scrollTop = this.commandWindowElement.nativeElement.scrollHeight;
+        }
       }
     });
 
@@ -84,6 +92,11 @@ export class TerminalComponent implements OnDestroy {
   }
 
   private logCommand(command: string, isError: boolean = false) {
-    this.commandWindowFc.setValue(`${isError?"Error":""} ${this.commandWindowFc.value} ${command}`);
+    if (isError) {
+      this.commandWindowFc.setValue(`${this.commandWindowFc.value} \n "Error" ${command}`);
+    }
+    else {
+      this.commandWindowFc.setValue(`${this.commandWindowFc.value} \n ${command}`);
+    }
   }
 }

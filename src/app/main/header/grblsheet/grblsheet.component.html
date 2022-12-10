@@ -1,5 +1,12 @@
-<div class="grblpanel">
-    <div class="row" *ngFor="let setting for GrblSettings">
-        <span></span>
+<form [formGroup]="grblSettingsForm">
+    <div class="bottomsheet-title">GRBL settings</div>
+    <div class="grblpanel" formArrayName="settings">
+        <ng-container *ngFor="let settingForm of grblArray.controls; let i = index">
+            <mat-form-field appearance="fill" class="max" >
+                <mat-label>{{GetSettingName(i)}}</mat-label>
+                <input matInput type="number" aria-label="Number" [formControl]="settingForm" matInput
+                    (change)="setGrblValue(i)">
+            </mat-form-field>
+        </ng-container>
     </div>
-</div>
+</form>

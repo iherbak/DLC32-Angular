@@ -20,7 +20,7 @@ export class CommandService {
     new Command("$G", "View GCode parser state."),
     new Command("$I", "View Build Info"),
     new Command("$N", "View saved start up code"),
-    new Command("$Nx", "Save Start-up GCode line (x=0 or 1) There are executed on a reset."),
+    new Command("$N", "Save Start-up GCode line (x=0 or 1) There are executed on a reset."),
     new Command("$C", "Toggle Check Gcode Mode"),
     new Command("$X", "Kill Alarm Lock state."),
     new Command("$H", "Run Homing Cycle"),
@@ -233,13 +233,13 @@ export class CommandService {
           break;
         }
         case CommandType.UploadSd: {
-          issuedCommand.commandUrl = `/SD`;
+          issuedCommand.commandUrl = `/upload`;
           issuedCommand.httpAction = command.httpAction;
           break;
         }
         case CommandType.FilesSdAction: {
           //delete, deletedir, createdir and filename as additional required parameter 
-          issuedCommand.commandUrl = `/SD${args.length > 0 ? "?" + args.join('&') : ""}`;
+          issuedCommand.commandUrl = `/upload${args.length > 0 ? "?" + args.join('&') : ""}`;
           break;
         }
         case CommandType.FilesAction: {
@@ -263,7 +263,7 @@ export class CommandService {
         default:
           {
             let commandprefix = command.commandType === CommandType.CommandSilent ? "command_silent" : "command";
-            issuedCommand.commandUrl = `/${commandprefix}?commandText=${command.command} ${args.join('&')}`;
+            issuedCommand.commandUrl = `/${commandprefix}?commandText=${command.command}${args.join('&')}`;
             break;
           }
       }

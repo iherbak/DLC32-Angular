@@ -5,6 +5,8 @@ import makeWebSocketObservable, { GetWebSocketResponses, WebSocketOptions } from
 import { ClientService } from './client.service';
 import { WsState, WsStatusMessage } from '../models/wsStatusMessage';
 import { AlarmCode } from '../models/alarmCode';
+import { GrblSetting } from '../models/grblSetting';
+import { FirmwareService } from './firmware.service';
 
 @Injectable({
   providedIn: 'root'
@@ -41,7 +43,7 @@ export class SocketService {
     return (this.machineState === WsState.Run || this.machineState === WsState.Hold);
   }
 
-  constructor(private clientService: ClientService) {
+  constructor(private clientService: ClientService, private firmwareService: FirmwareService) {
 
   }
 
@@ -79,17 +81,29 @@ export class SocketService {
                 if (alarmdesc != null) {
                   wsMessage.infoKeyValues.set("alarm", alarmdesc?.description);
                 }
-                else{
+                else {
                   wsMessage.infoKeyValues.set("alarm", "unknown");
                 }
               }
               this.clientService.WsStatusMessage.next(wsMessage);
             }
+            if (strMessage.startsWith('$')) {
+              let lines = strMessage.split("\n");
+              let grblSettings: GrblSetting[] = [];
+              lines.forEach(line => {
+                // do not parse ok message at the end
+                if (line.startsWith('$')) {
+                  let grblsetting = line.split("=");
+                  grblSettings.push(new GrblSetting(grblsetting[0].trim(), parseFloat(grblsetting[1].trim())));
+                }
+              });
+              this.firmwareService.GrblSettings = grblSettings;
+            }
             this.clientService.CommandSuccess.next(strMessage);
           }
           if (typeof (message) == 'string') {
 
-            this.clientService.CommandError.next(message);
+            this.clientService.CommandSuccess.next(message);
           }
         },
         error: (error) => {

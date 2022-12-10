@@ -1,4 +1,9 @@
 export class GrblSetting{
-    public setting! : string;
-    public value! : string;
+    public Setting : string;
+    public Value : number;
+
+    constructor(setting: string, value: number){
+        this.Setting = setting;
+        this.Value = value;
+    }
 }

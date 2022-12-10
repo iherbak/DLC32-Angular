@@ -26,15 +26,15 @@ export class ClientService {
     return this.sendCommand<R>(command, config);
   }
 
-  public sendGetCommand<R>(command: ExecutableCommand, backgroundCommand: boolean = false): Observable<R> {
+  public sendGetCommand<R>(command: ExecutableCommand, backgroundCommand: boolean = false, silent: boolean = false): Observable<R> {
     let config: any = {
       responseType: command.responseType,
       observe: 'body'
     };
-    return this.sendCommand<R>(command, config, backgroundCommand);
+    return this.sendCommand<R>(command, config, backgroundCommand, silent);
   }
 
-  private sendCommand<R>(command: ExecutableCommand, config: any, backgroundCommand: boolean = false): Observable<R> {
+  private sendCommand<R>(command: ExecutableCommand, config: any, backgroundCommand: boolean = false, silent: boolean = false): Observable<R> {
     if (!backgroundCommand) {
       this.WaitingForClient.next(true);
     }
@@ -45,7 +45,7 @@ export class ClientService {
     return obs.pipe(
       tap({
         next: n => {
-          if (!backgroundCommand) {
+          if (!backgroundCommand || !silent) {
             this.CommandSuccess.next(`${command.commandUrl} -> OK`);
             this.WaitingForClient.next(false);
           }

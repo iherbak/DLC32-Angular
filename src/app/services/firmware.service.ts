@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 import { FirmwareInfo } from '../models/firmwareInfo';
 import { GrblSetting } from '../models/grblSetting';
 
@@ -6,6 +7,8 @@ import { GrblSetting } from '../models/grblSetting';
   providedIn: 'root'
 })
 export class FirmwareService {
+
+  public GrblSettingsChanges : Subject<void> = new Subject();
 
   private info: FirmwareInfo = new FirmwareInfo();
   private grblSettings: GrblSetting[] = [];
@@ -28,6 +31,7 @@ export class FirmwareService {
 
   public set GrblSettings(settings: GrblSetting[]){
     this.grblSettings = settings;
+    this.GrblSettingsChanges.next();
   }
 
 
