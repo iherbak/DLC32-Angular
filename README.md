@@ -22,4 +22,16 @@ For daily use it contains all the controls you would find in the other UI-s
 - npm install
 - Build with ng build
 - use https://github.com/iherbak/DLC32-UIEmbedder to integrate the files into the index.html and generate an uploadable index.html.gz
-- Upload the index.html.gz to the device'S internal flash/SPIFF
+- Upload the index.html.gz to the device's internal flash/SPIFF
+
+#Releases
+
+- you can use one of the precompiled releases for upload
+
+#Upload
+
+- IMPORTATNT - Create a backup of the current version of your index.html.gz by downloading it. (click on it)
+
+- Find the option to update web UI and upload the index.html.gz overwriting the default one. (see image)
+
+![alt text](https://https://github.com/iherbak/DLC32-Angular/readme/upload.jpg?raw=true)
