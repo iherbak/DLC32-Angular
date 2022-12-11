@@ -30,6 +30,10 @@ export class GrblsheetComponent implements OnDestroy, AfterViewInit {
     return this.firmwareService.GrblSettings[i].Setting;
   }
 
+  public GetSettingDescription(i: number){
+    return this.firmwareService.GrblSettings[i].Description;
+  }
+
   ngAfterViewInit(): void {
     this.firmwareService.GrblSettings.forEach(setting => {
       let settingControl: FormControl = new FormControl(setting.Value);

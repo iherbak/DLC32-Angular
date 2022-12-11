@@ -94,10 +94,9 @@ export class SocketService {
                 // do not parse ok message at the end
                 if (line.startsWith('$')) {
                   let grblsetting = line.split("=");
-                  grblSettings.push(new GrblSetting(grblsetting[0].trim(), parseFloat(grblsetting[1].trim())));
+                  this.firmwareService.setGrblSettingValue(grblsetting[0].trim(), parseFloat(grblsetting[1].trim()));
                 }
               });
-              this.firmwareService.GrblSettings = grblSettings;
             }
             this.clientService.CommandSuccess.next(strMessage);
           }
