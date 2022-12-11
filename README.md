@@ -38,4 +38,4 @@ For daily use it contains all the controls you would find in the other UI-s
 
 #Screenshot
 
-<img src="/readme/screeshot.jpg">
+<img src="/readme/screenshot.jpg">
