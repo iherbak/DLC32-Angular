@@ -34,4 +34,4 @@ For daily use it contains all the controls you would find in the other UI-s
 
 - Find the option to update web UI and upload the index.html.gz overwriting the default one. (see image)
 
-![alt text](https://https://github.com/iherbak/DLC32-Angular/readme/upload.jpg?raw=true)
+![alt text](https://github.com/iherbak/DLC32-Angular/readme/upload.jpg?raw=true)
