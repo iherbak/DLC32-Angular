@@ -4,7 +4,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 # Purpose
 
-To provide an alternative UI for my MKS-DLC32
+To provide an alternative UI for my MKS-DLC32 based on Angular material
 
 #Functions
 
@@ -35,3 +35,7 @@ For daily use it contains all the controls you would find in the other UI-s
 - Find the option to update web UI and upload the index.html.gz overwriting the default one. (see image)
 
 <img src="/readme/upload.jpg">
+
+#Screenshot
+
+<img src="/readme/screeshot.jpg">
