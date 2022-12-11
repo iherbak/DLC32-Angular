@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnDestroy } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, UntypedFormArray, UntypedFormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, UntypedFormArray, UntypedFormGroup, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { GrblSetting } from 'src/app/models/grblSetting';
 import { ClientService } from 'src/app/services/client.service';
@@ -26,27 +26,33 @@ export class GrblsheetComponent implements OnDestroy, AfterViewInit {
     });
   }
 
-  public GetSettingName(i: number){
+  public GetSettingName(i: number) {
     return this.firmwareService.GrblSettings[i].Setting;
   }
 
-  public GetSettingDescription(i: number){
+  public GetSettingDescription(i: number) {
     return this.firmwareService.GrblSettings[i].Description;
+  }
+
+  public HasRequiredError(i: number) {
+    return this.grblArray.at(i).hasError('required');
   }
 
   ngAfterViewInit(): void {
     this.firmwareService.GrblSettings.forEach(setting => {
-      let settingControl: FormControl = new FormControl(setting.Value);
+      let settingControl: FormControl = new FormControl(setting.Value, [Validators.required]);
       this.grblArray.push(settingControl);
     });
 
   }
 
-  public setGrblValue(i : number) {
+  public setGrblValue(i: number) {
     let control = this.grblArray.at(i);
-    let command = this.commandService.getCommandUrlByCommand(`${this.GetSettingName(i)}=`, [control.value]);
-    if (command != null) {
-      this.clientService.sendGetCommand(command).subscribe();
+    if (control.valid) {
+      let command = this.commandService.getCommandUrlByCommand(`${this.GetSettingName(i)}=`, [control.value]);
+      if (command != null) {
+        this.clientService.sendGetCommand(command).subscribe();
+      }
     }
   }
 

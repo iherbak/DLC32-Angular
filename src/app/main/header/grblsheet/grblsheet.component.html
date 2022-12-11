@@ -2,14 +2,17 @@
     <div class="bottomsheet-title">GRBL settings</div>
     <div class="grblpanel" formArrayName="settings">
         <ng-container *ngFor="let settingForm of grblArray.controls; let i = index">
-                <mat-form-field appearance="fill" class="max">
-                    <mat-label>{{GetSettingName(i)}}</mat-label>
-                    <input matInput type="number" aria-label="Number" [formControl]="settingForm" matInput
-                        (change)="setGrblValue(i)">
-                </mat-form-field>
-                <div>
-                    {{GetSettingDescription(i)}}
-                </div>
+            <mat-form-field appearance="fill" class="max">
+                <mat-label>{{GetSettingName(i)}}</mat-label>
+                <input matInput type="number" aria-label="Number" [formControl]="settingForm" matInput
+                    (change)="setGrblValue(i)">
+                <mat-error *ngIf="settingForm.hasError('required')">
+                    <strong>Required</strong>
+                </mat-error>
+            </mat-form-field>
+            <div>
+                {{GetSettingDescription(i)}}
+            </div>
         </ng-container>
     </div>
 </form>
