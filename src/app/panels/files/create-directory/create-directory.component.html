@@ -5,7 +5,8 @@
         <input matInput type="text" placeholder="new" aria-label="text" matInput [formControl]="nameFc">
         <mat-error *ngIf="nameFc.hasError('required')">
             <strong>Required</strong>
-          </mat-error>
+        </mat-error>
     </mat-form-field>
-    <button type="button" mat-raised-button class="create" [disabled]="!directoryForm.valid" (click)="createDirectory()">Create</button>
+    <button type="button" mat-raised-button class="create" [disabled]="!directoryForm.valid"
+        (click)="createDirectory()">Create</button>
 </form>
