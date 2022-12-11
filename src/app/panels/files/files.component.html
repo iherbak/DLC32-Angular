@@ -24,6 +24,6 @@
         <input #fileInput hidden type="file" (change)="uploadFile($event)">
         <button type="button" class="upload" mat-raised-button (click)="upload()">Upload</button>
         <button type="button" class="create" mat-raised-button (click)="showCreateDirectory()">Create directory</button>
-        <button type="button" class="delete mat-warn" mat-raised-button [disabled]="!fileSelected()" (click)="showDelete()">Delete</button>
+        <button type="button" class="delete mat-warn" mat-raised-button [disabled]="!canBeDeleted()" (click)="showDelete()">Delete</button>
     </div>
 </form>

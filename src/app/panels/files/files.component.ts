@@ -171,6 +171,16 @@ export class FilesComponent implements OnInit, OnDestroy {
     return true;
   }
 
+  public canBeDeleted() {
+    if (this.selectedFileFc.value == null) {
+      return false;
+    }
+    if (this.selectedFileFc.value[0].name === '..') {
+      return false;
+    }
+    return true;
+  }
+
   public upload() {
     this.fileInput?.nativeElement.click();
   }
