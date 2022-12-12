@@ -183,7 +183,7 @@ export class CommandService {
   }
 
   public getSetOriginCommand(axes: Axis[]) {
-    let basecommand = this.gcodeCommands.find(c => c.command == "[G92]");
+    let basecommand = this.gcodeCommands.find(c => c.command == "G92");
     let args: string[] = [];
     axes.forEach((axis) => {
       switch (axis) {
