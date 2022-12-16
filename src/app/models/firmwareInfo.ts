@@ -16,6 +16,10 @@ export class FirmwareInfo extends WsStringMessage {
         return `ws://${this.Webcommunication.Wifi_Ip}:${this.Webcommunication.Websocket_Port}`;
     }
 
+    public clone(infoObject: FirmwareInfo){
+        Object.assign(this,infoObject);
+    }
+
     // example response 
     //FW version:1.1h (2022110102) # FW target:grbl-embedded # FW HW:Direct SD # primary sd:/sd # secondary sd:none # authentication:no # webcommunication: Sync: 81:10.0.4.119 # hostname:mks_grbl # axis:3
     public parseStringFWInfo(info: string) {

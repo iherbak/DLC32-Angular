@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnDestroy } from '@angular/core';
-import { Observable, Subject, Subscription, take, takeUntil, timer } from 'rxjs';
+import { Observable, Subject, take, takeUntil, timer } from 'rxjs';
 import { CommandType } from './models/commandType';
 import { FirmwareInfo } from './models/firmwareInfo';
 import { ClientService } from './services/client.service';
@@ -31,19 +31,16 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    //let command = this.commandService.getEspApiCommand(CommandType.FirmwareInfo);
-    let command = this.commandService.getCommandUrlByCommand("[ESP800]");
+    let command = this.commandService.getEspApiCommand(CommandType.FirmwareInfo);
     if (command != null) {
-      //this.clientService.sendGetCommand<FirmwareInfo>(command).subscribe({
-      this.clientService.sendGetCommand<string>(command).subscribe({
-        next: ret => {
-          //Object.assign(this.firmwareService.FirmwareInfo,ret);
-          this.firmwareService.FirmwareInfo.parseStringFWInfo(ret);
+      this.clientService.sendGetCommand<FirmwareInfo>(command).subscribe({
+        next: (ret: FirmwareInfo) => {
+          this.firmwareService.FirmwareInfo.clone(ret);
           this.snackBar.showSnackBar("Firmware info fetched, starting websocket connection...");
           this.StartWebSocketConnection();
           this.clientService.Connected.next();
         },
-        error: error => {
+        error: () => {
           this.snackBar.showSnackBar("Firmware info fetch failure!");
         }
       });
@@ -54,11 +51,11 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     this.snackBar.showSnackBar(this.firmwareService.WebSocketInfo);
     this.socketService.createConnection(this.firmwareService.WebSocketInfo);
     this.socketService.socketObservable.pipe(take(1)).subscribe({
-      next: n => {
+      next: () => {
         this.snackBar.showSnackBar("websocket connected...");
         this.openMainSubscriptions();
       },
-      error: e => {
+      error: () => {
         this.snackBar.showSnackBar("websocket connection failed!");
       }
     });
@@ -74,15 +71,15 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     });
 
     let settingsCommand = this.commandService.getCommandUrlByCommand("$$");
-    if(settingsCommand != null){
+    if (settingsCommand != null) {
       this.clientService.sendGetCommand(settingsCommand).subscribe();
     }
 
 
     this.socketService.socketObservable.pipe(takeUntil(this.unsub)).subscribe({
-      next: n => {
+      next: () => {
       },
-      error: e => {
+      error: () => {
         this.snackBar.showSnackBar("websocket connection failed!");
       }
     });
