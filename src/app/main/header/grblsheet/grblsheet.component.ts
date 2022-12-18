@@ -63,7 +63,8 @@ export class GrblsheetComponent implements OnDestroy, OnInit {
       case 'XYZ':{
         return AxisMask.XYZ;
       }
-
+      default:
+        return AxisMask.None;
     }
   }
 

@@ -38,6 +38,7 @@
                     <mat-form-field appearance="fill" class="max">
                         <mat-label>{{GetSettingName(i)}}</mat-label>
                         <mat-select [formControl]="settingForm" (selectionChange)="setGrblValue(i)">
+                            <mat-option [value]="AxisMasks.None">None</mat-option>
                             <mat-option [value]="AxisMasks.X">X</mat-option>
                             <mat-option [value]="AxisMasks.Y">Y</mat-option>
                             <mat-option [value]="AxisMasks.Z">Z</mat-option>

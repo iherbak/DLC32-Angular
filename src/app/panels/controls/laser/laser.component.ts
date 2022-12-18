@@ -28,7 +28,7 @@ export class LaserComponent {
       command = this.commandService.getCommandUrlByCommand("M3", ['S25']);
     }
     else {
-      command = this.commandService.getCommandUrlByCommand("M%");
+      command = this.commandService.getCommandUrlByCommand("M5");
     }
     if (command != null) {
       this.clientService.sendGetCommand(command).subscribe();
