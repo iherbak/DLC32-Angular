@@ -2,17 +2,57 @@
     <div class="bottomsheet-title">GRBL settings</div>
     <div class="grblpanel" formArrayName="settings">
         <ng-container *ngFor="let settingForm of grblArray.controls; let i = index">
-            <mat-form-field appearance="fill" class="max">
-                <mat-label>{{GetSettingName(i)}}</mat-label>
-                <input matInput type="number" aria-label="Number" [formControl]="settingForm" matInput
-                    (change)="setGrblValue(i)">
-                <mat-error *ngIf="settingForm.hasError('required')">
-                    <strong>Required</strong>
-                </mat-error>
-            </mat-form-field>
-            <div>
-                {{GetSettingDescription(i)}}
-            </div>
+            <ng-container [ngSwitch]="GetSettingType(i)">
+                <div *ngSwitchCase="SettingTypes.Number" class="grblsetting">
+                    <div>
+                        {{GetSettingDescription(i)}}
+                    </div>
+                    <mat-form-field appearance="fill" class="max">
+                        <mat-label>{{GetSettingName(i)}}</mat-label>
+                        <input matInput type="number" aria-label="Number" [formControl]="settingForm" matInput
+                            (change)="setGrblValue(i)">
+                        <mat-error *ngIf="settingForm.hasError('required')">
+                            <strong>Required</strong>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div *ngSwitchCase="SettingTypes.Bool" class="grblsetting">
+                    <div>
+                        {{GetSettingDescription(i)}}
+                    </div>
+                    <mat-form-field appearance="fill" class="max">
+                        <mat-label>{{GetSettingName(i)}}</mat-label>
+                        <mat-select [formControl]="settingForm" (selectionChange)="setGrblValue(i)">
+                            <mat-option [value]="true">On</mat-option>
+                            <mat-option [value]="false">Off</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="settingForm.hasError('required')">
+                            <strong>Required</strong>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div *ngSwitchCase="SettingTypes.Mask" class="grblsetting">
+                    <div>
+                        {{GetSettingDescription(i)}}
+                    </div>
+                    <mat-form-field appearance="fill" class="max">
+                        <mat-label>{{GetSettingName(i)}}</mat-label>
+                        <mat-select [formControl]="settingForm" (selectionChange)="setGrblValue(i)">
+                            <mat-option [value]="AxisMasks.X">X</mat-option>
+                            <mat-option [value]="AxisMasks.Y">Y</mat-option>
+                            <mat-option [value]="AxisMasks.Z">Z</mat-option>
+                            <mat-option [value]="AxisMasks.XY">XY</mat-option>
+                            <mat-option [value]="AxisMasks.XZ">XZ</mat-option>
+                            <mat-option [value]="AxisMasks.YZ">YZ</mat-option>
+                            <mat-option [value]="AxisMasks.XYZ">XYZ</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="settingForm.hasError('required')">
+                            <strong>Required</strong>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+            </ng-container>
         </ng-container>
     </div>
 </form>

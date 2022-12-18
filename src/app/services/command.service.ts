@@ -97,8 +97,8 @@ export class CommandService {
     new Command("manipulateFiles", "Manipulate files on server", "GET", "json", CommandType.FilesAction),
     new Command("login", "Login to files", "GET", "json", CommandType.Login),
     new Command("updateFw", "Update Frimware command", "GET", "json", CommandType.UpdateFw),
-    new Command("firmwareInfo", "Get firmware info", "GET", "json", CommandType.FirmwareInfo)
-
+    new Command("firmwareInfo", "Get firmware info", "GET", "json", CommandType.FirmwareInfo),
+    new Command("grblSettings", "Get grbl settings", "GET", "json", CommandType.GrblSettings)
   ];
 
   private gcodeCommands: Command[] = [
@@ -233,18 +233,22 @@ export class CommandService {
           break;
         }
         case CommandType.UploadSd: {
-          issuedCommand.commandUrl = `/upload`;
+          issuedCommand.commandUrl = `/sd`;
           issuedCommand.httpAction = command.httpAction;
           break;
         }
         case CommandType.FilesSdAction: {
           //delete, deletedir, createdir and filename as additional required parameter 
-          issuedCommand.commandUrl = `/upload${args.length > 0 ? "?" + args.join('&') : ""}`;
+          issuedCommand.commandUrl = `/sd${args.length > 0 ? "?" + args.join('&') : ""}`;
           break;
         }
         case CommandType.FilesAction: {
           //delete, deletedir, createdir and filename as additional required parameter 
           issuedCommand.commandUrl = `/files${args.length > 0 ? "?" + args.join('&') : ""}`;
+          break;
+        }
+        case CommandType.GrblSettings:{
+          issuedCommand.commandUrl = "/grblsettings";
           break;
         }
         case CommandType.Login:

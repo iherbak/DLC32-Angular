@@ -19,7 +19,7 @@ export class WsStatusMessage extends WsStringMessage {
     }
     constructor(info: string) {
         super();
-        this.infoKeyValues = this.getallKeyvalues(info.replace('<', 'State:').replace('>', '').split("|"));
+        this.infoKeyValues = this.getallKeyvalues(info.replace('<', '').replace('>', '').split("|"));
         let messageType = this.infoKeyValues.get("State");
         if (messageType != null) {
             if (messageType === "Run") {

@@ -87,17 +87,6 @@ export class SocketService {
               }
               this.clientService.WsStatusMessage.next(wsMessage);
             }
-            if (strMessage.startsWith('$')) {
-              let lines = strMessage.split("\n");
-              let grblSettings: GrblSetting[] = [];
-              lines.forEach(line => {
-                // do not parse ok message at the end
-                if (line.startsWith('$')) {
-                  let grblsetting = line.split("=");
-                  this.firmwareService.setGrblSettingValue(grblsetting[0].trim(), parseFloat(grblsetting[1].trim()));
-                }
-              });
-            }
             this.clientService.CommandSuccess.next(strMessage);
           }
           if (typeof (message) == 'string') {

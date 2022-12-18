@@ -1,11 +1,15 @@
-export class GrblSetting{
-    public Setting : string;
-    public Description: string;
-    public Value : number;
+import { SettingType } from "./settingtype";
 
-    constructor(setting: string, description: string, value: number = 0){
-        this.Setting = setting;
+export class GrblSetting{
+    public Name : string;
+    public Description: string;
+    public Value : string;
+    public SettingType: SettingType;
+
+    constructor(name: string, description: string, settingType: SettingType, value: string = ""){
+        this.Name = name;
         this.Description = description
+        this.SettingType = settingType;
         this.Value = value;
     }
 }

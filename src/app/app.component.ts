@@ -70,12 +70,6 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       }
     });
 
-    let settingsCommand = this.commandService.getCommandUrlByCommand("$$");
-    if (settingsCommand != null) {
-      this.clientService.sendGetCommand(settingsCommand).subscribe();
-    }
-
-
     this.socketService.socketObservable.pipe(takeUntil(this.unsub)).subscribe({
       next: () => {
       },
