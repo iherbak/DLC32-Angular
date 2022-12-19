@@ -64,7 +64,7 @@ export class CommandService {
     new Command("[ESP107]<IP>pwd=<admin password>", "Set/Get AP IP"),
     new Command("[ESP108]<channel>pwd=<admin password>", "Set/Get AP channel"),
     new Command("[ESP110]<state>pwd=<admin password>", "Set/Get radio state which can be STA, AP, BT, OFF"),
-    new Command("[ESP111]<header answer>", "Get current IP","GET","text"),
+    new Command("[ESP111]<header answer>", "Get current IP", "GET", "text"),
     new Command("[ESP112]<Hostname> pwd=<admin password>", "Get/Set hostname"),
     new Command("[ESP115]<state>pwd=<admin password>", "Get/Set immediate Radio (WiFi/BT) state which can be ON, OFF"),
     new Command("[ESP120]<state>pwd=<admin password>", "Get/Set HTTP state which can be ON, OFF"),
@@ -163,8 +163,8 @@ export class CommandService {
   public getCommandUrlByCommand(command: string, args: string[] = []) {
     let basecommand = new Command(command, '');
     if (basecommand) {
-      let storedCommand = this.getCommands().find(c=> c.command.startsWith(command));
-      if(storedCommand != null){
+      let storedCommand = this.getCommands().find(c => c.command.startsWith(command));
+      if (storedCommand != null) {
         basecommand.responseType = storedCommand.responseType;
       }
       return this.getCommandUrl(basecommand, args);
@@ -222,7 +222,7 @@ export class CommandService {
     }
   }
 
-  private getCommandUrl(command: Command | undefined, args: string[]): ExecutableCommand {
+  private getCommandUrl(command: Command | undefined, args: string[] = []): ExecutableCommand {
     let issuedCommand = new ExecutableCommand("");
     if (command !== undefined) {
       switch (command.commandType) {
@@ -247,7 +247,7 @@ export class CommandService {
           issuedCommand.commandUrl = `/files${args.length > 0 ? "?" + args.join('&') : ""}`;
           break;
         }
-        case CommandType.GrblSettings:{
+        case CommandType.GrblSettings: {
           issuedCommand.commandUrl = "/grblsettings";
           break;
         }
@@ -267,7 +267,12 @@ export class CommandService {
         default:
           {
             let commandprefix = command.commandType === CommandType.CommandSilent ? "command_silent" : "command";
-            issuedCommand.commandUrl = `/${commandprefix}?commandText=${command.command}${args.join('&')}`;
+            if (args.length > 0) {
+              issuedCommand.commandUrl = `/${commandprefix}?commandText=${command.command} ${args.join('&')}`;
+            }
+            else{
+              issuedCommand.commandUrl = `/${commandprefix}?commandText=${command.command}`;
+            }
             break;
           }
       }
