@@ -1,14 +1,14 @@
 .panelgrid {
     grid-template-areas:
-    'filepath filepath filepath'
-    'progress-bar progress-bar progress-bar'
-    'on percentage off';
+        'filepath filepath filepath'
+        'progress-bar progress-bar progress-bar'
+        'on percentage off';
     justify-content: space-between;
 }
 
 .progressbar {
     grid-area: progress-bar;
-    padding:5px;
+    padding: 5px;
 }
 
 .warn {
@@ -18,15 +18,21 @@
 
 .accent {
     grid-area: off;
-    margin:5px;
+    margin: 5px;
 }
 
-.filepath{
+.filepath {
     grid-area: filepath;
     justify-self: center;
     padding-top: 5px;
+    font-size: medium;
 }
 
-.percentages{
+.percentages {
     grid-area: percentage;
+    font-size: medium;
+}
+
+.panel-title {
+    background-color: #f44336;
 }

@@ -20,7 +20,6 @@ export class PanelsComponent implements OnDestroy {
     return this.socketService.isRunning;
   }
 
-
   public get isExpanded() {
     return this.expanded;
   }

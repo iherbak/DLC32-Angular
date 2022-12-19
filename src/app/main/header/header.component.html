@@ -1,15 +1,16 @@
-<mat-toolbar>
-    <button mat-raised-button aria-label="Menu icon" [matMenuTriggerFor]="menu" [disabled]="isRunning">
-        Menu
-    </button>
-    <span>DLC32-UI<sup>{{version}}</sup></span>
-</mat-toolbar>
+<div class="toolbar">
+  <button mat-raised-button aria-label="Menu icon" [matMenuTriggerFor]="menu" [disabled]="isRunning">
+    Menu
+  </button>
+  <span>DLC32-UI<sup>{{version}}</sup></span>
+</div>
+<app-progress *ngIf="isRunning"></app-progress>
 
 <mat-menu #menu="matMenu">
-    <button mat-menu-item (click)="showInfo()">
-      <span>Firmware info</span>
-    </button>
-    <button mat-menu-item (click)="showGrblSettings()">
-      <span>Grbl settings</span>
-    </button>
-  </mat-menu>
+  <button mat-menu-item (click)="showInfo()">
+    <span>Firmware info</span>
+  </button>
+  <button mat-menu-item (click)="showGrblSettings()">
+    <span>Grbl settings</span>
+  </button>
+</mat-menu>
