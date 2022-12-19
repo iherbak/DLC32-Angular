@@ -219,23 +219,28 @@ export class FilesComponent implements OnInit, OnDestroy {
   public showCreateDirectory() {
     let sheetRef = this.bottomSheet.open(CreateDirectoryComponent, { data: { currentPath: this.directory.path, commandType: this.getFileActionCommandType() } });
     sheetRef.afterDismissed().subscribe((n: { success: boolean, directory: Directory }) => {
-      if (n.success) {
-        this.UpdateFileList(n.directory);
-      }
-      else {
-        this.snackBar.showSnackBar("Create Directory failed");
+      if (n != undefined) {
+        if (n.success) {
+          this.UpdateFileList(n.directory);
+        }
+        else {
+          this.snackBar.showSnackBar("Create Directory failed");
+        }
       }
     });
+
   }
 
   public showDelete() {
     let sheetRef = this.bottomSheet.open(DeleteComponent, { data: { currentPath: this.directory.path, file: this.selectedFileFc.value[0], commandType: this.getFileActionCommandType() } });
     sheetRef.afterDismissed().subscribe((n: { success: boolean, directory: Directory }) => {
-      if (n.success) {
-        this.UpdateFileList(n.directory);
-      }
-      else {
-        this.snackBar.showSnackBar("Delete failed");
+      if (n != undefined) {
+        if (n.success) {
+          this.UpdateFileList(n.directory);
+        }
+        else {
+          this.snackBar.showSnackBar("Delete failed");
+        }
       }
     });
   }
