@@ -16,6 +16,7 @@ import { SnackBarService } from 'src/app/services/snack-bar.service';
 import { DeleteComponent } from './delete/delete.component';
 import { WsState } from 'src/app/models/wsStatusMessage';
 import { ProcessingDetails } from 'src/app/models/processingDetails';
+import { ShowProgress } from 'src/app/models/showProgress';
 
 @Component({
   selector: 'app-files',
@@ -24,7 +25,7 @@ import { ProcessingDetails } from 'src/app/models/processingDetails';
 })
 export class FilesComponent implements OnInit, OnDestroy {
 
-  @ViewChild("fileInput") fileInput: ElementRef | undefined;
+  @ViewChild("fileInput") fileInput!: ElementRef;
 
   private unsub: Subject<void> = new Subject();
   private postponedUpdate: boolean = true;
@@ -32,7 +33,7 @@ export class FilesComponent implements OnInit, OnDestroy {
   public directory: Directory;
   public pageIndex = 0;
   public pageFiles: ESP32File[] = [];
-  public fileSources: FileSource[] = [new FileSource("Internal flash", Drive.SPIFF)];
+  public fileSources: FileSource[] = [new FileSource("/spiffs", Drive.SPIFF)];
   public fileForm: FormGroup;
 
   public get slashCorrectPath() {
@@ -55,13 +56,7 @@ export class FilesComponent implements OnInit, OnDestroy {
     });
 
     this.directory = new Directory();
-
     this.directory.path = "/";
-    this.directory.total = "1/100 TB";
-    this.directory.files.push(new ESP32File("adssadsa.txt", "322.77 KB"));
-    this.directory.files.push(new ESP32File("folder", "-1"));
-    this.directory.files.push(new ESP32File("alder", "-1"));
-    this.UpdateFileList(this.directory);
 
     this.clientService.Connected.pipe(takeUntil(this.unsub)).subscribe(() => {
       this.fileSources.push(new FileSource(this.firmwareService.FirmwareInfo.Primary_Sd, Drive.SD))
@@ -103,12 +98,23 @@ export class FilesComponent implements OnInit, OnDestroy {
       this.clientService.sendGetCommand<Directory>(basecommand).subscribe({
         next: n => {
           if (n.status.toLowerCase() !== "busy") {
-            this.UpdateFileList(n);
+            if (n.status.toLowerCase() != 'no sd card') {
+              this.UpdateFileList(n);
+            }
+            else {
+              this.snackBar.showSnackBar("SD Card was not recognized by firmware,");
+              this.fileSources.splice(1, 1);
+              this.fileSourceFc.setValue(this.fileSources[0], { emitEvent: false });
+              this.refreshFiles();
+            }
           }
           else {
             this.postponedUpdate = true;
           }
         },
+        error: () => {
+          this.snackBar.showSnackBar("Unable to get files!");
+        }
       }
       );
     }
@@ -182,7 +188,7 @@ export class FilesComponent implements OnInit, OnDestroy {
   }
 
   public upload() {
-    this.fileInput?.nativeElement.click();
+    this.fileInput.nativeElement.click();
   }
 
   public uploadFile(event: Event) {
@@ -199,9 +205,12 @@ export class FilesComponent implements OnInit, OnDestroy {
       this.clientService.sendPostCommand<Directory>(basecommand, formData).subscribe({
         next: (ret: Directory) => {
           this.UpdateFileList(ret);
+          //reset input
+          this.fileInput.nativeElement.value = null;
         },
-        error: error => {
-          console.log("upload failed");
+        error: () => {
+          this.fileInput.nativeElement.value = null;
+          this.snackBar.showSnackBar("Upload failed!",)
         }
       });
     }

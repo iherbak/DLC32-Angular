@@ -20,6 +20,13 @@ export class ProgressComponent implements OnDestroy {
     return this.processingDetails;
   }
 
+  public get FormattedPercentage(): string {
+    if (this.ProcessingDetails.Percentage != 0) {
+      return `${this.ProcessingDetails.Percentage} %`;
+    }
+    return "";
+  }
+
   public get isRunning() {
     return this.socketService.isRunning;
   }

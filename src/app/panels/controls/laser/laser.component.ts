@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { CommandType } from 'src/app/models/commandType';
 import { ExecutableCommand } from 'src/app/models/executableCommand';
 import { ClientService } from 'src/app/services/client.service';
 import { CommandService } from 'src/app/services/command.service';

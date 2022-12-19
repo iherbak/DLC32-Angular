@@ -1,8 +1,8 @@
 .panelgrid {
     grid-template-areas:
-    'filepath filepath'
-    'progress-bar progress-bar'
-    'on off';
+    'filepath filepath filepath'
+    'progress-bar progress-bar progress-bar'
+    'on percentage off';
     justify-content: space-between;
 }
 
@@ -25,4 +25,8 @@
     grid-area: filepath;
     justify-self: center;
     padding-top: 5px;
+}
+
+.percentages{
+    grid-area: percentage;
 }

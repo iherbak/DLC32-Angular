@@ -1,5 +1,5 @@
 <mat-toolbar>
-    <button mat-raised-button aria-label="Menu icon" [matMenuTriggerFor]="menu">
+    <button mat-raised-button aria-label="Menu icon" [matMenuTriggerFor]="menu" [disabled]="isRunning">
         Menu
     </button>
     <span>DLC32-UI<sup>{{version}}</sup></span>
