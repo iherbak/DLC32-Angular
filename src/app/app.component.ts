@@ -20,6 +20,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
   private unsub: Subject<void> = new Subject();
   private watchDog!: Observable<number>;
+  private textDecoder: TextEncoder = new TextEncoder();
 
   constructor(private commandService: CommandService, public clientService: ClientService, private snackBar: SnackBarService, private socketService: SocketService, private firmwareService: FirmwareService) {
 

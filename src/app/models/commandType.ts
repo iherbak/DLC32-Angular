@@ -2,6 +2,7 @@ export enum CommandType {
     Login,
     Command,
     CommandSilent,
+    EspCommand,
     Upload,
     UploadSd,
     FilesAction,

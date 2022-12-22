@@ -16,7 +16,6 @@ import { SnackBarService } from 'src/app/services/snack-bar.service';
 import { DeleteComponent } from './delete/delete.component';
 import { WsState } from 'src/app/models/wsStatusMessage';
 import { ProcessingDetails } from 'src/app/models/processingDetails';
-import { ShowProgress } from 'src/app/models/showProgress';
 
 @Component({
   selector: 'app-files',
@@ -57,7 +56,8 @@ export class FilesComponent implements OnInit, OnDestroy {
 
     this.directory = new Directory();
     this.directory.path = "/";
-
+    this.directory.files = [new ESP32File("cedfre","1321 kB")];
+    this.UpdateFileList(this.directory);
     this.clientService.Connected.pipe(takeUntil(this.unsub)).subscribe(() => {
       this.fileSources.push(new FileSource(this.firmwareService.FirmwareInfo.Primary_Sd, Drive.SD))
       if (this.fileSources.length > 1) {

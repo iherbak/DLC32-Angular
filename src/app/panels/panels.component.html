@@ -1,35 +1,37 @@
-<div class="panel-grid">
-    <mat-accordion class="accordion">
-        <mat-expansion-panel [disabled]="isRunning" [expanded]="isExpanded">
-            <mat-expansion-panel-header >
-                <mat-panel-title>
-                    Controls panel
-                </mat-panel-title>
-                <mat-panel-description>
-                    Control options for laser like move, set origin etc.
-                </mat-panel-description>
-            </mat-expansion-panel-header>
-            <div class="controls-panel-grid">
-                <app-xyz></app-xyz>
-                <app-laser></app-laser>
-                <app-general></app-general>
-            </div>
-        </mat-expansion-panel>
-        <mat-expansion-panel [expanded]="isExpanded" [disabled]="isRunning">
-            <mat-expansion-panel-header>
-                <mat-panel-title>
-                    Files panel
-                </mat-panel-title>
-                <mat-panel-description>
-                    Manage files on storages, internal flash, sd
-                </mat-panel-description>
-            </mat-expansion-panel-header>
-            <div class="files-panel-grid">
-                <app-files></app-files>
-            </div>
-        </mat-expansion-panel>
-    </mat-accordion>
-    <div>
+<mat-accordion class="accordion">
+    <mat-expansion-panel [disabled]="isRunning" [expanded]="isExpanded">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                Controls panel
+            </mat-panel-title>
+            <mat-panel-description>
+                Control options for laser like move, set origin etc.
+            </mat-panel-description>
+        </mat-expansion-panel-header>
+        <app-xyz></app-xyz>
+        <app-laser></app-laser>
+        <app-general></app-general>
+    </mat-expansion-panel>
+    <mat-expansion-panel [expanded]="isExpanded" [disabled]="isRunning">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                Files panel
+            </mat-panel-title>
+            <mat-panel-description>
+                Manage files on storages, internal flash, sd
+            </mat-panel-description>
+        </mat-expansion-panel-header>
+        <app-files></app-files>
+    </mat-expansion-panel>
+    <mat-expansion-panel [expanded]="isExpanded" [disabled]="isRunning">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                Terminal panel
+            </mat-panel-title>
+            <mat-panel-description>
+                See status, issue commands
+            </mat-panel-description>
+        </mat-expansion-panel-header>
         <app-terminal></app-terminal>
-    </div>
-</div>
+    </mat-expansion-panel>
+</mat-accordion>

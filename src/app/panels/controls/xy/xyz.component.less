@@ -1,58 +1,50 @@
-button {
-    width: 100px;
-}
-
-.panelgrid {
-    grid-template-columns: repeat(3,110px) auto;
-    grid-template-areas: 
-    '. up . axisselect'
-    'left home right feedrate'
-    '. down . .'
-    'distance distance distance .';
+.top-buttons {
+    display: grid;
+    grid-template-columns: repeat(3, 110px);
     place-items: center;
 }
 
-.z{
-    grid-area: title-z;
-}
-.up {
-    grid-area: up;
-}
-
-.left {
-    grid-area: left;
+.middle-buttons {
+    display: grid;
+    grid-template-columns: repeat(3, 110px);
+    place-items: center;
 }
 
-.home {
-    grid-area: home;
+.bottom-buttons {
+    display: grid;
+    grid-template-columns: repeat(3, 110px);
+    place-items: center;
 }
 
-.right {
-    grid-area: right;
+.controls-wrapper {
+    display: flex;
+    justify-content: center;
+    background-color: #666666;
+    padding-bottom: 5px;
+    margin-bottom: 5px;
 }
 
-.down {
-    grid-area: down;
+.rates {
+    align-items: center;
+    display: grid;
+    grid-template-rows: repeat(2, auto);
+    grid-template-columns: 167px;
 }
 
-.axisselect{
-    grid-area: axisselect;
-}
-.feedrate{
-    grid-area: feedrate;
-    width:100px;
-}
-
-.distance{
-    grid-area: distance;
-}
-
-.minus-tenth-step,.minus-one-step,.minus-ten-step,.minus-hundred-step,
-.tenth-step,.one-step,.ten-step,.hundred-step{
-    width:70px;
+.z,
+.up,
+.left,
+.home,
+.right,
+.down,
+.axisselect,
+.feedrate {
+    margin: 5px;
 }
 
-mat-button-toggle{
-    border-top:1px solid gray;
-    border-bottom:1px solid gray;
+@media all and (max-width:850px) {
+    .controls-wrapper {
+        flex-direction: column;
+        align-items: center;
+    }
 }

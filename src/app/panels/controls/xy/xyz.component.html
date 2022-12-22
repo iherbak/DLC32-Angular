@@ -1,35 +1,51 @@
 <form [formGroup]="distanceForm">
   <div class="panel-title">Motion</div>
-  <div class="panelgrid">
-    <button type="button" mat-raised-button class="up" (click)="move(Axes.Y)" [disabled]="!distanceForm.valid">UP</button>
-    <button type="button" mat-raised-button class="left" (click)="move(Axes.X,Directions.MINUS)" [disabled]="validMovementForZ() || !distanceForm.valid">LEFT</button>
-    <button type="button" mat-raised-button class="mat-accent home" (click)="home()" [disabled]="!distanceForm.valid">HOME</button>
-    <button type="button" mat-raised-button class="right" (click)="move(Axes.X)" [disabled]="validMovementForZ() || !distanceForm.valid">RIGHT</button>
-    <button type="button" mat-raised-button class="down" (click)="move(Axes.Y,Directions.MINUS)" [disabled]="!distanceForm.valid">DOWN</button>
+  <div class="controls-wrapper">
+    <div class="controls">
+      <div class="top-buttons">
+        <div></div>
+        <button type="button" mat-raised-button class="up" (click)="move(Axes.Y)"
+          [disabled]="!distanceForm.valid">UP</button>
+        <mat-checkbox class="axisselect" [formControl]="moveZFc">Move Z</mat-checkbox>
+      </div>
+      <div class="middle-buttons">
+        <button type="button" mat-raised-button class="left" (click)="move(Axes.X,Directions.MINUS)"
+          [disabled]="validMovementForZ() || !distanceForm.valid">LEFT</button>
+        <button type="button" mat-raised-button class="mat-accent home" (click)="home()"
+          [disabled]="!distanceForm.valid">HOME</button>
+        <button type="button" mat-raised-button class="right" (click)="move(Axes.X)"
+          [disabled]="validMovementForZ() || !distanceForm.valid">RIGHT</button>
+      </div>
+      <div class="bottom-buttons">
+        <div></div>
+        <button type="button" mat-raised-button class="down" (click)="move(Axes.Y,Directions.MINUS)"
+          [disabled]="!distanceForm.valid">DOWN</button>
+        <div></div>
 
-    <mat-checkbox class="axisselect" [formControl]="moveZFc">Move Z</mat-checkbox>
+      </div>
+    </div>
+    <div class="rates">
+      <mat-button-toggle-group [formControl]="distanceFc" class="distance" name="distance" aria-label="distance">
+        <mat-button-toggle class="tenth-step" value="0.1">0.1</mat-button-toggle>
+        <mat-button-toggle class="one-step" value="1">1</mat-button-toggle>
+        <mat-button-toggle class="ten-step" value="10">10</mat-button-toggle>
+        <mat-button-toggle class="hundred-step" value="100">100</mat-button-toggle>
+      </mat-button-toggle-group>
+      <mat-form-field appearance="fill" class="feedrate">
+        <mat-label>Feedrate</mat-label>
+        <input matInput class="" type="number" placeholder="Feedrate" aria-label="Number" matInput
+          [formControl]="feedRateFc">
+        <mat-error *ngIf="feedRateFc.hasError('min') && !feedRateFc.hasError('required')">
+          Min: 1
+        </mat-error>
+        <mat-error *ngIf="feedRateFc.hasError('max') && !feedRateFc.hasError('required')">
+          Max: 3000
+        </mat-error>
+        <mat-error *ngIf="feedRateFc.hasError('required')">
+          <strong>Required</strong>
+        </mat-error>
+      </mat-form-field>
 
-    <mat-button-toggle-group [formControl]="distanceFc" class="distance" name="distance" aria-label="distance">
-      <mat-button-toggle class="tenth-step" value="0.1">0.1</mat-button-toggle>
-      <mat-button-toggle class="one-step" value="1">1</mat-button-toggle>
-      <mat-button-toggle class="ten-step" value="10">10</mat-button-toggle>
-      <mat-button-toggle class="hundred-step" value="100">100</mat-button-toggle>
-    </mat-button-toggle-group>
-
-    <mat-form-field appearance="fill" class="feedrate">
-      <mat-label>Feedrate</mat-label>
-      <input matInput class="" type="number" placeholder="Feedrate" aria-label="Number" matInput [formControl]="feedRateFc">
-      <mat-error *ngIf="feedRateFc.hasError('min') && !feedRateFc.hasError('required')">
-        Min: 1
-      </mat-error>
-      <mat-error *ngIf="feedRateFc.hasError('max') && !feedRateFc.hasError('required')">
-        Max: 3000
-      </mat-error>
-      <mat-error *ngIf="feedRateFc.hasError('required')">
-        <strong>Required</strong>
-      </mat-error>
-  
-  </mat-form-field>
-
+    </div>
   </div>
 </form>

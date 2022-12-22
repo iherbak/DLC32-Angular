@@ -1,18 +1,11 @@
 .panelgrid {
-    grid-template-columns: repeat(3,110px);
-    grid-template-areas:
-        'on off unlock';
+    grid-template-columns: repeat(3, auto);
     place-items: center;
     justify-content: center;
 }
 
-.on {
-    grid-area: on;
-}
-
-.off {
-    grid-area: off;
-}
-.unlock{
-    grid-area: unlock;
+.on,
+.off,
+.unlock {
+    margin: 5px;
 }

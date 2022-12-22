@@ -11,7 +11,12 @@
             </mat-select>
         </mat-form-field>
     </div>
-    <div class="panelgrid">
+    <div>
+        <div class="top-button-grid">
+            <button type="button" class="start mat-warn" mat-raised-button [disabled]="!fileSelected()"
+                (click)="StartFile()">Start</button>
+            <button type="button" class="boundary" mat-raised-button [disabled]="!fileSelected()">Show boundary</button>
+        </div>
         <mat-selection-list class="files" multiple="false" formControlName="selectedFile">
             <mat-list-option *ngFor="let file of pageFiles" [value]="file" (appDoubleClick)="enterDir(file)">
                 <app-file-item [file]="file"></app-file-item>
@@ -19,11 +24,13 @@
         </mat-selection-list>
         <mat-paginator class="paginator" pageSize="10" [pageIndex]="pageIndex" [length]="directory.files.length"
             (page)="paginate($event)"></mat-paginator>
-        <button type="button" class="start mat-warn" mat-raised-button [disabled]="!fileSelected()" (click)="StartFile()">Start</button>
-        <button type="button" class="boundary" mat-raised-button [disabled]="!fileSelected()">Show boundary</button>
         <input #fileInput hidden type="file" (change)="uploadFile($event)">
-        <button type="button" class="upload" mat-raised-button (click)="upload()">Upload</button>
-        <button type="button" class="create" mat-raised-button (click)="showCreateDirectory()">Create directory</button>
-        <button type="button" class="delete mat-warn" mat-raised-button [disabled]="!canBeDeleted()" (click)="showDelete()">Delete</button>
+        <div class="bottom-button-grid">
+            <button type="button" class="upload" mat-raised-button (click)="upload()">Upload</button>
+            <button type="button" class="create" mat-raised-button (click)="showCreateDirectory()">Create
+                directory</button>
+            <button type="button" class="delete mat-warn" mat-raised-button [disabled]="!canBeDeleted()"
+                (click)="showDelete()">Delete</button>
+        </div>
     </div>
 </form>

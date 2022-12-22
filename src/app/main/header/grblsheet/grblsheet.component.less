@@ -1,10 +1,16 @@
 .grblpanel{
     display: grid;
-    grid-template-columns: auto auto auto;
+    grid-template-columns: repeat(3,auto);
     gap: 5px;
     .grblsetting{
         display:flex;
         justify-content: space-between;
         flex-direction: column;
     }
+}
+
+@media all and (max-width:850px) {
+    .grblpanel{
+        grid-template-columns: repeat(2,auto);
+    }        
 }

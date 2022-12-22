@@ -1,33 +1,15 @@
 .panelgrid {
-    grid-template-columns: repeat(3,110px);
-    grid-template-areas:
-        'x y z '
-        'xy . xyz';
+    grid-template-columns: repeat(5,auto);
     place-items: center;
     justify-content: center;
 }
 
-.x {
-    grid-area: x;
+.x, .y, .z, .xy, .xyz {
     margin: 5px;
 }
 
-.y {
-    grid-area: y;
-    margin: 5px;
-}
-
-.z {
-    grid-area: z;
-    margin: 5px;
-}
-
-.xy {
-    grid-area: xy;
-    margin: 5px;
-}
-
-.xyz {
-    grid-area: xyz;
-    margin: 5px;
+@media all and (max-width:850px) {
+    .panelgrid {
+        grid-template-columns: repeat(3, auto);
+    }
 }

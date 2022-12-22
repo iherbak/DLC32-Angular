@@ -3,6 +3,7 @@ import { Subject } from 'rxjs';
 import { Axis } from '../models/axis';
 import { Command } from '../models/command';
 import { CommandType } from '../models/commandType';
+import { EspCommand } from '../models/espCommand';
 import { ExecutableCommand } from '../models/executableCommand';
 
 @Injectable({
@@ -55,39 +56,39 @@ export class CommandService {
 
   ];
   private espCommands: Command[] = [
-    new Command("[ESP100]<SSID>pwd=<admin password>", "Set/Get STA SSID"),
-    new Command("[ESP101]<Password>pwd=<admin password>", "Set STA Password"),
-    new Command("[ESP102]<mode>pwd=<admin password>", "Set/Get STA IP mode (DHCP/STATIC)"),
-    new Command("[ESP103]IP=<IP> MSK=<IP> GW=<IP> pwd=<admin password>", "Set/Get STA IP/Mask/GW"),
-    new Command("[ESP105]<SSID>pwd=<admin password>", "Set/Get AP SSID"),
-    new Command("[ESP106]<Password>pwd=<admin password>", "Change AP Password"),
-    new Command("[ESP107]<IP>pwd=<admin password>", "Set/Get AP IP"),
-    new Command("[ESP108]<channel>pwd=<admin password>", "Set/Get AP channel"),
-    new Command("[ESP110]<state>pwd=<admin password>", "Set/Get radio state which can be STA, AP, BT, OFF"),
-    new Command("[ESP111]<header answer>", "Get current IP", "GET", "text"),
-    new Command("[ESP112]<Hostname> pwd=<admin password>", "Get/Set hostname"),
-    new Command("[ESP115]<state>pwd=<admin password>", "Get/Set immediate Radio (WiFi/BT) state which can be ON, OFF"),
-    new Command("[ESP120]<state>pwd=<admin password>", "Get/Set HTTP state which can be ON, OFF"),
-    new Command("[ESP121]<port>pwd=<admin password>", "Get/Set HTTP port"),
-    new Command("[ESP130]<state>pwd=<admin password>", "Get/Set Telnet state which can be ON, OFF"),
-    new Command("[ESP131]<port>pwd=<admin password>", "Get/Set Telnet port"),
-    new Command("[ESP140]<Bluetooth name> pwd=<admin password>", "Get/Set btname"),
-    new Command("[ESP200]pwd=<user/admin password>", "Get SD Card Status"),
-    new Command("[ESP210]pwd=<user/admin password>", "Get SD Card Content"),
-    new Command("[ESP215]<file/dir name>pwd=<user/admin password>", "Delete SD Card file / directory"),
-    new Command("[ESP220]<Filename> pwd=<user/admin password>", "Print SD file", 'GET', 'text'),
-    new Command("[ESP400]pwd=<user/admin password>", "Get full EEPROM settings content but do not give any passwords"),
-    new Command("[ESP401]P=<position> T=<type> V=<value> pwd=<user/admin password>", "Set EEPROM setting position in EEPROM, type: B(byte), I(integer/long), S(string), A(IP address / mask)"),
-    new Command("[ESP410]pwd=<user/admin password>", "Get available AP list (limited to 30) output is JSON or plain text according parameter"),
-    new Command("[ESP420]pwd=<user/admin password>", "Get current settings of ESP3D output is JSON or plain text according parameter"),
-    new Command("[ESP444]RESTART pwd=<admin password>", "Restart ESP"),
-    new Command("[ESP555]<password>pwd=<admin password>", "Change / Reset user password"),
-    new Command("[ESP600]msg [pwd=<admin password>]", "Send Notification"),
-    new Command("[ESP610]type=<NONE/PUSHOVER/EMAIL/LINE> T1=<token1> T2=<token2> TS=<Settings> [pwd=<admin password>]", "Set/Get Notification settings Get will give type and settings only, not the protected T1/T2"),
-    new Command("[ESP700]<filename> pwd=<user/admin password>", "Read SPIFFS file and send each line to serial"),
-    new Command("[ESP710]FORMAT pwd=<admin password>", "Format SPIFFS"),
-    new Command("[ESP720]pwd=<user/admin password>", "SPIFFS total size and used size"),
-    new Command("[ESP800]", "Get fw version and basic information", "GET", 'text')
+    new EspCommand("[ESP100]<SSID>pwd=<admin password>", "Set/Get STA SSID"),
+    new EspCommand("[ESP101]<Password>pwd=<admin password>", "Set STA Password"),
+    new EspCommand("[ESP102]<mode>pwd=<admin password>", "Set/Get STA IP mode (DHCP/STATIC)"),
+    new EspCommand("[ESP103]IP=<IP> MSK=<IP> GW=<IP> pwd=<admin password>", "Set/Get STA IP/Mask/GW"),
+    new EspCommand("[ESP105]<SSID>pwd=<admin password>", "Set/Get AP SSID"),
+    new EspCommand("[ESP106]<Password>pwd=<admin password>", "Change AP Password"),
+    new EspCommand("[ESP107]<IP>pwd=<admin password>", "Set/Get AP IP"),
+    new EspCommand("[ESP108]<channel>pwd=<admin password>", "Set/Get AP channel"),
+    new EspCommand("[ESP110]<state>pwd=<admin password>", "Set/Get radio state which can be STA, AP, BT, OFF"),
+    new EspCommand("[ESP111]<header answer>", "Get current IP", "GET", "text"),
+    new EspCommand("[ESP112]<Hostname> pwd=<admin password>", "Get/Set hostname"),
+    new EspCommand("[ESP115]<state>pwd=<admin password>", "Get/Set immediate Radio (WiFi/BT) state which can be ON, OFF"),
+    new EspCommand("[ESP120]<state>pwd=<admin password>", "Get/Set HTTP state which can be ON, OFF"),
+    new EspCommand("[ESP121]<port>pwd=<admin password>", "Get/Set HTTP port"),
+    new EspCommand("[ESP130]<state>pwd=<admin password>", "Get/Set Telnet state which can be ON, OFF"),
+    new EspCommand("[ESP131]<port>pwd=<admin password>", "Get/Set Telnet port"),
+    new EspCommand("[ESP140]<Bluetooth name> pwd=<admin password>", "Get/Set btname"),
+    new EspCommand("[ESP200]pwd=<user/admin password>", "Get SD Card Status"),
+    new EspCommand("[ESP210]pwd=<user/admin password>", "Get SD Card Content"),
+    new EspCommand("[ESP215]<file/dir name>pwd=<user/admin password>", "Delete SD Card file / directory"),
+    new EspCommand("[ESP220]<Filename> pwd=<user/admin password>", "Print SD file", 'GET', 'text'),
+    new EspCommand("[ESP400]pwd=<user/admin password>", "Get full EEPROM settings content but do not give any passwords"),
+    new EspCommand("[ESP401]P=<position> T=<type> V=<value> pwd=<user/admin password>", "Set EEPROM setting position in EEPROM, type: B(byte), I(integer/long), S(string), A(IP address / mask)"),
+    new EspCommand("[ESP410]pwd=<user/admin password>", "Get available AP list (limited to 30) output is JSON or plain text according parameter"),
+    new EspCommand("[ESP420]pwd=<user/admin password>", "Get current settings of ESP3D output is JSON or plain text according parameter"),
+    new EspCommand("[ESP444]RESTART pwd=<admin password>", "Restart ESP"),
+    new EspCommand("[ESP555]<password>pwd=<admin password>", "Change / Reset user password"),
+    new EspCommand("[ESP600]msg [pwd=<admin password>]", "Send Notification"),
+    new EspCommand("[ESP610]type=<NONE/PUSHOVER/EMAIL/LINE> T1=<token1> T2=<token2> TS=<Settings> [pwd=<admin password>]", "Set/Get Notification settings Get will give type and settings only, not the protected T1/T2"),
+    new EspCommand("[ESP700]<filename> pwd=<user/admin password>", "Read SPIFFS file and send each line to serial"),
+    new EspCommand("[ESP710]FORMAT pwd=<admin password>", "Format SPIFFS"),
+    new EspCommand("[ESP720]pwd=<user/admin password>", "SPIFFS total size and used size"),
+    new EspCommand("[ESP800]", "Get fw version and basic information", "GET", 'text')
   ];
   private espApiCommands: Command[] = [
     new Command("getFiles from internal flash", "Getting Files from server", "GET", "json", CommandType.FilesAction),
@@ -166,6 +167,7 @@ export class CommandService {
       let storedCommand = this.getCommands().find(c => c.command.startsWith(command));
       if (storedCommand != null) {
         basecommand.responseType = storedCommand.responseType;
+        basecommand.commandType = storedCommand.commandType;
       }
       return this.getCommandUrl(basecommand, args);
     }
@@ -267,11 +269,12 @@ export class CommandService {
         default:
           {
             let commandprefix = command.commandType === CommandType.CommandSilent ? "command_silent" : "command";
+            commandprefix = command.commandType == CommandType.EspCommand ? "espcommand" : commandprefix;
             if (args.length > 0) {
-              issuedCommand.commandUrl = `/${commandprefix}?commandText=${command.command} ${args.join('&')}`;
+              issuedCommand.commandUrl = `/${commandprefix}?cmd=${command.command}${args.join('&')}`;
             }
-            else{
-              issuedCommand.commandUrl = `/${commandprefix}?commandText=${command.command}`;
+            else {
+              issuedCommand.commandUrl = `/${commandprefix}?cmd=${command.command}`;
             }
             break;
           }

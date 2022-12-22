@@ -38,7 +38,7 @@ export class TerminalComponent implements OnDestroy {
   constructor(formBuilder: UntypedFormBuilder, private commandService: CommandService, private clientService: ClientService) {
     this.commandForm = formBuilder.group({
       commandInput: [""],
-      commandWindow: [{ value: "Terminal is ready", disabled: true }],
+      commandWindow: [{ value: "Terminal is ready...", disabled: true }],
       autoscroll: [true]
     });
 
@@ -93,10 +93,10 @@ export class TerminalComponent implements OnDestroy {
 
   private logCommand(command: string, isError: boolean = false) {
     if (isError) {
-      this.commandWindowFc.setValue(`${this.commandWindowFc.value} \n "Error" ${command}`);
+      this.commandWindowFc.setValue(`${this.commandWindowFc.value} \n "Error" ${command.replace('\r\n','')}`);
     }
     else {
-      this.commandWindowFc.setValue(`${this.commandWindowFc.value} \n ${command}`);
+      this.commandWindowFc.setValue(`${this.commandWindowFc.value} \n ${command.replace('\r\n','')}`);
     }
   }
 }

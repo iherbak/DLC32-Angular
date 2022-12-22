@@ -1,49 +1,46 @@
-button {
-    width: 140px;
+.top-button-grid, .bottom-button-grid {
+    display:grid;
+    justify-content: space-between;
+    background-color: #212121;
 }
 
-.panelgrid {
-    grid-template-areas:
-        'start empty boundary'
-        'files files files'
-        'paginator paginator paginator'
-        "upload create delete"
-    ;
-    justify-content: space-between;
+.top-button-grid{
+    grid-template-columns: auto auto;
+    margin-top: 5px;
+}
+
+.bottom-button-grid {
+    display:grid;
+    grid-template-columns: 150px auto 150px;
+    align-items: center;
+    justify-items: center;
+    justify-content: center;
 }
 
 .files {
-    grid-area: files;
     height: 480px;
-}
-
-.paginator {
-    grid-area: paginator;
+    grid-column: first;
+    background-color: #212121;
 }
 
 .start {
-    grid-area: start;
     margin: 5px;
 }
 
 .upload {
-    grid-area: upload;
     margin: 5px;
 }
 
 .create {
-    grid-area: create;
     margin: 5px;
 }
 
 .delete {
-    grid-area: delete;
     margin: 5px;
 }
 
 
 .boundary {
-    grid-area: boundary;
     margin: 5px;
 }
 
