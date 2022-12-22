@@ -45,11 +45,28 @@ mat-progress-bar {
   height: 10px;
 }
 
-.mat-expansion-panel-body, .mat-expansion-panel-header {
-  padding: 0 10px 10px;
+mat-expansion-panel-header {
+  &.mat-expansion-panel-header {
+    padding: 0 10px 10px;
+  }
+}
+
+div {
+  .mat-expansion-panel-body {
+    padding: 0 10px 10px;
+  }
 }
 
 :root {
   --mdc-linear-progress-track-height: 10px;
 }
 
+app-terminal {
+  mat-form-field {
+    &.window {
+      .mdc-text-field {
+        padding: 0px;
+      }
+    }
+  }
+}
