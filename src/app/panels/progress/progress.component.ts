@@ -1,3 +1,4 @@
+import { DecimalPipe } from '@angular/common';
 import { Component, OnDestroy } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { ProcessingDetails } from 'src/app/models/processingDetails';
@@ -21,13 +22,6 @@ export class ProgressComponent implements OnDestroy {
 
   public get ProcessingDetails(): ProcessingDetails {
     return this.processingDetails;
-  }
-
-  public get FormattedPercentage(): string {
-    if (this.ProcessingDetails.Percentage != 0) {
-      return `${this.ProcessingDetails.Percentage} %`;
-    }
-    return "";
   }
 
   public get isRunning() {

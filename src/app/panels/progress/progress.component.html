@@ -3,6 +3,6 @@
     <div class="filepath">{{ProcessingDetails.FilePath}}</div>
     <div class="progressbar"><mat-progress-bar mode="determinate" [value]="ProcessingDetails.Percentage"></mat-progress-bar></div>
     <button mat-raised-button class="mat-warn warn" [disabled]="!isRunning" (click)="cancel()">Cancel</button>
-    <div class="percentages">{{FormattedPercentage}}</div>
+    <div class="percentages">{{ProcessingDetails.Percentage | number : '1.2'}} %</div>
     <button mat-raised-button class="mat-accent accent" [disabled]="!isRunning" (click)="pause()">{{pauseResumeText}}</button>
 </div>

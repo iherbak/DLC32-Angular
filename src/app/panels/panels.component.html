@@ -23,7 +23,7 @@
         </mat-expansion-panel-header>
         <app-files></app-files>
     </mat-expansion-panel>
-    <mat-expansion-panel [expanded]="isExpanded" [disabled]="isRunning">
+    <mat-expansion-panel [expanded]="!isExpanded">
         <mat-expansion-panel-header>
             <mat-panel-title>
                 Terminal panel
