@@ -170,9 +170,16 @@ export class CommandService {
 
   public getCommandUrlByCommand(command: string, args: string[] = []) {
     let basecommand = new Command(command, '');
+    //search for command amongst the KB friendly ones
     let storedCommand = this.getCommands().find(c => c.command.startsWith(command));
     if (storedCommand == null) {
+      //search in no kb friendly ones
       storedCommand = this.grblRealTimeNonKBFriendlyCommands.find(c => c.command.startsWith(command));
+    }
+    //try if it is the unusal settings change
+    let reg = new RegExp("\\$\\d.*=");
+    if (reg.test(command)) {
+      storedCommand = this.grblCommands.find(c => c.command == "$x=");
     }
     if (storedCommand != null) {
       basecommand.responseType = storedCommand.responseType;
