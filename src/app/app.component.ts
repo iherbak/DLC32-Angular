@@ -39,6 +39,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
           this.firmwareService.FirmwareInfo.clone(ret);
           this.snackBar.showSnackBar("Firmware info fetched, starting websocket connection...");
           this.StartWebSocketConnection();
+          this
           this.clientService.Connected.next();
         },
         error: () => {

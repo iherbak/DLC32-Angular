@@ -17,6 +17,10 @@ export class FirmwareInfo extends WsStringMessage {
         return `ws://${this.Webcommunication.Wifi_Ip}:${this.Webcommunication.Websocket_Port}`;
     }
 
+    public get Telnet() {
+        return `${this.Webcommunication.Wifi_Ip}:${this.Webcommunication.Telnet_Port}`;
+    }
+
     public clone(infoObject: FirmwareInfo) {
         Object.assign(this, infoObject);
     }

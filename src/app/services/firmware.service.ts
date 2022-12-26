@@ -61,6 +61,10 @@ export class FirmwareService {
     return this.info.WebSocket;
   }
 
+  public get TelnetInfo() {
+    return this.info.Telnet;
+  }
+
   public get GrblSettings() {
     return this.grblSettings;
   }

@@ -14,26 +14,8 @@ export class CommandService {
   //GRbl commands response comes back through websocket connection
   public InvalidCommand: Subject<string> = new Subject();
 
-  private grblCommands: Command[] = [
-    new Command("$$", "Display Grbl Settings."),
-    new Command("$x=", "Change Grbl Setting x to val."),
-    new Command("$#", "View GCode Parameters."),
-    new Command("$G", "View GCode parser state."),
-    new Command("$I", "View Build Info"),
-    new Command("$N", "View saved start up code"),
-    new Command("$N", "Save Start-up GCode line (x=0 or 1) There are executed on a reset."),
-    new Command("$C", "Toggle Check Gcode Mode"),
-    new Command("$X", "Kill Alarm Lock state."),
-    new Command("$H", "Run Homing Cycle"),
-    new Command("$J", "Run Jogging Motion."),
-    new Command("$RST=$", "Restores the Grbl settings to defaults."),
-    new Command("$RST=#", "Erases G54-G59 WCS offsets and G28/30 positions stored in EEPROM."),
-    new Command("$RST=*", "Clear and Load all data from EEPROM."),
-    new Command("$SLP", "Enable Sleep mode."),
+  private grblRealTimeNonKBFriendlyCommands: Command[] = [
     new Command("\u0018", "Soft Reset"),
-    new Command("?", "Status report query."),
-    new Command("~", "Cycle Start/Resume from Feed Hold, Door or Program pause."),
-    new Command("!", "Feed Hold - Stop all motion."),
     new Command("\u0084", "Safety door"),
     new Command("\u0085", "Jog cancel"),
     new Command("\u0090", "100% feed rate"),
@@ -52,9 +34,30 @@ export class CommandService {
     new Command("\u009E", "Toggle spindle stop"),
     new Command("\u00A0", "Toggle flood coolant"),
     new Command("\u00A0", "Toggle mist coolant"),
-
-
   ];
+
+  private grblCommands: Command[] = [
+    new Command("$$", "Display Grbl Settings."),
+    new Command("$x=", "Change Grbl Setting x to val."),
+    new Command("$#", "View GCode Parameters."),
+    new Command("$G", "View GCode parser state."),
+    new Command("$I", "View Build Info"),
+    new Command("$N", "View saved start up code"),
+    new Command("$N", "Save Start-up GCode line (x=0 or 1) There are executed on a reset."),
+    new Command("$C", "Toggle Check Gcode Mode"),
+    new Command("$X", "Kill Alarm Lock state."),
+    new Command("$H", "Run Homing Cycle"),
+    new Command("$J", "Run Jogging Motion."),
+    new Command("$RST=$", "Restores the Grbl settings to defaults."),
+    new Command("$RST=#", "Erases G54-G59 WCS offsets and G28/30 positions stored in EEPROM."),
+    new Command("$RST=*", "Clear and Load all data from EEPROM."),
+    new Command("$SLP", "Enable Sleep mode."),
+    new Command("?", "Status report query."),
+    new Command("~", "Cycle Start/Resume from Feed Hold, Door or Program pause."),
+    new Command("!", "Feed Hold - Stop all motion.")
+  ];
+
+
   private espCommands: Command[] = [
     new EspCommand("[ESP]", "Esp commands help"),
     new EspCommand("[ESP0]", "Esp commands help"),
@@ -167,12 +170,13 @@ export class CommandService {
 
   public getCommandUrlByCommand(command: string, args: string[] = []) {
     let basecommand = new Command(command, '');
-    if (basecommand) {
-      let storedCommand = this.getCommands().find(c => c.command.startsWith(command));
-      if (storedCommand != null) {
-        basecommand.responseType = storedCommand.responseType;
-        basecommand.commandType = storedCommand.commandType;
-      }
+    let storedCommand = this.getCommands().find(c => c.command.startsWith(command));
+    if (storedCommand == null) {
+      storedCommand = this.grblRealTimeNonKBFriendlyCommands.find(c => c.command.startsWith(command));
+    }
+    if (storedCommand != null) {
+      basecommand.responseType = storedCommand.responseType;
+      basecommand.commandType = storedCommand.commandType;
       return this.getCommandUrl(basecommand, args);
     }
     this.InvalidCommand.next(`Invalid command : ${command}`);

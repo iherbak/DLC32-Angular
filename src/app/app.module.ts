@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './main/header/header.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -10,7 +9,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatTabsModule } from '@angular/material/tabs';
 import { PanelsComponent } from './panels/panels.component';
 import { MatGridListModule } from '@angular/material/grid-list';
-import { XyzComponent } from './panels/controls/xy/xyz.component';
+import { XyzComponent } from './panels/controls/xyz/xyz.component';
 import { GeneralComponent } from './panels/controls/general/general.component';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { FilesComponent } from './panels/files/files.component';

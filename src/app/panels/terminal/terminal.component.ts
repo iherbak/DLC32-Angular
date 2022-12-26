@@ -99,4 +99,8 @@ export class TerminalComponent implements OnDestroy {
       this.commandWindowFc.setValue(`${this.commandWindowFc.value} \n ${command.replace('\r\n','')}`);
     }
   }
+
+  public history($event: Event){
+    console.log($event);
+  }
 }

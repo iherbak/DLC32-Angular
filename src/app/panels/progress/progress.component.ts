@@ -1,8 +1,7 @@
-import { DecimalPipe } from '@angular/common';
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { ProcessingDetails } from 'src/app/models/processingDetails';
-import { WsState, WsStatusMessage } from 'src/app/models/wsStatusMessage';
+import { WsState } from 'src/app/models/wsStatusMessage';
 import { ClientService } from 'src/app/services/client.service';
 import { CommandService } from 'src/app/services/command.service';
 import { SnackBarService } from 'src/app/services/snack-bar.service';
@@ -13,10 +12,11 @@ import { SocketService } from 'src/app/services/socket.service';
   templateUrl: './progress.component.html',
   styleUrls: ['./progress.component.less']
 })
-export class ProgressComponent implements OnDestroy {
+export class ProgressComponent implements OnDestroy, OnInit {
 
   private unsub: Subject<void> = new Subject();
   private processingDetails: ProcessingDetails = new ProcessingDetails("", 0);
+  private spenttime: number;
 
   private cancelIssued: boolean = false;
 
@@ -25,13 +25,16 @@ export class ProgressComponent implements OnDestroy {
   }
 
   public get isRunning() {
-    return this.socketService.isRunning;
+    return this.socketService.isRunning && !this.cancelIssued;
   }
   public get pauseResumeText() {
     return this.socketService.MachineState === WsState.Hold ? "Resume" : "Pause";
   }
 
+ 
   constructor(private clientService: ClientService, private commandService: CommandService, private socketService: SocketService, private snackBarService: SnackBarService) {
+    this.spenttime = Date.now();
+
     this.clientService.WsStatusMessage.pipe(takeUntil(this.unsub)).subscribe(commandResult => {
       switch (commandResult.state) {
         case WsState.Run: {
@@ -59,6 +62,9 @@ export class ProgressComponent implements OnDestroy {
 
     });
   }
+  ngOnInit(): void {
+    this.cancelIssued = false;
+  }
 
   public pause() {
     let command = this.socketService.MachineState === WsState.Hold ? "~" : "!";
@@ -77,7 +83,6 @@ export class ProgressComponent implements OnDestroy {
   }
 
   private finishCancel() {
-    this.cancelIssued = false;
     let baseCommand = this.commandService.getCommandUrlByCommand("\u0018");
     if (baseCommand != null) {
       this.clientService.sendGetCommand(baseCommand).subscribe();
