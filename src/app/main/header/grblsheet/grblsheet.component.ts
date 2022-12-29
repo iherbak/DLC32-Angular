@@ -1,28 +1,27 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, UntypedFormGroup, Validators } from '@angular/forms';
-import { Subject } from 'rxjs';
+import { MatBottomSheetRef } from '@angular/material/bottom-sheet';
 import { AxisMask } from 'src/app/models/axisMask';
-import { CommandType } from 'src/app/models/commandType';
-import { GrblSettings } from 'src/app/models/grblSettings';
+import { GrblSetting } from 'src/app/models/grblSetting';
 import { SettingType } from 'src/app/models/settingtype';
 import { ClientService } from 'src/app/services/client.service';
 import { CommandService } from 'src/app/services/command.service';
 import { FirmwareService } from 'src/app/services/firmware.service';
+import { SnackBarService } from 'src/app/services/snack-bar.service';
 
 @Component({
   selector: 'app-grblsheet',
   templateUrl: './grblsheet.component.html',
   styleUrls: ['./grblsheet.component.less']
 })
-export class GrblsheetComponent implements OnDestroy, OnInit {
+export class GrblsheetComponent implements OnInit {
 
-  private unsub: Subject<void> = new Subject();
   public grblSettingsForm!: UntypedFormGroup;
 
   public get SettingTypes() {
     return SettingType;
   }
-  public get AxisMasks(){
+  public get AxisMasks() {
     return AxisMask;
   }
 
@@ -30,37 +29,44 @@ export class GrblsheetComponent implements OnDestroy, OnInit {
     return this.grblSettingsForm.get('settings') as FormArray<FormControl>;
   }
 
-  constructor(private clientService: ClientService, private commandService: CommandService, private firmwareService: FirmwareService, private formBuilder: FormBuilder) {
+  constructor(private clientService: ClientService, private commandService: CommandService, private firmwareService: FirmwareService, private formBuilder: FormBuilder, public bottomSheetRef: MatBottomSheetRef<GrblsheetComponent>, private snackBar: SnackBarService) {
     this.grblSettingsForm = this.formBuilder.group({
       settings: this.formBuilder.array([])
     });
 
   }
   ngOnInit(): void {
-    this.refreshSettings();
+    this.updateFormArray(this.firmwareService.GrblSettings);
+  }
+
+  private updateSettings() {
+    this.firmwareService.fetchGrblSettings().subscribe({
+      next: (settings) => { this.updateFormArray(settings) },
+      error: () => { this.snackBar.showSnackBar("GRBL settings fetch failure"); }
+    });
   }
 
   getAxisMask(value: string): any {
-    switch(value){
-      case 'X':{
+    switch (value) {
+      case 'X': {
         return AxisMask.X;
       }
-      case 'Y':{
+      case 'Y': {
         return AxisMask.Y;
       }
-      case 'Z':{
+      case 'Z': {
         return AxisMask.Z;
       }
-      case 'XY':{
+      case 'XY': {
         return AxisMask.XY;
       }
-      case 'XZ':{
+      case 'XZ': {
         return AxisMask.XZ;
       }
-      case 'YZ':{
+      case 'YZ': {
         return AxisMask.YZ;
       }
-      case 'XYZ':{
+      case 'XYZ': {
         return AxisMask.XYZ;
       }
       default:
@@ -68,19 +74,9 @@ export class GrblsheetComponent implements OnDestroy, OnInit {
     }
   }
 
-  private refreshSettings() {
-    let basecommand = this.commandService.getEspApiCommand(CommandType.GrblSettings);
-    if (basecommand != null) {
-      this.clientService.sendGetCommand<GrblSettings>(basecommand).subscribe((settings) => {
-        this.firmwareService.updateSettings(settings);
-        this.updateFormArray();
-      });
-    }
-  }
-
-  private updateFormArray(){
+  private updateFormArray(settings: GrblSetting[]) {
     this.grblArray.clear();
-    this.firmwareService.GrblSettings.forEach(setting => {
+    settings.forEach(setting => {
       let settingControl: FormControl;
       switch (setting.SettingType) {
         case SettingType.Number: {
@@ -91,7 +87,7 @@ export class GrblsheetComponent implements OnDestroy, OnInit {
           settingControl = new FormControl(setting.Value === "Off" ? false : true, [Validators.required]);
           break;
         }
-        case SettingType.Mask:{
+        case SettingType.Mask: {
           settingControl = new FormControl(this.getAxisMask(setting.Value), [Validators.required]);
           break;
         }
@@ -120,21 +116,12 @@ export class GrblsheetComponent implements OnDestroy, OnInit {
     return this.grblArray.at(i).hasError('required');
   }
 
-
   public setGrblValue(i: number) {
     let control = this.grblArray.at(i);
     if (control.valid) {
-      let command = this.commandService.getCommandUrlByCommand(`${this.GetSettingName(i)}=`, [control.value]);
-      if (command != null) {
-        this.clientService.sendGetCommand(command).subscribe(() => {
-          this.refreshSettings();
-        });
-      }
+      this.firmwareService.setGrblValue(i, control.value).subscribe((settings) => {
+        this.updateFormArray(settings);
+      });
     }
-  }
-
-  ngOnDestroy(): void {
-    this.unsub.next();
-    this.unsub.complete();
   }
 }

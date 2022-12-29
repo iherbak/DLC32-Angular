@@ -16,7 +16,6 @@ export class ProgressComponent implements OnDestroy, OnInit {
 
   private unsub: Subject<void> = new Subject();
   private processingDetails: ProcessingDetails = new ProcessingDetails("", 0);
-  private spenttime: number;
 
   private cancelIssued: boolean = false;
 
@@ -25,17 +24,15 @@ export class ProgressComponent implements OnDestroy, OnInit {
   }
 
   public get isRunning() {
-    return this.socketService.isRunning && !this.cancelIssued;
+    return this.clientService.isRunning && !this.cancelIssued;
   }
   public get pauseResumeText() {
-    return this.socketService.MachineState === WsState.Hold ? "Resume" : "Pause";
+    return this.clientService.MachineState === WsState.Hold ? "Resume" : "Pause";
   }
 
- 
-  constructor(private clientService: ClientService, private commandService: CommandService, private socketService: SocketService, private snackBarService: SnackBarService) {
-    this.spenttime = Date.now();
 
-    this.clientService.WsStatusMessage.pipe(takeUntil(this.unsub)).subscribe(commandResult => {
+  constructor(private clientService: ClientService, private commandService: CommandService, private socketService: SocketService, private snackBarService: SnackBarService) {
+    this.socketService.WsStatusMessage.pipe(takeUntil(this.unsub)).subscribe(commandResult => {
       switch (commandResult.state) {
         case WsState.Run: {
           this.processingDetails = commandResult.getProcessingDetails();
@@ -43,11 +40,13 @@ export class ProgressComponent implements OnDestroy, OnInit {
         }
         case WsState.Idle: {
           this.processingDetails = new ProcessingDetails("", 0);
+          this.cancelIssued = false;
           break;
         }
         case WsState.Alarm: {
           let alarmDesc = commandResult.infoKeyValues.get("alarm");
           this.snackBarService.showSnackBar(alarmDesc ? alarmDesc : "");
+          this.cancelIssued = false;
           break;
         }
         case WsState.Hold: {
@@ -59,15 +58,15 @@ export class ProgressComponent implements OnDestroy, OnInit {
           }
         }
       }
-
     });
   }
+  
   ngOnInit(): void {
     this.cancelIssued = false;
   }
 
   public pause() {
-    let command = this.socketService.MachineState === WsState.Hold ? "~" : "!";
+    let command = this.clientService.MachineState === WsState.Hold ? "~" : "!";
     let baseCommand = this.commandService.getCommandUrlByCommand(command);
     if (baseCommand != null) {
       this.clientService.sendGetCommand(baseCommand).subscribe();

@@ -10,6 +10,7 @@ export class Directory {
     constructor()
     {
         this.files = [];
+        this.path = "/";
     }
     
 }

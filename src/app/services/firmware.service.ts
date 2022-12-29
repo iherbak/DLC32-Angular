@@ -1,9 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
+import { CommandType } from '../models/commandType';
 import { FirmwareInfo } from '../models/firmwareInfo';
 import { GrblSetting } from '../models/grblSetting';
 import { GrblSettings } from '../models/grblSettings';
 import { SettingType } from '../models/settingtype';
+import { ClientService } from './client.service';
+import { CommandService } from './command.service';
 
 @Injectable({
   providedIn: 'root'
@@ -69,6 +72,8 @@ export class FirmwareService {
     return this.grblSettings;
   }
 
+  constructor(private clientService: ClientService, private commandService: CommandService) { }
+
   public updateSettings(settings: GrblSettings) {
     settings.Settings.forEach(setting => {
       let grblSetting = this.grblSettings.find(s => s.Name === '$' + setting.Name);
@@ -76,6 +81,53 @@ export class FirmwareService {
         grblSetting.Value = setting.Value === "" ? "0" : setting.Value;
       }
 
+    });
+  }
+
+  public fetchGrblSettings(): Observable<GrblSetting[]> {
+    return new Observable((observer) => {
+      let basecommand = this.commandService.getEspApiCommand(CommandType.GrblSettings);
+      if (basecommand != null) {
+        this.clientService.sendGetCommand<GrblSettings>(basecommand).subscribe(
+          {
+            next: (settings) => {
+              this.updateSettings(settings);
+              observer.next(this.GrblSettings);
+            },
+            error: (error) => {
+              observer.error(error);
+            }
+          });
+      }
+      else {
+        observer.error("Invalid command for GRBL settings fetch");
+      }
+    });
+
+  }
+
+  public setGrblValue(settingsnumber: number, value: any): Observable<GrblSetting[]> {
+    return new Observable(observer => {
+      let command = this.commandService.getCommandUrlByCommand(`${this.grblSettings[settingsnumber].Name}=`, [value]);
+      if (command != null) {
+        this.clientService.sendGetCommand(command).subscribe(
+          {
+            next: () => {
+              this.fetchGrblSettings().subscribe(
+                {
+                  next: settings => {
+                    observer.next(settings);
+                  },
+                  error: error => {
+                    observer.error(error);
+                  }
+                });
+            },
+            error: error => {
+              observer.error(error);
+            }
+          });
+      }
     });
   }
 

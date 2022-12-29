@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { MatBottomSheetRef } from '@angular/material/bottom-sheet';
 import { CommandType } from 'src/app/models/commandType';
 import { FirmwareInfo } from 'src/app/models/firmwareInfo';
 import { ClientService } from 'src/app/services/client.service';
@@ -16,7 +17,7 @@ export class InfosheetComponent {
     return this.firmware.FirmwareInfo;
   }
   
-  constructor(private firmware: FirmwareService) {
+  constructor(private firmware: FirmwareService, public bottomSheetRef: MatBottomSheetRef<InfosheetComponent>) {
   }
 
 

@@ -1,5 +1,5 @@
 <mat-accordion class="accordion">
-    <mat-expansion-panel [disabled]="isRunning" [expanded]="isExpanded">
+    <mat-expansion-panel [disabled]="isRunning || !isConnected" [expanded]="isExpanded">
         <mat-expansion-panel-header>
             <mat-panel-title>
                 Controls panel
@@ -12,7 +12,7 @@
         <app-laser></app-laser>
         <app-general></app-general>
     </mat-expansion-panel>
-    <mat-expansion-panel [expanded]="isExpanded" [disabled]="isRunning">
+    <mat-expansion-panel [expanded]="isExpanded" [disabled]="isRunning || !isConnected">
         <mat-expansion-panel-header>
             <mat-panel-title>
                 Files panel

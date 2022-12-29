@@ -1,5 +1,5 @@
 <form [formGroup]="grblSettingsForm">
-    <div class="bottomsheet-title">GRBL settings</div>
+    <div class="sheet-header"><div class="bottomsheet-title">GRBL settings</div><div><button mat-button (click)="bottomSheetRef.dismiss()">X</button></div></div>
     <div class="grblpanel" formArrayName="settings">
         <ng-container *ngFor="let settingForm of grblArray.controls; let i = index">
             <ng-container [ngSwitch]="GetSettingType(i)">

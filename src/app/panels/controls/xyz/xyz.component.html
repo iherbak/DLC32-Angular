@@ -6,15 +6,16 @@
         <div></div>
         <button type="button" mat-raised-button class="up" (click)="move(Axes.Y)"
           [disabled]="!distanceForm.valid">UP</button>
-        <mat-checkbox class="axisselect" [formControl]="moveZFc">Move Z</mat-checkbox>
       </div>
       <div class="middle-buttons">
         <button type="button" mat-raised-button class="left" (click)="move(Axes.X,Directions.MINUS)"
-          [disabled]="validMovementForZ() || !distanceForm.valid">LEFT</button>
-        <button type="button" mat-raised-button class="mat-accent home" (click)="home()"
-          [disabled]="!distanceForm.valid">HOME</button>
+          [disabled]="!distanceForm.valid">LEFT</button>
+        <button *ngIf="hardLimitEnabled" type="button" mat-raised-button class="mat-accent home" (click)="home()"
+          [disabled]="!distanceForm.valid">HARD HOME</button>
+        <button  type="button" mat-raised-button class="mat-accent home" [ngClass]="hardLimitEnabled?'':'extended'" (click)="softhome()"
+          [disabled]="!distanceForm.valid">SOFT HOME</button>
         <button type="button" mat-raised-button class="right" (click)="move(Axes.X)"
-          [disabled]="validMovementForZ() || !distanceForm.valid">RIGHT</button>
+          [disabled]="!distanceForm.valid">RIGHT</button>
       </div>
       <div class="bottom-buttons">
         <div></div>

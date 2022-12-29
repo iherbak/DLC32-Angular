@@ -1,6 +1,5 @@
-import { Component, ComponentRef, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { MatSelectionList } from '@angular/material/list';
 import { PageEvent } from '@angular/material/paginator';
 import { CommandType } from 'src/app/models/commandType';
 import { Directory } from 'src/app/models/directory';
@@ -15,7 +14,7 @@ import { CreateDirectoryComponent } from './create-directory/create-directory.co
 import { SnackBarService } from 'src/app/services/snack-bar.service';
 import { DeleteComponent } from './delete/delete.component';
 import { WsState } from 'src/app/models/wsStatusMessage';
-import { ProcessingDetails } from 'src/app/models/processingDetails';
+import { SocketService } from 'src/app/services/socket.service';
 
 @Component({
   selector: 'app-files',
@@ -28,7 +27,6 @@ export class FilesComponent implements OnInit, OnDestroy {
 
   private unsub: Subject<void> = new Subject();
   private postponedUpdate: boolean = true;
-  private processingDetails: ProcessingDetails = new ProcessingDetails("", 0);
   public directory: Directory;
   public pageIndex = 0;
   public pageFiles: ESP32File[] = [];
@@ -47,7 +45,7 @@ export class FilesComponent implements OnInit, OnDestroy {
     return this.fileForm.get("selectedFile") as FormControl;
   }
 
-  constructor(private formBuilder: FormBuilder, private commandService: CommandService, private clientService: ClientService, private firmwareService: FirmwareService, private bottomSheet: MatBottomSheet, private snackBar: SnackBarService) {
+  constructor(private formBuilder: FormBuilder, private commandService: CommandService, private clientService: ClientService, private firmwareService: FirmwareService, private bottomSheet: MatBottomSheet, private snackBar: SnackBarService, private socketService: SocketService) {
 
     this.fileForm = this.formBuilder.group({
       fileSource: [this.fileSources[0]],
@@ -55,9 +53,7 @@ export class FilesComponent implements OnInit, OnDestroy {
     });
 
     this.directory = new Directory();
-    this.directory.path = "/";
-    this.directory.files = [new ESP32File("cedfre","1321 kB")];
-    this.UpdateFileList(this.directory);
+
     this.clientService.Connected.pipe(takeUntil(this.unsub)).subscribe(() => {
       this.fileSources.push(new FileSource(this.firmwareService.FirmwareInfo.Primary_Sd, Drive.SD))
       if (this.fileSources.length > 1) {
@@ -74,15 +70,11 @@ export class FilesComponent implements OnInit, OnDestroy {
       this.refreshFiles();
     });
 
-    this.clientService.WsStatusMessage.pipe(takeUntil(this.unsub)).subscribe({
+    this.socketService.WsStatusMessage.pipe(takeUntil(this.unsub)).subscribe({
       next: (commandResult) => {
         if (commandResult.state === WsState.Idle && this.postponedUpdate) {
           this.postponedUpdate = false;
-          this.directory.path = this.processingDetails.FilePath.substring(0, this.processingDetails.FilePath.lastIndexOf("/"));
           this.refreshFiles();
-        }
-        if ((commandResult.state == WsState.Run || commandResult.state === WsState.Hold) && this.postponedUpdate) {
-          this.processingDetails = commandResult.getProcessingDetails();
         }
       }
     });
@@ -260,7 +252,6 @@ export class FilesComponent implements OnInit, OnDestroy {
     }
   }
   public StartFile() {
-
     let basecommand = this.commandService.getCommandUrlByCommand("[ESP220]", [`${this.slashCorrectPath}${this.selectedFileFc.value[0].name}`]);
     if (basecommand != null) {
       this.clientService.sendGetCommand<void>(basecommand).subscribe();

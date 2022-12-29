@@ -1,12 +1,9 @@
 import { QueueingSubject } from 'queueing-subject';
 import { Injectable } from '@angular/core';
-import { Observable, retry, share, switchMap, tap } from 'rxjs';
+import { Observable, retry, share, Subject, switchMap, tap } from 'rxjs';
 import makeWebSocketObservable, { GetWebSocketResponses, WebSocketOptions } from 'rxjs-websockets';
-import { ClientService } from './client.service';
 import { WsState, WsStatusMessage } from '../models/wsStatusMessage';
 import { AlarmCode } from '../models/alarmCode';
-import { GrblSetting } from '../models/grblSetting';
-import { FirmwareService } from './firmware.service';
 
 @Injectable({
   providedIn: 'root'
@@ -33,18 +30,10 @@ export class SocketService {
   //a subject to send messages through websocket
   public sendMessage: QueueingSubject<ArrayBuffer> = new QueueingSubject();
 
-  private machineState: WsState = WsState.Idle
+  public WsStatusMessage: Subject<WsStatusMessage> = new Subject();
+  public WsStringMessage: Subject<string> = new Subject();
 
-  public get MachineState() {
-    return this.machineState;
-  }
-
-  public get isRunning() {
-    return (this.machineState === WsState.Run || this.machineState === WsState.Hold);
-  }
-
-  constructor(private clientService: ClientService, private firmwareService: FirmwareService) {
-
+  constructor() {
   }
 
   //create connection
@@ -71,11 +60,6 @@ export class SocketService {
             //it is a status message
             if (strMessage.startsWith('<')) {
               let wsMessage = new WsStatusMessage(strMessage);
-              //set state change
-              if (this.machineState !== wsMessage.state) {
-                this.machineState = wsMessage.state;
-              }
-
               if (wsMessage.state == WsState.Alarm) {
                 let alarmdesc = this.alarmCodes.find(ac => ac.code == wsMessage.infoKeyValues.get("ALARM"));
                 if (alarmdesc != null) {
@@ -85,17 +69,16 @@ export class SocketService {
                   wsMessage.infoKeyValues.set("alarm", "unknown");
                 }
               }
-              this.clientService.WsStatusMessage.next(wsMessage);
+              this.WsStatusMessage.next(wsMessage);
+              this.WsStringMessage.next(`[WS_ARR:${strMessage}]`);
             }
-            this.clientService.CommandSuccess.next(strMessage);
           }
           if (typeof (message) == 'string') {
-
-            this.clientService.CommandSuccess.next(message);
+            this.WsStringMessage.next(`[WS_STR:${message}]`);
           }
         },
         error: (error) => {
-          this.clientService.CommandError.next(`WS: ${error}`);
+          this.WsStringMessage.next(`[WS_ERROR:${error}]`);
           console.log('Websocket error:', error)
         },
       }),

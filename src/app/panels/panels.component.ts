@@ -17,7 +17,11 @@ export class PanelsComponent implements OnDestroy {
   private expanded: boolean = true;
 
   public get isRunning() {
-    return this.socketService.isRunning;
+    return this.clientService.isRunning;
+  }
+
+  public get isConnected() {
+    return this.clientService.isConnected;
   }
 
   public get isExpanded() {
@@ -26,15 +30,17 @@ export class PanelsComponent implements OnDestroy {
 
   constructor(private socketService: SocketService, private clientService: ClientService) {
 
-    this.clientService.WsStatusMessage.pipe(takeUntil(this.unsub)).subscribe({
+    this.socketService.WsStatusMessage.pipe(takeUntil(this.unsub)).subscribe({
       next: (commandResult) => {
-        switch(commandResult.state){
+        switch (commandResult.state) {
           case WsState.Hold:
-          case WsState.Run:{
+          case WsState.Run:
+          case WsState.Unknown:
+          case WsState.Home: {
             this.expanded = false;
             break;
           }
-          default:{
+          default: {
             this.expanded = true;
           }
         }

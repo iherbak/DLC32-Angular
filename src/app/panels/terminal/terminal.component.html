@@ -1,7 +1,8 @@
 <form [formGroup]="commandForm">
     <div class="panel-title">
         <div>Terminal</div>
-        <mat-checkbox class="axisselect" [formControl]="autoscrollFc">Autoscroll</mat-checkbox>
+        <mat-checkbox [formControl]="autoscrollFc">Autoscroll</mat-checkbox>
+        <mat-checkbox [formControl]="verboseFc">Verbose</mat-checkbox>
     </div>
     <div>
         <mat-form-field class="window max" appearance="fill">

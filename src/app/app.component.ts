@@ -2,6 +2,7 @@ import { AfterViewInit, Component, OnDestroy } from '@angular/core';
 import { Observable, Subject, take, takeUntil, timer } from 'rxjs';
 import { CommandType } from './models/commandType';
 import { FirmwareInfo } from './models/firmwareInfo';
+import { WsStatusMessage } from './models/wsStatusMessage';
 import { ClientService } from './services/client.service';
 import { CommandService } from './services/command.service';
 import { FirmwareService } from './services/firmware.service';
@@ -38,11 +39,14 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         next: (ret: FirmwareInfo) => {
           this.firmwareService.FirmwareInfo.clone(ret);
           this.snackBar.showSnackBar("Firmware info fetched, starting websocket connection...");
-          this.StartWebSocketConnection();
-          this
-          this.clientService.Connected.next();
+          this.firmwareService.fetchGrblSettings().subscribe(()=>{
+            this.StartWebSocketConnection();
+            this.clientService.Connected.next();
+          });
         },
         error: () => {
+          let wsMessage = new WsStatusMessage("<State:Unknown>");
+          this.socketService.WsStatusMessage.next(wsMessage);
           this.snackBar.showSnackBar("Firmware info fetch failure!");
         }
       });
@@ -52,26 +56,11 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   public StartWebSocketConnection() {
     this.snackBar.showSnackBar(this.firmwareService.WebSocketInfo);
     this.socketService.createConnection(this.firmwareService.WebSocketInfo);
-    this.socketService.socketObservable.pipe(take(1)).subscribe({
-      next: () => {
-        this.snackBar.showSnackBar("websocket connected...");
-        this.openMainSubscriptions();
-      },
-      error: () => {
-        this.snackBar.showSnackBar("websocket connection failed!");
-      }
-    });
+    this.openMainSubscriptions();
   }
 
   private openMainSubscriptions() {
-    let baseCommand = this.commandService.getCommandUrlByCommand("?");
-    this.watchDog = timer(0, 3000);
-    this.watchDog.pipe(takeUntil(this.unsub)).subscribe(() => {
-      if (baseCommand != null) {
-        this.clientService.sendGetCommand(baseCommand, true, true).subscribe();
-      }
-    });
-
+    
     this.socketService.socketObservable.pipe(takeUntil(this.unsub)).subscribe({
       next: () => {
       },
@@ -79,5 +68,15 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         this.snackBar.showSnackBar("websocket connection failed!");
       }
     });
+
+    let baseCommand = this.commandService.getCommandUrlByCommand("?");
+    this.watchDog = timer(0, 3000);
+
+    this.watchDog.pipe(takeUntil(this.unsub)).subscribe(() => {
+      if (baseCommand != null) {
+        this.clientService.sendGetCommand(baseCommand, true, true).subscribe();
+      }
+    });
+
   }
 }

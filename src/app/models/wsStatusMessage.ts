@@ -34,6 +34,12 @@ export class WsStatusMessage extends WsStringMessage {
             if (messageType === 'Alarm') {
                 this.state = WsState.Alarm;
             }
+            if(messageType === "Unknown"){
+                this.state = WsState.Unknown;
+            }
+            if(messageType === "Home"){
+                this.state = WsState.Home;
+            }
         }
 
     }
@@ -44,5 +50,7 @@ export enum WsState {
     Idle,
     Run,
     Hold,
-    Alarm
+    Alarm,
+    Unknown,
+    Home
 }

@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Axis } from 'src/app/models/axis';
-import { CommandType } from 'src/app/models/commandType';
 import { Direction } from 'src/app/models/direction';
-import { ExecutableCommand } from 'src/app/models/executableCommand';
 import { ClientService } from 'src/app/services/client.service';
 import { CommandService } from 'src/app/services/command.service';
+import { FirmwareService } from 'src/app/services/firmware.service';
 
 @Component({
   selector: 'app-xyz',
@@ -20,19 +19,18 @@ export class XyzComponent {
     return this.distanceForm.get('distanceInput') as FormControl;
   }
 
-  public get moveZFc() {
-    return this.distanceForm.get('moveZInput') as FormControl;
-  }
-
   public get feedRateFc() {
     return this.distanceForm.get('feedRate') as FormControl;
   }
 
-  constructor(private commandService: CommandService, formBuilder: UntypedFormBuilder, private clientService: ClientService) {
+  public get hardLimitEnabled(){
+    return this.firmwareService.GrblSettings.find(s=> s.Name == "$21")?.Value === "Off" ? false : true;
+  }
+
+  constructor(private commandService: CommandService, formBuilder: UntypedFormBuilder, private clientService: ClientService, private firmwareService: FirmwareService) {
 
     this.distanceForm = formBuilder.group({
       distanceInput: ["0.1"],
-      moveZInput: [false],
       feedRate: [500,[Validators.required, Validators.min(1), Validators.max(3000)]]
     });
 
@@ -47,10 +45,6 @@ export class XyzComponent {
   };
 
   public move(axis: Axis, direction: Direction = Direction.PLUS) {
-    //if Z is target override axis
-    if (this.moveZFc.value) {
-      axis = Axis.Z;
-    }
     let distance = this.distanceFc.value;
     let command = this.commandService.getJogCommand(axis, direction === Direction.MINUS ? -distance : distance, this.feedRateFc.value);
     this.clientService.sendGetCommand(command).subscribe();
@@ -63,8 +57,11 @@ export class XyzComponent {
     }
   }
 
-  public validMovementForZ() {
-    return this.moveZFc.value;
+  public softhome() {
+    let command = this.commandService.getCommandUrlByCommand("G90 X0 Y0");
+    if (command !== null) {
+      this.clientService.sendGetCommand(command).subscribe();
+    }
   }
 
 }

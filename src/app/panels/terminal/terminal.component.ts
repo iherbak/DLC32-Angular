@@ -1,9 +1,10 @@
 import { Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
 import { FormControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, take, takeUntil } from 'rxjs';
 import { Command } from 'src/app/models/command';
 import { ClientService } from 'src/app/services/client.service';
 import { CommandService } from 'src/app/services/command.service';
+import { SocketService } from 'src/app/services/socket.service';
 
 @Component({
   selector: 'app-terminal',
@@ -30,22 +31,25 @@ export class TerminalComponent implements OnDestroy {
     return this.commandForm.get('autoscroll') as FormControl;
   }
 
+  public get verboseFc(): FormControl {
+    return this.commandForm.get('verbose') as FormControl;
+  }
 
   public filteredOptions: Command[] = [];
 
   private unsub: Subject<void> = new Subject();
 
-  constructor(formBuilder: UntypedFormBuilder, private commandService: CommandService, private clientService: ClientService) {
+  constructor(formBuilder: UntypedFormBuilder, private commandService: CommandService, private clientService: ClientService, private socketService: SocketService) {
     this.commandForm = formBuilder.group({
       commandInput: [""],
       commandWindow: [{ value: "Terminal is ready...", disabled: true }],
-      autoscroll: [true]
+      autoscroll: [true],
+      verbose: [false]
     });
 
     this.commandInputFc.valueChanges.pipe(takeUntil(this.unsub)).subscribe((commandfilter: string) => {
       this.filteredOptions = this.commandService.getCommands().filter(o => o.command.includes(commandfilter));
     });
-
 
     this.commandWindowFc.valueChanges.pipe(takeUntil(this.unsub)).subscribe((added: string) => {
       if (this.currentLinesCount++ > this.maxLines) {
@@ -71,6 +75,11 @@ export class TerminalComponent implements OnDestroy {
       this.logCommand(commandResult, true);
     });
 
+    this.socketService.WsStringMessage.pipe(takeUntil(this.unsub)).subscribe(wsStringMsg => {
+      if (this.verboseFc.value) {
+        this.logCommand(wsStringMsg);
+      }
+    })
   }
 
   ngOnDestroy(): void {
@@ -93,14 +102,14 @@ export class TerminalComponent implements OnDestroy {
 
   private logCommand(command: string, isError: boolean = false) {
     if (isError) {
-      this.commandWindowFc.setValue(`${this.commandWindowFc.value} \n "Error" ${command.replace('\r\n','')}`);
+      this.commandWindowFc.setValue(`${this.commandWindowFc.value} \n "Error" ${command.replace('\r\n', '')}`);
     }
     else {
-      this.commandWindowFc.setValue(`${this.commandWindowFc.value} \n ${command.replace('\r\n','')}`);
+      this.commandWindowFc.setValue(`${this.commandWindowFc.value} \n ${command.replace('\r\n', '')}`);
     }
   }
 
-  public history($event: Event){
+  public history($event: Event) {
     console.log($event);
   }
 }

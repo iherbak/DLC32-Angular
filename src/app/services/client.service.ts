@@ -1,22 +1,48 @@
 import { HttpClient, HttpEvent, HttpEventType } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, last, map, Observable, ObservableInput, of, Subject, switchMap, tap } from 'rxjs';
+import { Injectable, OnDestroy } from '@angular/core';
+import { BehaviorSubject, catchError, last, map, Observable, Subject, takeUntil, tap } from 'rxjs';
 import { ExecutableCommand } from '../models/executableCommand';
 import { ShowProgress } from '../models/showProgress';
-import { WsStatusMessage } from '../models/wsStatusMessage';
+import { WsState } from '../models/wsStatusMessage';
+import { SocketService } from './socket.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ClientService {
+export class ClientService implements OnDestroy {
 
+  private unsub: Subject<void> = new Subject();
   public WaitingForClient: BehaviorSubject<ShowProgress> = new BehaviorSubject(new ShowProgress());
   public CommandSuccess: Subject<string> = new Subject();
-  public WsStatusMessage: Subject<WsStatusMessage> = new Subject();
   public CommandError: Subject<string> = new Subject();
   public Connected: Subject<void> = new Subject();
 
-  constructor(private httpClient: HttpClient) {
+  private machineState: WsState = WsState.Idle
+
+  public get MachineState() {
+    return this.machineState;
+  }
+
+  public get isRunning() {
+    return (this.machineState === WsState.Run || this.machineState === WsState.Hold);
+  }
+
+  public get isConnected(){
+    return this.machineState !== WsState.Unknown;
+  }
+
+
+  constructor(private httpClient: HttpClient, private socketService: SocketService) {
+    this.socketService.WsStatusMessage.pipe(takeUntil(this.unsub)).subscribe(message=>{
+      if(message.state != this.machineState){
+        this.machineState = message.state;
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.unsub.next();
+    this.unsub.complete();
   }
 
   public sendPostCommand<R>(command: ExecutableCommand, payload: any): Observable<R> {

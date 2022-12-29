@@ -1,18 +1,16 @@
 .top-buttons {
     display: grid;
-    grid-template-columns: repeat(3, 110px);
     place-items: center;
 }
 
 .middle-buttons {
     display: grid;
-    grid-template-columns: repeat(3, 110px);
+    grid-template-columns: 110px repeat(2,140px) 110px;
     place-items: center;
 }
 
 .bottom-buttons {
     display: grid;
-    grid-template-columns: repeat(3, 110px);
     place-items: center;
 }
 
@@ -40,6 +38,16 @@
 .axisselect,
 .feedrate {
     margin: 5px;
+}
+
+button {
+    &.home {
+        width:130px;
+        &.extended{
+            grid-column-start: 2;
+            grid-column-end: 4;
+        }
+    }
 }
 
 @media all and (max-width:850px) {
