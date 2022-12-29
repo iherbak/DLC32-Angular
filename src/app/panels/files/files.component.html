@@ -15,6 +15,7 @@
         <div class="top-button-grid">
             <button type="button" class="start mat-warn" mat-raised-button [disabled]="!fileSelected()"
                 (click)="StartFile()">Start</button>
+            <div>{{directory.path}}</div>
             <button type="button" class="boundary" mat-raised-button [disabled]="!fileSelected()">Show boundary</button>
         </div>
         <mat-selection-list class="files" multiple="false" formControlName="selectedFile">
