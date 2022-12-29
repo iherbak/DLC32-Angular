@@ -9,17 +9,17 @@ To provide an alternative UI for my MKS-DLC32 based on Angular material
 #Functions
 
 For daily use it contains all the controls you would find in the other UI-s
-- Jogging and homing
-- File actions
+- Jogging and homing (HARD and SOFT based on Grbl settings)
+- File actions on storages (SPIFFS and SD)
 - Engraving status
-- A terminal to issue commands towards the firmware
+- A terminal to issue commands towards the firmware and monitor messages
 
 #Under construction
 - Better error handling
 
 #Releases
 
-- you can use one of the precompiled releases for upload
+- The compiled UI is integrated into the custom firmware I made at https://github.com/iherbak/MKS-DLC32-FIRMWARE
 
 #Compilation
 
@@ -30,11 +30,7 @@ For daily use it contains all the controls you would find in the other UI-s
 
 #Upload
 
-- IMPORTANT - Create a backup of the current version of your index.html.gz by downloading it. (click on it)
-
-- Find the option to update web UI and upload the index.html.gz overwriting the default one. (see image)
-
-<img src="/readme/upload.jpg">
+- The compiled UI is integrated into the custom firmware I made at https://github.com/iherbak/MKS-DLC32-FIRMWARE so upload the firmware instead
 
 #Screenshot
 
