@@ -9,5 +9,6 @@ export enum CommandType {
     FilesSdAction,
     UpdateFw,
     FirmwareInfo,
-    GrblSettings
+    GrblSettings,
+    FileBoundaries
 }

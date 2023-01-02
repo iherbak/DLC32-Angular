@@ -7,7 +7,7 @@ import { ESP32File } from 'src/app/models/esp32file';
 import { ClientService } from 'src/app/services/client.service';
 import { CommandService } from 'src/app/services/command.service';
 import { Drive, FileSource } from 'src/app/models/fileSource';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil, timer } from 'rxjs';
 import { FirmwareService } from 'src/app/services/firmware.service';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { CreateDirectoryComponent } from './create-directory/create-directory.component';
@@ -15,6 +15,7 @@ import { SnackBarService } from 'src/app/services/snack-bar.service';
 import { DeleteComponent } from './delete/delete.component';
 import { WsState } from 'src/app/models/wsStatusMessage';
 import { SocketService } from 'src/app/services/socket.service';
+import { Boundaries } from 'src/app/models/boundaries';
 
 @Component({
   selector: 'app-files',
@@ -79,6 +80,32 @@ export class FilesComponent implements OnInit, OnDestroy {
       }
     });
 
+  }
+
+  public getBoundaries() {
+    let basecommand = this.commandService.getEspApiCommand(CommandType.FileBoundaries, [`filename=${this.selectedFileFc.value[0].name}`, `path=${this.directory.path}`]);
+    if (basecommand != null) {
+      this.clientService.sendGetCommand<Boundaries>(basecommand).subscribe({
+        next: boundaries => {
+          let boundCommands = this.commandService.generateBoundaryCommands(boundaries.bounds);
+          let sender = timer(0, 500);
+          let i = 0;
+          let s = sender.subscribe(() => {
+            if (i < boundCommands.length) {
+              this.clientService.sendGetCommand(boundCommands[i++],true,false).subscribe();
+            }
+            else {
+              s.unsubscribe();
+            }
+          })
+
+
+        },
+        error: err => {
+          this.snackBar.showSnackBar("Failed to get bounds for file!");
+        }
+      });
+    }
   }
 
   private refreshFiles() {

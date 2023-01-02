@@ -16,7 +16,7 @@
             <button type="button" class="start mat-warn" mat-raised-button [disabled]="!fileSelected()"
                 (click)="StartFile()">Start</button>
             <div>{{directory.path}}</div>
-            <button type="button" class="boundary" mat-raised-button [disabled]="!fileSelected()">Show boundary</button>
+            <button type="button" class="boundary" mat-raised-button [disabled]="!fileSelected()" (click)="getBoundaries()">Show boundary</button>
         </div>
         <mat-selection-list class="files" multiple="false" formControlName="selectedFile">
             <mat-list-option *ngFor="let file of pageFiles" [value]="file" (appDoubleClick)="enterDir(file)">

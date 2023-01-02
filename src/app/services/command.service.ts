@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Axis } from '../models/axis';
+import { Boundaries } from '../models/boundaries';
+import { Bounds } from '../models/bounds';
 import { Command } from '../models/command';
 import { CommandType } from '../models/commandType';
 import { EspCommand } from '../models/espCommand';
@@ -106,10 +108,12 @@ export class CommandService {
     new Command("login", "Login to files", "GET", "json", CommandType.Login),
     new Command("updateFw", "Update Frimware command", "GET", "json", CommandType.UpdateFw),
     new Command("firmwareInfo", "Get firmware info", "GET", "json", CommandType.FirmwareInfo),
-    new Command("grblSettings", "Get grbl settings", "GET", "json", CommandType.GrblSettings)
+    new Command("grblSettings", "Get grbl settings", "GET", "json", CommandType.GrblSettings),
+    new Command("boundary", "Get file boundary coordinates", "GET", "json", CommandType.FileBoundaries)
   ];
 
   private gcodeCommands: Command[] = [
+    new Command("G0", "Linear move without laser"),
     new Command("G1", "Linear move"),
     new Command("G2", "Arc or circle move"),
     new Command("G3", "Arc or circle move"),
@@ -171,7 +175,7 @@ export class CommandService {
   public getCommandUrlByCommand(command: string, args: string[] = []) {
     let basecommand = new Command(command, '');
     //search for command amongst the KB friendly ones
-    let storedCommand = this.getCommands().find(c => c.command.startsWith(command));
+    let storedCommand = this.getCommands().find(c => command.startsWith(c.command));
     if (storedCommand == null) {
       //search in no kb friendly ones
       storedCommand = this.grblRealTimeNonKBFriendlyCommands.find(c => c.command.startsWith(command));
@@ -239,6 +243,27 @@ export class CommandService {
     }
   }
 
+  public generateBoundaryCommands(bounds: Bounds): ExecutableCommand[] {
+    let gcodes: string[] = [
+      "M3 S20",
+      "G0 X0 Y0",
+      `G1 X${bounds.minX} Y${bounds.minY}`,
+      `G1 X${bounds.minX} Y${bounds.maxY}`,
+      `G1 X${bounds.maxX} Y${bounds.maxY}`,
+      `G1 X${bounds.maxX} Y${bounds.minY}`,
+      `G1 X${bounds.minX} Y${bounds.minY}`,
+      "M5"];
+    let commands: ExecutableCommand[] = [];
+
+    for (let i = 0; i < gcodes.length; i++) {
+      let command = this.getCommandUrlByCommand(gcodes[i]);
+      if (command != null) {
+        commands.push(command);
+      }
+    }
+    return commands;
+  }
+
   private getCommandUrl(command: Command | undefined, args: string[] = []): ExecutableCommand {
     let issuedCommand = new ExecutableCommand("");
     if (command !== undefined) {
@@ -279,6 +304,10 @@ export class CommandService {
         }
         case CommandType.FirmwareInfo: {
           issuedCommand.commandUrl = "/firmware";
+          break;
+        }
+        case CommandType.FileBoundaries: {
+          issuedCommand.commandUrl = `/boundaries${args.length > 0 ? "?" + args.join('&') : ""}`;
           break;
         }
         default:
