@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { CommandType } from '../models/commandType';
+import { EspSetting } from '../models/espSetting';
+import { EspSettings } from '../models/espSettings';
 import { FirmwareInfo } from '../models/firmwareInfo';
 import { GrblSetting } from '../models/grblSetting';
 import { GrblSettings } from '../models/grblSettings';
@@ -50,6 +52,23 @@ export class FirmwareService {
     new GrblSetting("$132", "Z Max travel, mm", SettingType.Number),
   ];
 
+  public espSettings: EspSetting[] = [
+    new EspSetting("ESP140", "Bluetooth name"),
+    new EspSetting("ESP110", "Radio/Mode"),
+    new EspSetting("ESP131", "Telnet/Port"),
+    new EspSetting("ESP130", "Telnet/enable"),
+    new EspSetting("ESP121", "Http/port"),
+    new EspSetting("ESP120", "Http/Enable"),
+    new EspSetting("ESP112", "System/Hostname"),
+    new EspSetting("ESP108", "AP/Channel"),
+    new EspSetting("ESP107", "Ap/IP"),
+    new EspSetting("ESP106", "AP/Password"),
+    new EspSetting("ESP105", "AP/SSID"),
+    new EspSetting("ESP100", "Sta/SSID"),
+    new EspSetting("ESP101", "Sta/Password"),
+    new EspSetting("ESP102", "Sta/IPMode"),
+  ];
+  
   private info: FirmwareInfo = new FirmwareInfo();
 
   public get FirmwareInfo() {
@@ -72,6 +91,10 @@ export class FirmwareService {
     return this.grblSettings;
   }
 
+  public get EspSettings() {
+    return this.espSettings;
+  }
+
   constructor(private clientService: ClientService, private commandService: CommandService) { }
 
   public updateSettings(settings: GrblSettings) {
@@ -81,6 +104,15 @@ export class FirmwareService {
         grblSetting.Value = setting.Value === "" ? "0" : setting.Value;
       }
 
+    });
+  }
+  
+  public updateEspSettings(settings: EspSettings) {
+    settings.Settings.forEach(setting => {
+      let espSetting = this.espSettings.find(s => s.Name === setting.Name);
+      if (espSetting != null) {
+        espSetting.Value = setting.Value === "" ? "0" : setting.Value;
+      }
     });
   }
 
@@ -106,6 +138,28 @@ export class FirmwareService {
 
   }
 
+  public fetchEspSettings(): Observable<EspSetting[]> {
+    return new Observable((observer) => {
+      let basecommand = this.commandService.getEspApiCommand(CommandType.EspSettings);
+      if (basecommand != null) {
+        this.clientService.sendGetCommand<EspSettings>(basecommand).subscribe(
+          {
+            next: (settings) => {
+              this.updateEspSettings(settings);
+              observer.next(this.EspSettings);
+            },
+            error: (error) => {
+              observer.error(error);
+            }
+          });
+      }
+      else {
+        observer.error("Invalid command for Esp settings fetch");
+      }
+    });
+
+  }
+
   public setGrblValue(settingsnumber: number, value: any): Observable<GrblSetting[]> {
     return new Observable(observer => {
       let command = this.commandService.getCommandUrlByCommand(`${this.grblSettings[settingsnumber].Name}=`, [value]);
@@ -114,6 +168,31 @@ export class FirmwareService {
           {
             next: () => {
               this.fetchGrblSettings().subscribe(
+                {
+                  next: settings => {
+                    observer.next(settings);
+                  },
+                  error: error => {
+                    observer.error(error);
+                  }
+                });
+            },
+            error: error => {
+              observer.error(error);
+            }
+          });
+      }
+    });
+  }
+
+  public setEspValue(settingsnumber: number, value: any): Observable<EspSetting[]> {
+    return new Observable(observer => {
+      let command = this.commandService.getCommandUrlByCommand(`[ESP401]P=${this.espSettings[settingsnumber].Name} V=${value}`);
+      if (command != null) {
+        this.clientService.sendGetCommand(command).subscribe(
+          {
+            next: () => {
+              this.fetchEspSettings().subscribe(
                 {
                   next: settings => {
                     observer.next(settings);

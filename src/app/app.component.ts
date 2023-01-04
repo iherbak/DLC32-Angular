@@ -39,9 +39,11 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         next: (ret: FirmwareInfo) => {
           this.firmwareService.FirmwareInfo.clone(ret);
           this.snackBar.showSnackBar("Firmware info fetched, starting websocket connection...");
-          this.firmwareService.fetchGrblSettings().subscribe(()=>{
-            this.StartWebSocketConnection();
-            this.clientService.Connected.next();
+          this.firmwareService.fetchGrblSettings().subscribe(() => {
+            this.firmwareService.fetchEspSettings().subscribe(() => {
+              this.StartWebSocketConnection();
+              this.clientService.Connected.next();
+            });
           });
         },
         error: () => {
@@ -60,7 +62,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   }
 
   private openMainSubscriptions() {
-    
+
     this.socketService.socketObservable.pipe(takeUntil(this.unsub)).subscribe({
       next: () => {
       },

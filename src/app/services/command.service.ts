@@ -56,48 +56,35 @@ export class CommandService {
     new Command("$SLP", "Enable Sleep mode."),
     new Command("?", "Status report query."),
     new Command("~", "Cycle Start/Resume from Feed Hold, Door or Program pause."),
-    new Command("!", "Feed Hold - Stop all motion.")
+    new Command("!", "Feed Hold - Stop all motion."),
+    new Command("$", "Grbl help")
   ];
 
 
   private espCommands: Command[] = [
     new EspCommand("[ESP]", "Esp commands help"),
     new EspCommand("[ESP0]", "Esp commands help"),
-    new EspCommand("[ESP100]<SSID>", "Set/Get STA SSID"),
-    new EspCommand("[ESP101]<Password>", "Set STA Password"),
-    new EspCommand("[ESP102]<mode>", "Set/Get STA IP mode (DHCP/STATIC)"),
-    new EspCommand("[ESP103]IP=<IP> MSK=<IP> GW=<IP>", "Set/Get STA IP/Mask/GW"),
-    new EspCommand("[ESP105]<SSID>", "Set/Get AP SSID"),
-    new EspCommand("[ESP106]<Password>", "Change AP Password"),
-    new EspCommand("[ESP107]<IP>", "Set/Get AP IP"),
-    new EspCommand("[ESP108]<channel>", "Set/Get AP channel"),
-    new EspCommand("[ESP110]<state>", "Set/Get radio state which can be STA, AP, BT, OFF"),
-    new EspCommand("[ESP111]<header answer>", "Get current IP", "GET", "text"),
-    new EspCommand("[ESP112]<Hostname> ", "Get/Set hostname"),
-    new EspCommand("[ESP115]<state>", "Get/Set immediate Radio (WiFi/BT) state which can be ON, OFF"),
-    new EspCommand("[ESP120]<state>", "Get/Set HTTP state which can be ON, OFF"),
-    new EspCommand("[ESP121]<port>", "Get/Set HTTP port"),
-    new EspCommand("[ESP130]<state>", "Get/Set Telnet state which can be ON, OFF"),
-    new EspCommand("[ESP131]<port>", "Get/Set Telnet port"),
-    new EspCommand("[ESP140]<Bluetooth name> ", "Get/Set btname"),
+    new EspCommand("[ESP103]", "IP=<IP> MSK=<IP> GW=<IP> Set/Get STA IP/Mask/GW"),
+    new EspCommand("[ESP111]", "<header answer> Get current IP", "GET", "text"),
+    new EspCommand("[ESP115]", "<state> Get/Set immediate Radio (WiFi/BT) state which can be ON, OFF"),
     new EspCommand("[ESP200]", "Get SD Card Status"),
     new EspCommand("[ESP210]", "Get SD Card Content"),
-    new EspCommand("[ESP215]<file/dir name>", "Delete SD Card file / directory"),
-    new EspCommand("[ESP220]<Filename> ", "Print SD file", 'GET', 'text'),
-    new EspCommand("[ESP221]<Filename> ", "Read SD file", 'GET', 'text'),
+    new EspCommand("[ESP215]", "<file/dir name> Delete SD Card file / directory"),
+    new EspCommand("[ESP220]", "<Filename> Print SD file", 'GET', 'text'),
+    new EspCommand("[ESP221]", "<Filename> Read SD file", 'GET', 'text'),
     new EspCommand("[ESP400]", "Get full EEPROM settings content but do not give any passwords"),
-    new EspCommand("[ESP401]P=<position> T=<type> V=<value> ", "Set EEPROM setting position in EEPROM, type: B(byte), I(integer/long), S(string), A(IP address / mask)"),
+    new EspCommand("[ESP401]", "P=<Esp setting name> V=<value> Set EEPROM setting position in EEPROM"),
     new EspCommand("[ESP410]", "Get available AP list (limited to 30)"),
     new EspCommand("[ESP420]", "Get current settings of ESP3D"),
-    new EspCommand("[ESP444]RESTART", "Restart ESP"),
-    new EspCommand("[ESP555]<password>", "Change / Reset user password"),
-    new EspCommand("[ESP600]msg", "Send Notification"),
-    new EspCommand("[ESP610]type=<NONE/PUSHOVER/EMAIL/LINE> T1=<token1> T2=<token2> TS=<Settings>", "Set/Get Notification settings Get will give type and settings only, not the protected T1/T2"),
-    new EspCommand("[ESP700]<filename>", "Run SPIFFS file"),
+    new EspCommand("[ESP444]", "RESTART Restart ESP"),
+    new EspCommand("[ESP555]", "<password> Change / Reset user password"),
+    new EspCommand("[ESP600]", "msg Send Notification"),
+    new EspCommand("[ESP610]", "type=<NONE/PUSHOVER/EMAIL/LINE> T1=<token1> T2=<token2> TS=<Settings> Set/Get Notification settings Get will give type and settings only, not the protected T1/T2"),
+    new EspCommand("[ESP700]", "<filename> Run SPIFFS file"),
     new EspCommand("[ESP701]", "Read local file"),
-    new EspCommand("[ESP710]FORMAT", "Format SPIFFS"),
+    new EspCommand("[ESP710]", "FORMAT Format SPIFFS"),
     new EspCommand("[ESP720]", "SPIFFS total size and used size"),
-    new EspCommand("[ESP800]", "Get fw version and basic information", "GET", 'text')
+    // new EspCommand("[ESP800]", "Get fw version and basic information", "GET", 'text')
   ];
   private espApiCommands: Command[] = [
     new Command("getFiles from internal flash", "Getting Files from server", "GET", "json", CommandType.FilesAction),
@@ -105,11 +92,12 @@ export class CommandService {
     new Command("upload to internal flash", "Getting Files from server", "POST", "json", CommandType.Upload),
     new Command("upload to sd card", "Getting Files from server", "POST", "json", CommandType.UploadSd),
     new Command("manipulateFiles", "Manipulate files on server", "GET", "json", CommandType.FilesAction),
-    new Command("login", "Login to files", "GET", "json", CommandType.Login),
+    new Command("login", "Login", "GET", "json", CommandType.Login),
     new Command("updateFw", "Update Frimware command", "GET", "json", CommandType.UpdateFw),
     new Command("firmwareInfo", "Get firmware info", "GET", "json", CommandType.FirmwareInfo),
     new Command("grblSettings", "Get grbl settings", "GET", "json", CommandType.GrblSettings),
-    new Command("boundary", "Get file boundary coordinates", "GET", "json", CommandType.FileBoundaries)
+    new Command("boundary", "Get file boundary coordinates", "GET", "json", CommandType.FileBoundaries),
+    new Command("espsettings", "Get esp settings", "GET", "json", CommandType.EspSettings)
   ];
 
   private gcodeCommands: Command[] = [
@@ -245,13 +233,14 @@ export class CommandService {
 
   public generateBoundaryCommands(bounds: Bounds): ExecutableCommand[] {
     let gcodes: string[] = [
-      "M3 S20",
       "G0 X0 Y0",
+      "M3 S20",
       `G1 X${bounds.minX} Y${bounds.minY}`,
       `G1 X${bounds.minX} Y${bounds.maxY}`,
       `G1 X${bounds.maxX} Y${bounds.maxY}`,
       `G1 X${bounds.maxX} Y${bounds.minY}`,
       `G1 X${bounds.minX} Y${bounds.minY}`,
+      "G0 X0 Y0",
       "M5"];
     let commands: ExecutableCommand[] = [];
 
@@ -291,6 +280,10 @@ export class CommandService {
         }
         case CommandType.GrblSettings: {
           issuedCommand.commandUrl = "/grblsettings";
+          break;
+        }
+        case CommandType.EspSettings:{
+          issuedCommand.commandUrl = "/espsettings";
           break;
         }
         case CommandType.Login:

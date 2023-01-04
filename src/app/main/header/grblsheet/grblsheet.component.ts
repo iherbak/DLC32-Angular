@@ -29,7 +29,7 @@ export class GrblsheetComponent implements OnInit {
     return this.grblSettingsForm.get('settings') as FormArray<FormControl>;
   }
 
-  constructor(private clientService: ClientService, private commandService: CommandService, private firmwareService: FirmwareService, private formBuilder: FormBuilder, public bottomSheetRef: MatBottomSheetRef<GrblsheetComponent>, private snackBar: SnackBarService) {
+  constructor(private firmwareService: FirmwareService, private formBuilder: FormBuilder, public bottomSheetRef: MatBottomSheetRef<GrblsheetComponent>, private snackBar: SnackBarService) {
     this.grblSettingsForm = this.formBuilder.group({
       settings: this.formBuilder.array([])
     });

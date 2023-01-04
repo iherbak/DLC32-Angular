@@ -70,11 +70,16 @@ export class SocketService {
                 }
               }
               this.WsStatusMessage.next(wsMessage);
-              this.WsStringMessage.next(`[WS_ARR:${strMessage}]`);
             }
+            this.WsStringMessage.next(`[WS_ARR:${strMessage}]`);
           }
-          if (typeof (message) == 'string') {
-            this.WsStringMessage.next(`[WS_STR:${message}]`);
+          else {
+            if (typeof (message) == 'string') {
+              this.WsStringMessage.next(`[WS_STR:${message}]`);
+            }
+            else{
+              this.WsStringMessage.next(`[WS_UNKNOWN:${message}]`);
+            }
           }
         },
         error: (error) => {

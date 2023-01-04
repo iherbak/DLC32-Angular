@@ -1,0 +1,23 @@
+<form [formGroup]="espSettingsForm">
+    <div class="sheet-header">
+        <div class="bottomsheet-title">ESP settings</div>
+        <div><button mat-button (click)="bottomSheetRef.dismiss()">X</button></div>
+    </div>
+    <div class="grblpanel" formArrayName="settings">
+        <ng-container *ngFor="let settingForm of espArray.controls; let i = index">
+            <div class="grblsetting">
+                <div>
+                    {{GetSettingDescription(i)}}
+                </div>
+                <mat-form-field appearance="fill" class="max">
+                    <mat-label>{{GetSettingName(i)}}</mat-label>
+                    <input matInput type="text" aria-label="text" [formControl]="settingForm" matInput
+                        (change)="setEspValue(i)">
+                    <mat-error *ngIf="settingForm.hasError('required')">
+                        <strong>Required</strong>
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </ng-container>
+    </div>
+</form>

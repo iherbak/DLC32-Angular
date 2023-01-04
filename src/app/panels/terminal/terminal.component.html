@@ -15,7 +15,7 @@
                     [formControl]="commandInputFc" [matAutocomplete]="auto">
                 <mat-autocomplete #auto="matAutocomplete">
                     <mat-option *ngFor="let option of filteredOptions" [value]="option.command">
-                        {{option.command}} - {{option.description}}
+                        {{option.command}} {{option.description}}
                     </mat-option>
                 </mat-autocomplete>
             </mat-form-field>

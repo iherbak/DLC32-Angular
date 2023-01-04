@@ -38,6 +38,7 @@ import { DeleteComponent } from './panels/files/delete/delete.component';
 import { DoubleClickDirective } from './panels/files/double-click.directive';
 import { GrblsheetComponent } from './main/header/grblsheet/grblsheet.component';
 import { LoaderComponent } from './main/loader/loader.component';
+import { EspsheetComponent } from './main/header/espsheet/espsheet.component';
 
 
 @NgModule({
@@ -57,7 +58,8 @@ import { LoaderComponent } from './main/loader/loader.component';
     DeleteComponent,
     DoubleClickDirective,
     GrblsheetComponent,
-    LoaderComponent
+    LoaderComponent,
+    EspsheetComponent
   ],
   imports: [
     BrowserModule,

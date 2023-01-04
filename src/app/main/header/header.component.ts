@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { EspsheetComponent } from 'src/app/main/header/espsheet/espsheet.component';
 import { ClientService } from 'src/app/services/client.service';
 import { InfosheetComponent } from '../infosheet/infosheet.component';
 import { GrblsheetComponent } from './grblsheet/grblsheet.component';
@@ -32,4 +33,9 @@ export class HeaderComponent {
   public showGrblSettings() {
     this.bottomSheet.open(GrblsheetComponent);
   }
+
+  public showEspSettings() {
+    this.bottomSheet.open(EspsheetComponent);
+  }
+
 }
