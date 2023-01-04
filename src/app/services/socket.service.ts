@@ -4,6 +4,7 @@ import { Observable, retry, share, Subject, switchMap, tap } from 'rxjs';
 import makeWebSocketObservable, { GetWebSocketResponses, WebSocketOptions } from 'rxjs-websockets';
 import { WsState, WsStatusMessage } from '../models/wsStatusMessage';
 import { AlarmCode } from '../models/alarmCode';
+import { WsStringMessage } from '../models/wsStringMessage';
 
 @Injectable({
   providedIn: 'root'
@@ -31,7 +32,7 @@ export class SocketService {
   public sendMessage: QueueingSubject<ArrayBuffer> = new QueueingSubject();
 
   public WsStatusMessage: Subject<WsStatusMessage> = new Subject();
-  public WsStringMessage: Subject<string> = new Subject();
+  public WsStringMessage: Subject<WsStringMessage> = new Subject();
 
   constructor() {
   }
@@ -71,19 +72,21 @@ export class SocketService {
               }
               this.WsStatusMessage.next(wsMessage);
             }
-            this.WsStringMessage.next(`[WS_ARR:${strMessage}]`);
+            else {
+              this.WsStringMessage.next(new WsStringMessage(`[WS_ARR:${strMessage}]`));
+            }
           }
           else {
             if (typeof (message) == 'string') {
-              this.WsStringMessage.next(`[WS_STR:${message}]`);
+              this.WsStringMessage.next(new WsStringMessage(`[WS_STR:${message}]`));
             }
-            else{
-              this.WsStringMessage.next(`[WS_UNKNOWN:${message}]`);
+            else {
+              this.WsStringMessage.next(new WsStringMessage(`[WS_UNKNOWN:${message}]`));
             }
           }
         },
         error: (error) => {
-          this.WsStringMessage.next(`[WS_ERROR:${error}]`);
+          this.WsStringMessage.next(new WsStringMessage(`[WS_ERROR:${error}]`));
           console.log('Websocket error:', error)
         },
       }),

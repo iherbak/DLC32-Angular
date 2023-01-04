@@ -76,10 +76,15 @@ export class TerminalComponent implements OnDestroy {
     });
 
     this.socketService.WsStringMessage.pipe(takeUntil(this.unsub)).subscribe(wsStringMsg => {
+      this.logCommand(wsStringMsg.rawMessage);
+    });
+
+    this.socketService.WsStatusMessage.pipe(takeUntil(this.unsub)).subscribe(wsStatusMsg => {
       if (this.verboseFc.value) {
-        this.logCommand(wsStringMsg);
+        this.logCommand(wsStatusMsg.rawMessage);
       }
-    })
+
+    });
   }
 
   ngOnDestroy(): void {
@@ -91,7 +96,7 @@ export class TerminalComponent implements OnDestroy {
     let baseCommand = this.commandService.getCommandUrlByCommand(this.commandInputFc.value);
     if (baseCommand !== null) {
       this.clientService.sendGetCommand(baseCommand).subscribe(n => {
-
+        this.logCommand(JSON.stringify(n));
       });
     }
   }

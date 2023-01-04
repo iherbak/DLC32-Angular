@@ -69,7 +69,7 @@ export class FirmwareService {
     new EspSetting("ESP102", "Sta/IPMode"),
   ];
   
-  private info: FirmwareInfo = new FirmwareInfo();
+  private info: FirmwareInfo = new FirmwareInfo("");
 
   public get FirmwareInfo() {
     return this.info;

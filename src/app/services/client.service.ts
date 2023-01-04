@@ -76,6 +76,7 @@ export class ClientService implements OnDestroy {
         next: n => {
           if (!backgroundCommand || !silent) {
             this.CommandSuccess.next(`${command.commandUrl} -> OK`);
+            
             this.WaitingForClient.next(new ShowProgress(false));
           }
         },
