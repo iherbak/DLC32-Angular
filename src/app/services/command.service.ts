@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Axis } from '../models/axis';
-import { Boundaries } from '../models/boundaries';
 import { Bounds } from '../models/bounds';
 import { Command } from '../models/command';
 import { CommandType } from '../models/commandType';
@@ -80,11 +79,9 @@ export class CommandService {
     new EspCommand("[ESP555]", "<password> Change / Reset user password"),
     new EspCommand("[ESP600]", "msg Send Notification"),
     new EspCommand("[ESP610]", "type=<NONE/PUSHOVER/EMAIL/LINE> T1=<token1> T2=<token2> TS=<Settings> Set/Get Notification settings Get will give type and settings only, not the protected T1/T2"),
-    new EspCommand("[ESP700]", "<filename> Run SPIFFS file"),
     new EspCommand("[ESP701]", "Read local file"),
     new EspCommand("[ESP710]", "FORMAT Format SPIFFS"),
     new EspCommand("[ESP720]", "SPIFFS total size and used size"),
-    // new EspCommand("[ESP800]", "Get fw version and basic information", "GET", 'text')
   ];
   private espApiCommands: Command[] = [
     new Command("getFiles from internal flash", "Getting Files from server", "GET", "json", CommandType.FilesAction),
