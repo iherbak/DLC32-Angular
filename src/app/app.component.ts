@@ -47,8 +47,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
           });
         },
         error: () => {
-          //let wsMessage = new WsStatusMessage("<State:Unknown>");
-          //this.socketService.WsStatusMessage.next(wsMessage);
+          let wsMessage = new WsStatusMessage("<State:Unknown>");
+          this.socketService.WsStatusMessage.next(wsMessage);
           this.snackBar.showSnackBar("Firmware info fetch failure!");
         }
       });
