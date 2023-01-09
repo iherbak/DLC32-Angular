@@ -1,5 +1,5 @@
 
-<div class="bottomsheet-title">Delete</div>
+<div class="sheet-header"><div class="bottomsheet-title">Delete</div><div><button mat-button (click)="bottomSheetRef.dismiss()">X</button></div></div>
 <div class="bottomsheet-form">
     <div>Are you sure to delete: {{data.file.name}}</div>
     <button type="button" mat-raised-button class="delete" (click)="delete()">Delete</button>

@@ -13,7 +13,7 @@ import { CommandService } from 'src/app/services/command.service';
 })
 export class DeleteComponent {
 
-  constructor(@Inject(MAT_BOTTOM_SHEET_DATA) public data: { currentPath: string, file: ESP32File, commandType: CommandType }, private _bottomSheetRef: MatBottomSheetRef<DeleteComponent>, private commandService: CommandService, private clientService: ClientService) {
+  constructor(@Inject(MAT_BOTTOM_SHEET_DATA) public data: { currentPath: string, file: ESP32File, commandType: CommandType }, public bottomSheetRef: MatBottomSheetRef<DeleteComponent>, private commandService: CommandService, private clientService: ClientService) {
 
   }
 
@@ -22,10 +22,10 @@ export class DeleteComponent {
     if (command != null) {
       this.clientService.sendGetCommand<Directory>(command).subscribe({
         next: d => {
-          this._bottomSheetRef.dismiss({ success: true, directory: d });
+          this.bottomSheetRef.dismiss({ success: true, directory: d });
         },
         error: e => {
-          this._bottomSheetRef.dismiss({ success: false, directory: null });
+          this.bottomSheetRef.dismiss({ success: false, directory: null });
         }
       });
     }

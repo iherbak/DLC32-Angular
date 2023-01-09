@@ -1,0 +1,24 @@
+.content {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    align-items: center;
+    align-content: center;
+    .rect {
+        display: grid;
+        grid-template-columns: repeat(2, auto);
+        grid-template-rows: repeat(3, auto);
+        width:300px;
+
+        .top-right,
+        .bottom-right {
+            text-align: right;
+        }
+
+        .mid-left,
+        .mid-right {
+            height: 70px;
+            background-color: var(--mdc-theme-primary, #7b1fa2);
+            opacity: 0.6;
+        }
+    }
+}

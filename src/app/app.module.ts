@@ -39,6 +39,7 @@ import { DoubleClickDirective } from './panels/files/double-click.directive';
 import { GrblsheetComponent } from './main/header/grblsheet/grblsheet.component';
 import { LoaderComponent } from './main/loader/loader.component';
 import { EspsheetComponent } from './main/header/espsheet/espsheet.component';
+import { BoundarysheetComponent } from './panels/files/boundarysheet/boundarysheet.component';
 
 
 @NgModule({
@@ -59,7 +60,8 @@ import { EspsheetComponent } from './main/header/espsheet/espsheet.component';
     DoubleClickDirective,
     GrblsheetComponent,
     LoaderComponent,
-    EspsheetComponent
+    EspsheetComponent,
+    BoundarysheetComponent
   ],
   imports: [
     BrowserModule,

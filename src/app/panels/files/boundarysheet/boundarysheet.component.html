@@ -1,0 +1,15 @@
+<div class="sheet-header">
+    <div class="bottomsheet-title">Draw boundaries</div>
+    <div><button mat-button (click)="bottomSheetRef.dismiss()">X</button></div>
+</div>
+<div class="content">
+    <div class="rect">
+        <span class="top-left">({{bounds.minX}}, {{bounds.maxY}})</span>
+        <span class="top-right">({{bounds.maxX}}, {{bounds.maxY}})</span>
+        <span class="mid-left"></span>
+        <span class="mid-right"></span>
+        <span class="bottom-left" >({{bounds.minX}}, {{bounds.minY}})</span>
+        <span class="bottom-right">({{bounds.maxX}}, {{bounds.minY}})</span>
+    </div>
+    <button type="button" mat-raised-button class="draw" (click)="sendBoundaries()">Send</button>
+</div>

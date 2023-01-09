@@ -5,6 +5,7 @@ import makeWebSocketObservable, { GetWebSocketResponses, WebSocketOptions } from
 import { WsState, WsStatusMessage } from '../models/wsStatusMessage';
 import { AlarmCode } from '../models/alarmCode';
 import { WsStringMessage } from '../models/wsStringMessage';
+import { WsGcodeParserMessage } from '../models/wsGcodeParserMessage';
 
 @Injectable({
   providedIn: 'root'
@@ -33,7 +34,8 @@ export class SocketService {
 
   public WsStatusMessage: Subject<WsStatusMessage> = new Subject();
   public WsStringMessage: Subject<WsStringMessage> = new Subject();
-
+  public WsGcodeParserMessage: Subject<WsGcodeParserMessage> = new Subject();
+  
   constructor() {
   }
 
@@ -59,22 +61,35 @@ export class SocketService {
           if (message instanceof ArrayBuffer) {
             let strMessage = this.textDecoder.decode(message);
             //it is a status message
-            if (strMessage.startsWith('<')) {
-              let wsMessage = new WsStatusMessage(strMessage);
-              if (wsMessage.state == WsState.Alarm) {
-                let alarmdesc = this.alarmCodes.find(ac => ac.code == wsMessage.infoKeyValues.get("ALARM"));
-                if (alarmdesc != null) {
-                  wsMessage.infoKeyValues.set("alarm", alarmdesc?.description);
+            switch (strMessage[0]) {
+              case "<": {
+                let wsMessage = new WsStatusMessage(strMessage);
+                if (wsMessage.state == WsState.Alarm) {
+                  let alarmdesc = this.alarmCodes.find(ac => ac.code == wsMessage.infoKeyValues.get("ALARM"));
+                  if (alarmdesc != null) {
+                    wsMessage.infoKeyValues.set("alarm", alarmdesc?.description);
+                  }
+                  else {
+                    wsMessage.infoKeyValues.set("alarm", "unknown");
+                  }
                 }
-                else {
-                  wsMessage.infoKeyValues.set("alarm", "unknown");
-                }
+                this.WsStatusMessage.next(wsMessage);
+                break;
               }
-              this.WsStatusMessage.next(wsMessage);
+              case "[": {
+                if(strMessage.includes("M3") || strMessage.includes("M3") ){
+                  this.WsGcodeParserMessage.next(new WsGcodeParserMessage(strMessage,true));
+                }
+                if(strMessage.includes("M5")){
+                  this.WsGcodeParserMessage.next(new WsGcodeParserMessage(strMessage,false));
+                }
+                break;
+              }
+              default: {
+                this.WsStringMessage.next(new WsStringMessage(`[WS_ARR:${strMessage}]`));
+              }
             }
-            else {
-              this.WsStringMessage.next(new WsStringMessage(`[WS_ARR:${strMessage}]`));
-            }
+
           }
           else {
             if (typeof (message) == 'string') {

@@ -16,6 +16,7 @@ import { DeleteComponent } from './delete/delete.component';
 import { WsState } from 'src/app/models/wsStatusMessage';
 import { SocketService } from 'src/app/services/socket.service';
 import { Boundaries } from 'src/app/models/boundaries';
+import { BoundarysheetComponent } from './boundarysheet/boundarysheet.component';
 
 @Component({
   selector: 'app-files',
@@ -87,19 +88,7 @@ export class FilesComponent implements OnInit, OnDestroy {
     if (basecommand != null) {
       this.clientService.sendGetCommand<Boundaries>(basecommand).subscribe({
         next: boundaries => {
-          let boundCommands = this.commandService.generateBoundaryCommands(boundaries.bounds);
-          let sender = timer(0, 500);
-          let i = 0;
-          let s = sender.subscribe(() => {
-            if (i < boundCommands.length) {
-              this.clientService.sendGetCommand(boundCommands[i++],true,false).subscribe();
-            }
-            else {
-              s.unsubscribe();
-            }
-          })
-
-
+          this.bottomSheet.open(BoundarysheetComponent, { data: { boundaries: boundaries } });
         },
         error: err => {
           this.snackBar.showSnackBar("Failed to get bounds for file!");

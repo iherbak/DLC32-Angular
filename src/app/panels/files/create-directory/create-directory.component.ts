@@ -20,7 +20,7 @@ export class CreateDirectoryComponent {
     return this.directoryForm.get('name') as FormControl;
   }
 
-  constructor(@Inject(MAT_BOTTOM_SHEET_DATA) public data: { currentPath: string, commandType: CommandType }, private _bottomSheetRef: MatBottomSheetRef<CreateDirectoryComponent>, private formBuilder: FormBuilder, private commandService: CommandService, private clientService: ClientService) {
+  constructor(@Inject(MAT_BOTTOM_SHEET_DATA) public data: { currentPath: string, commandType: CommandType }, public bottomSheetRef: MatBottomSheetRef<CreateDirectoryComponent>, private formBuilder: FormBuilder, private commandService: CommandService, private clientService: ClientService) {
     this.directoryForm = this.formBuilder.group({
       name: ['',[Validators.required]]
     });
@@ -31,10 +31,10 @@ export class CreateDirectoryComponent {
     if (command != null) {
       this.clientService.sendGetCommand<Directory>(command).subscribe({
         next: d => {
-          this._bottomSheetRef.dismiss({ success: true, directory: d });
+          this.bottomSheetRef.dismiss({ success: true, directory: d });
         },
         error: e => {
-          this._bottomSheetRef.dismiss({ success: false, directory: null });
+          this.bottomSheetRef.dismiss({ success: false, directory: null });
         }
       });
     }
