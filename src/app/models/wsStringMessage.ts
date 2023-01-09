@@ -7,6 +7,7 @@ export class WsStringMessage {
     constructor(rawMessage: string){
         this.rawMessage = rawMessage;
     }
+    
     protected getallKeyvalues(sections: string[]): Map<string, string> {
         let keyvalues = new Map();
         if (sections.length > 0) {
