@@ -35,7 +35,7 @@ export class SocketService {
   public WsStatusMessage: Subject<WsStatusMessage> = new Subject();
   public WsStringMessage: Subject<WsStringMessage> = new Subject();
   public WsGcodeParserMessage: Subject<WsGcodeParserMessage> = new Subject();
-  
+
   constructor() {
   }
 
@@ -77,19 +77,16 @@ export class SocketService {
                 break;
               }
               case "[": {
-                if(strMessage.includes("M3") || strMessage.includes("M3") ){
-                  this.WsGcodeParserMessage.next(new WsGcodeParserMessage(strMessage,true));
+                if (strMessage.includes("M3") || strMessage.includes("M3")) {
+                  this.WsGcodeParserMessage.next(new WsGcodeParserMessage(strMessage, true));
                 }
-                if(strMessage.includes("M5")){
-                  this.WsGcodeParserMessage.next(new WsGcodeParserMessage(strMessage,false));
+                if (strMessage.includes("M5")) {
+                  this.WsGcodeParserMessage.next(new WsGcodeParserMessage(strMessage, false));
                 }
                 break;
               }
-              default: {
-                this.WsStringMessage.next(new WsStringMessage(`[WS_ARR:${strMessage}]`));
-              }
             }
-
+            this.WsStringMessage.next(new WsStringMessage(`[WS_ARR:${strMessage}]`));
           }
           else {
             if (typeof (message) == 'string') {

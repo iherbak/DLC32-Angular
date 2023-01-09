@@ -18,7 +18,7 @@ export class ClientService implements OnDestroy {
   public CommandError: Subject<string> = new Subject();
   public Connected: Subject<void> = new Subject();
 
-  private machineState: WsState = WsState.Idle
+  private machineState: WsState = WsState.Unknown
 
   public get MachineState() {
     return this.machineState;

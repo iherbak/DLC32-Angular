@@ -17,6 +17,7 @@ export class WsStatusMessage extends WsStringMessage {
         }
         return result;
     }
+    
     constructor(info: string) {
         super(info);
         this.infoKeyValues = this.getallKeyvalues(info.replace('<', '').replace('>', '').split("|"));

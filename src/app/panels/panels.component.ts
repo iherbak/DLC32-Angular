@@ -29,10 +29,12 @@ export class PanelsComponent implements OnDestroy {
     return this.expanded;
   }
 
-  public checkGcodeParserState(){
-    let command = this.commandService.getCommandUrlByCommand("$G");
-    if (command != null) {
-      this.clientService.sendGetCommand(command).subscribe();
+  public checkGcodeParserState() {
+    if (this.isConnected) {
+      let command = this.commandService.getCommandUrlByCommand("$G");
+      if (command != null) {
+        this.clientService.sendGetCommand(command).subscribe();
+      }
     }
   }
 
