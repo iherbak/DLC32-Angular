@@ -1,6 +1,22 @@
 <div class="panel-title">Laser</div>
+<form [formGroup]="laserForm">
 <div class="panelgrid">
-    <button type="button" mat-raised-button class="mat-warn on" (click)="switchLaser(true)" [disabled]="LaserOn">On</button>
+    <mat-form-field appearance="fill" class="powerrate">
+        <mat-label>Power %</mat-label>
+        <input matInput class="" type="number" placeholder="Power %" aria-label="Number" matInput
+          [formControl]="powerRateFc">
+        <mat-error *ngIf="powerRateFc.hasError('min') && !powerRateFc.hasError('required')">
+          Min: 1
+        </mat-error>
+        <mat-error *ngIf="powerRateFc.hasError('max') && !powerRateFc.hasError('required')">
+          Max: 100
+        </mat-error>
+        <mat-error *ngIf="powerRateFc.hasError('required')">
+          <strong>Required</strong>
+        </mat-error>
+      </mat-form-field>
+    <button type="button" mat-raised-button class="mat-warn on" (click)="switchLaser(true)" [disabled]="LaserOn || !powerRateFc.valid">On</button>
     <button type="button" mat-raised-button class="mat-accent off" (click)="switchLaser(false)" [disabled]="!LaserOn">Off</button>
     <button type="button" mat-raised-button class="mat-primary unlock" (click)="unlock()">Unlock</button>
 </div>
+</form>
