@@ -10,9 +10,9 @@
       <div class="middle-buttons">
         <button type="button" mat-raised-button class="left" (click)="move(Axes.X,Directions.MINUS)"
           [disabled]="!distanceForm.valid">LEFT</button>
-        <button *ngIf="hardLimitEnabled" type="button" mat-raised-button class="mat-accent home" (click)="home()"
+        <button *ngIf="hardLimitEnabled" type="button" mat-raised-button class="mat-accent home hard" (click)="home()"
           [disabled]="!distanceForm.valid">HARD HOME</button>
-        <button  type="button" mat-raised-button class="mat-accent home" [ngClass]="hardLimitEnabled?'':'extended'" (click)="softhome()"
+        <button  type="button" mat-raised-button class="mat-accent home soft" [ngClass]="hardLimitEnabled?'':'extended'" (click)="softhome()"
           [disabled]="!distanceForm.valid">SOFT HOME</button>
         <button type="button" mat-raised-button class="right" (click)="move(Axes.X)"
           [disabled]="!distanceForm.valid">RIGHT</button>

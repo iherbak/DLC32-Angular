@@ -3,6 +3,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, catchError, last, map, Observable, Subject, takeUntil, tap } from 'rxjs';
 import { ExecutableCommand } from '../models/executableCommand';
 import { ShowProgress } from '../models/showProgress';
+import { WsGcodeParserMessage } from '../models/wsGcodeParserMessage';
 import { WsState } from '../models/wsStatusMessage';
 import { SocketService } from './socket.service';
 

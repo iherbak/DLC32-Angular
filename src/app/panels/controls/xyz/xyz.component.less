@@ -5,7 +5,8 @@
 
 .middle-buttons {
     display: grid;
-    grid-template-columns: 110px repeat(2,140px) 110px;
+    grid-template-columns: 110px 140px 110px;
+    grid-template-rows: repeat(2, auto);
     place-items: center;
 }
 
@@ -41,11 +42,28 @@
 }
 
 button {
+
+    &.left,
+    &.right {
+        grid-row: span 2;
+    }
+
     &.home {
-        width:130px;
-        &.extended{
-            grid-column-start: 2;
-            grid-column-end: 4;
+        grid-row: 1;
+        width: 130px;
+
+        &.hard {
+            grid-column: 2;
+            grid-row: 1;
+        }
+
+        &.soft {
+            grid-column: 2;
+            grid-row: 2;
+        }
+
+        &.extended {
+            grid-row: span 2;
         }
     }
 }

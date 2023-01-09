@@ -2,6 +2,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { WsState } from '../models/wsStatusMessage';
 import { ClientService } from '../services/client.service';
+import { CommandService } from '../services/command.service';
 import { SocketService } from '../services/socket.service';
 
 @Component({
@@ -28,7 +29,14 @@ export class PanelsComponent implements OnDestroy {
     return this.expanded;
   }
 
-  constructor(private socketService: SocketService, private clientService: ClientService) {
+  public checkGcodeParserState(){
+    let command = this.commandService.getCommandUrlByCommand("$G");
+    if (command != null) {
+      this.clientService.sendGetCommand(command).subscribe();
+    }
+  }
+
+  constructor(private socketService: SocketService, private clientService: ClientService, private commandService: CommandService) {
 
     this.socketService.WsStatusMessage.pipe(takeUntil(this.unsub)).subscribe({
       next: (commandResult) => {

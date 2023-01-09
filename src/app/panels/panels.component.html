@@ -1,5 +1,5 @@
 <mat-accordion class="accordion">
-    <mat-expansion-panel [disabled]="isRunning || !isConnected" [expanded]="isExpanded">
+    <mat-expansion-panel [disabled]="isRunning || !isConnected" [expanded]="isExpanded" (opened)="checkGcodeParserState()">
         <mat-expansion-panel-header>
             <mat-panel-title>
                 Controls panel
