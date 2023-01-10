@@ -83,8 +83,14 @@ export class TerminalComponent implements OnDestroy {
       if (this.verboseFc.value) {
         this.logCommand(wsStatusMsg.rawMessage);
       }
-
     });
+
+    this.socketService.WsGcodeParserMessage.pipe(takeUntil(this.unsub)).subscribe(wsGcodeParserMsg => {
+      if (this.verboseFc.value) {
+        this.logCommand(wsGcodeParserMsg.rawMessage);
+      }
+    });
+
   }
 
   ngOnDestroy(): void {

@@ -35,6 +35,9 @@ export class SocketService {
   public WsStatusMessage: Subject<WsStatusMessage> = new Subject();
   public WsStringMessage: Subject<WsStringMessage> = new Subject();
   public WsGcodeParserMessage: Subject<WsGcodeParserMessage> = new Subject();
+  private wsStatusReg = new RegExp("<.*>");
+  private wsGcodeParserRegex = new RegExp("\\[.*\\]");
+
 
   constructor() {
   }
@@ -60,33 +63,34 @@ export class SocketService {
         next: (message: any) => {
           if (message instanceof ArrayBuffer) {
             let strMessage = this.textDecoder.decode(message);
-            //it is a status message
-            switch (strMessage[0]) {
-              case "<": {
-                let wsMessage = new WsStatusMessage(strMessage);
-                if (wsMessage.state == WsState.Alarm) {
-                  let alarmdesc = this.alarmCodes.find(ac => ac.code == wsMessage.infoKeyValues.get("ALARM"));
-                  if (alarmdesc != null) {
-                    wsMessage.infoKeyValues.set("alarm", alarmdesc?.description);
-                  }
-                  else {
-                    wsMessage.infoKeyValues.set("alarm", "unknown");
-                  }
+            //has a status message?
+            let result = this.wsStatusReg.exec(strMessage);
+
+            if (result!= null) {
+              let last = result[result.length - 1];
+              let wsMessage = new WsStatusMessage(last);
+              if (wsMessage.state == WsState.Alarm) {
+                let alarmdesc = this.alarmCodes.find(ac => ac.code == wsMessage.infoKeyValues.get("ALARM"));
+                if (alarmdesc != null) {
+                  wsMessage.infoKeyValues.set("alarm", alarmdesc?.description);
                 }
-                this.WsStatusMessage.next(wsMessage);
-                break;
+                else {
+                  wsMessage.infoKeyValues.set("alarm", "unknown");
+                }
               }
-              case "[": {
-                if (strMessage.includes("M3") || strMessage.includes("M3")) {
-                  this.WsGcodeParserMessage.next(new WsGcodeParserMessage(strMessage, true));
-                }
-                if (strMessage.includes("M5")) {
-                  this.WsGcodeParserMessage.next(new WsGcodeParserMessage(strMessage, false));
-                }
-                break;
+              this.WsStatusMessage.next(wsMessage);
+            }
+            //has gcode parser message?
+            result = this.wsGcodeParserRegex.exec(strMessage);
+            if (result != null) {
+              let last = result[result.length - 1];
+              if (last.includes("M3") || last.includes("M3")) {
+                this.WsGcodeParserMessage.next(new WsGcodeParserMessage(last, true));
+              }
+              if (last.includes("M5")) {
+                this.WsGcodeParserMessage.next(new WsGcodeParserMessage(last, false));
               }
             }
-            this.WsStringMessage.next(new WsStringMessage(`[WS_ARR:${strMessage}]`));
           }
           else {
             if (typeof (message) == 'string') {
