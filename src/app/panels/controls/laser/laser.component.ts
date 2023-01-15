@@ -29,7 +29,7 @@ export class LaserComponent implements AfterViewInit, OnDestroy {
   constructor(private commandService: CommandService, private clientService: ClientService, private socketService: SocketService, private formBuilder: FormBuilder) {
 
     this.laserForm = formBuilder.group({
-      powerRate: [25, [Validators.required, Validators.min(1), Validators.max(100)]]
+      powerRate: [10, [Validators.required, Validators.min(1), Validators.max(100)]]
     });
 
     this.socketService.WsGcodeParserMessage.pipe(takeUntil(this.unsub)).subscribe(message => {
